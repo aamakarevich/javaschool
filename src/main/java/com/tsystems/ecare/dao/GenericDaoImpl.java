@@ -1,7 +1,8 @@
 package com.tsystems.ecare.dao;
 
+import com.tsystems.ecare.utils.PersistenceProvider;
+
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.List;
@@ -11,11 +12,12 @@ import java.util.List;
  */
 public abstract class GenericDaoImpl <T, ID extends Serializable> implements GenericDao<T, ID>  {
 
-    @PersistenceContext
-    protected EntityManager entityManager;
+    protected EntityManager entityManager = PersistenceProvider.getEntityManager();
 
     public T save(T entity) {
-        this.entityManager.persist(entity);
+        entityManager.getTransaction().begin();
+        entityManager.persist(entity);
+        entityManager.getTransaction().commit();
         return entity;
     }
 
@@ -34,7 +36,7 @@ public abstract class GenericDaoImpl <T, ID extends Serializable> implements Gen
         return entities;
     }
 
-    public T findByID(Class clazz, ID id) {
+    public T findById(Class clazz, ID id) {
         T entity;
         entity = (T)this.entityManager.find(clazz, id);
         return entity;

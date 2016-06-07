@@ -1,11 +1,13 @@
-package com.tsystems.ecare.managers;
+package com.tsystems.ecare.services;
 
 import com.tsystems.ecare.entities.Address;
 
 /**
  * @author Andrei Makarevich
  */
-public interface AddressManager {
+public interface AddressService {
 
     Address saveNewAddress(Address address);
+
+    Address merge(Address address);
 }

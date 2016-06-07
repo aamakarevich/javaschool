@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
-             version="2.0">
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
 
     <persistence-unit name="ECARE" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
@@ -11,13 +12,17 @@
         <class>com.tsystems.ecare.entities.Plan</class>
         <class>com.tsystems.ecare.entities.Address</class>
         <class>com.tsystems.ecare.entities.Feature</class>
+        <class>com.tsystems.ecare.entities.Role</class>
         <properties>
             <!-- Database connection configuration -->
             <property name="hibernate.connection.driver_class" value="net.sf.log4jdbc.DriverSpy"/>
+            <!-- com.mysql.jdbc.Driver || net.sf.log4jdbc.DriverSpy />-->
             <property name="hibernate.connection.url" value="jdbc:log4jdbc:mysql://localhost:3306/ecare"/>
+            <!-- jdbc:mysql || jdbc:log4jdbc:mysql -->
             <property name="hibernate.connection.username" value="root"/>
             <property name="hibernate.connection.password" value="root"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+            <property name="hibernate.current_session_context_class" value="thread"/>
 
             <!-- SQL displaying configuration -->
             <property name="hibernate.show_sql" value="false"/>

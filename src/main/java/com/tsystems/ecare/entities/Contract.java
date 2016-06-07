@@ -36,6 +36,8 @@ public class Contract implements Serializable {
         LOCKED
     }
 
+    public Contract() {}
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

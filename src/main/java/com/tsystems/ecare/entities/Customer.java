@@ -1,6 +1,9 @@
 package com.tsystems.ecare.entities;
 
+import com.tsystems.ecare.utils.HashUtil;
+
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,11 +11,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,9 +37,22 @@ public class Customer implements Serializable {
     private String passport;
     private String email;
     private String password;
-    private Boolean isAdmin;
-    private List<Contract> contracts;
+    private transient List<Contract> contracts;
     private Address address;
+    private transient List<Role> roles;
+
+    public Customer() {}
+
+    public Customer(String firstName, String lastName, Date birthdate, String passport,
+                    String email, String password, Address address) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthdate = birthdate;
+        this.passport = passport;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -100,17 +122,8 @@ public class Customer implements Serializable {
     }
 
     public void setPassword(String password) {
+
         this.password = password;
-    }
-
-    @Basic
-    @Column(name = "isAdmin", nullable = false)
-    public Boolean getAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(Boolean admin) {
-        isAdmin = admin;
     }
 
     @Override
@@ -127,7 +140,6 @@ public class Customer implements Serializable {
         if (passport != null ? !passport.equals(customer.passport) : customer.passport != null) return false;
         if (email != null ? !email.equals(customer.email) : customer.email != null) return false;
         if (password != null ? !password.equals(customer.password) : customer.password != null) return false;
-        if (isAdmin != null ? !isAdmin.equals(customer.isAdmin) : customer.isAdmin != null) return false;
 
         return true;
     }
@@ -141,7 +153,6 @@ public class Customer implements Serializable {
         result = 31 * result + (passport != null ? passport.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (isAdmin != null ? isAdmin.hashCode() : 0);
         return result;
     }
 
@@ -154,7 +165,7 @@ public class Customer implements Serializable {
         this.contracts = contracts;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
     public Address getAddress() {
         return address;
@@ -162,5 +173,15 @@ public class Customer implements Serializable {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "customer_role", schema = "ecare", joinColumns = @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false))
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }

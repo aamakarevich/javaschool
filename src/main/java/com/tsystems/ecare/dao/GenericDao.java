@@ -16,5 +16,5 @@ public interface GenericDao<T, ID extends Serializable> {
 
     List findAll(Class clazz);
 
-    T findByID(Class clazz, ID id);
+    T findById(Class clazz, ID id);
 }

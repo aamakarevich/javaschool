@@ -34,6 +34,9 @@ public class Feature implements Serializable {
     private transient List<Contract> contracts;
     private transient List<Plan> plans;
 
+    public Feature() {
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

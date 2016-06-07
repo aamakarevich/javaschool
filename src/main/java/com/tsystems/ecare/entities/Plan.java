@@ -30,6 +30,9 @@ public class Plan implements Serializable {
 
     private transient List<Contract> contracts;
 
+    public Plan() {
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
