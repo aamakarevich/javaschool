@@ -3,10 +3,8 @@ package com.tsystems.ecare.controllers;
 import com.google.gson.Gson;
 import com.tsystems.ecare.entities.Customer;
 import com.tsystems.ecare.services.CustomerService;
-import com.tsystems.ecare.services.CustomerServiceImpl;
-import com.tsystems.ecare.utils.PersistenceProvider;
+import com.tsystems.ecare.services.impl.CustomerServiceImpl;
 
-import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

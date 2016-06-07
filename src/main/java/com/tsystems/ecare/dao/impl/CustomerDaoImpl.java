@@ -1,8 +1,8 @@
-package com.tsystems.ecare.dao;
+package com.tsystems.ecare.dao.impl;
 
+import com.tsystems.ecare.dao.CustomerDao;
 import com.tsystems.ecare.entities.Customer;
 
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 

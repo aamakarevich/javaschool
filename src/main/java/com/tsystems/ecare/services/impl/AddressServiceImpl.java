@@ -1,8 +1,9 @@
-package com.tsystems.ecare.services;
+package com.tsystems.ecare.services.impl;
 
 import com.tsystems.ecare.dao.AddressDao;
-import com.tsystems.ecare.dao.AddressDaoImpl;
+import com.tsystems.ecare.dao.impl.AddressDaoImpl;
 import com.tsystems.ecare.entities.Address;
+import com.tsystems.ecare.services.AddressService;
 import com.tsystems.ecare.utils.PersistenceProvider;
 
 import javax.persistence.EntityManager;
@@ -15,14 +16,11 @@ public class AddressServiceImpl implements AddressService {
     private AddressDao addressDao = new AddressDaoImpl();
 
     public Address saveNewAddress(Address address) {
-        EntityManager em = PersistenceProvider.getEntityManager();
         address = addressDao.save(address);
-        PersistenceProvider.closeEntityManager();
         return address;
     }
 
     public Address merge(Address address) {
-        EntityManager em = PersistenceProvider.getEntityManager();
         address = addressDao.merge(address);
         return address;
     }

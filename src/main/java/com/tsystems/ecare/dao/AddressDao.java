@@ -7,5 +7,4 @@ import com.tsystems.ecare.entities.Address;
  */
 public interface AddressDao extends GenericDao<Address, Integer> {
 
-
 }

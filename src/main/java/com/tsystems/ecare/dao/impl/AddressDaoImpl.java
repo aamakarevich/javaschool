@@ -1,8 +1,7 @@
-package com.tsystems.ecare.dao;
+package com.tsystems.ecare.dao.impl;
 
+import com.tsystems.ecare.dao.AddressDao;
 import com.tsystems.ecare.entities.Address;
-
-import javax.persistence.EntityManager;
 
 /**
  * @author Andrei Makarevich

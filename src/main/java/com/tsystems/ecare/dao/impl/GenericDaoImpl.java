@@ -1,5 +1,6 @@
-package com.tsystems.ecare.dao;
+package com.tsystems.ecare.dao.impl;
 
+import com.tsystems.ecare.dao.GenericDao;
 import com.tsystems.ecare.utils.PersistenceProvider;
 
 import javax.persistence.EntityManager;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * @author Andrei Makarevich
  */
-public abstract class GenericDaoImpl <T, ID extends Serializable> implements GenericDao<T, ID>  {
+public abstract class GenericDaoImpl <T, ID extends Serializable> implements GenericDao<T, ID> {
 
     protected EntityManager entityManager = PersistenceProvider.getEntityManager();
 
