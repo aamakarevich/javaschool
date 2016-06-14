@@ -16,5 +16,9 @@ public interface GenericDao<T, ID extends Serializable> {
 
     List findAll(Class clazz);
 
+    List findAllPaged(Class clazz, Integer pageNumber, Integer pageSize);
+
     T findById(Class clazz, ID id);
+
+    Long getTotalCount(Class clazz);
 }

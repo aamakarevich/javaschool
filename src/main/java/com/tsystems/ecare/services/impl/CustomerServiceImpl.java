@@ -8,6 +8,7 @@ import com.tsystems.ecare.utils.HashUtil;
 import com.tsystems.ecare.utils.PersistenceProvider;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 /**
  * @author Andrei Makarevich
@@ -35,5 +36,13 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer merge(Customer customer) {
         customer = customerDao.merge(customer);
         return customer;
+    }
+
+    public List<Customer> getCustomersPaged(Integer pageNumber, Integer pageSize) {
+        return customerDao.findAllPaged(Customer.class, pageNumber, pageSize);
+    }
+
+    public Long getCustomersCount() {
+        return customerDao.getTotalCount(Customer.class);
     }
 }
