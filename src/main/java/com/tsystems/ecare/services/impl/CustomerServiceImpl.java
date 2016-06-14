@@ -22,6 +22,11 @@ public class CustomerServiceImpl implements CustomerService {
         return customer;
     }
 
+    public Customer getUserByEmail(String email) {
+        Customer customer = customerDao.findByEmail(email);
+        return customer;
+    }
+
     public Customer saveNewCustomer(Customer customer) {
         customer.setPassword(HashUtil.getSHA256(customer.getPassword()));
         customer = customerDao.save(customer);

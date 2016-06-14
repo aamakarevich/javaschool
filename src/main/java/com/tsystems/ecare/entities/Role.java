@@ -17,7 +17,7 @@ import java.util.List;
 public class Role {
     private Integer id;
     private String title;
-    private List<Customer> customers;
+    private transient List<Customer> customers;
 
     public Role() {}
 

@@ -7,5 +7,7 @@ import com.tsystems.ecare.entities.Customer;
  */
 public interface CustomerDao extends GenericDao<Customer, Integer> {
 
+    Customer findByEmail(String email);
+
     Customer findByEmailAndPassword(String email, String password);
 }

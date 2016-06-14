@@ -24,7 +24,10 @@ public abstract class GenericDaoImpl <T, ID extends Serializable> implements Gen
     }
 
     public T merge(T entity) {
-        return this.entityManager.merge(entity);
+        entityManager.getTransaction().begin();
+        entity = this.entityManager.merge(entity);
+        entityManager.getTransaction().commit();
+        return entity;
     }
 
     public void delete(T entity) {

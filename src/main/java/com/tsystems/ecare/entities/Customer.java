@@ -32,9 +32,9 @@ public class Customer implements Serializable {
     private String passport;
     private String email;
     private String password;
-    private transient List<Contract> contracts;
+    private List<Contract> contracts;
     private Address address;
-    private transient List<Role> roles;
+    private List<Role> roles;
 
     public Customer() {}
 

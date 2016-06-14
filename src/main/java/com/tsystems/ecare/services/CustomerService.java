@@ -11,6 +11,8 @@ public interface CustomerService {
 
     Customer getUser(Integer id);
 
+    Customer getUserByEmail(String email);
+
     Customer saveNewCustomer(Customer customer);
 
     Customer verifyUser(String email, String password);
