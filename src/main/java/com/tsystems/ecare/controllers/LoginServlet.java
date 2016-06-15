@@ -27,9 +27,19 @@ public class LoginServlet extends HttpServlet {
                          HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession(true);
-        if (session.getAttribute("currentuser") != null) {
+
+        if (request.getParameter("out") != null) {
+            session.setAttribute("currentuser", null);
+        }
+
+        if (session.getAttribute("currentuser") != null ) {
+
             Customer customer = new CustomerServiceImpl().getUserByEmail((String) session.getAttribute("currentuser"));
-            JsonUtil.writeObjectToJson(response, customer);
+            final Map<String, String> userData = new HashMap<String, String>();
+            userData.put("email", customer.getEmail());
+            userData.put("username", customer.getFirstName() + " " + customer.getLastName());
+            customer.getRoles().forEach(r -> userData.put(r.getTitle(), String.valueOf(true)));
+            JsonUtil.writeObjectToJson(response, userData);
             return;
         }
 
@@ -39,9 +49,12 @@ public class LoginServlet extends HttpServlet {
                     HashUtil.getSHA256(request.getParameter("password")));
             if (customer != null) {
                 request.getSession(true).setAttribute("currentuser", customer.getEmail());
+                Map<String, String> userData = new HashMap<String, String>();
+                userData.put("email", customer.getEmail());
+                userData.put("username", customer.getFirstName() + " " + customer.getLastName());
+                JsonUtil.writeObjectToJson(response, userData);
+                return;
             }
-            JsonUtil.writeObjectToJson(response, customer);
-            return;
         }
 
         JsonUtil.writeObjectToJson(response, null);

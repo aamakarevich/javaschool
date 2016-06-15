@@ -34,14 +34,15 @@ public class AuthenticationFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         String url = req.getServletPath();
-        if (!allowedUrls.contains(url)) {
+        if (allowedUrls.contains(url)) {
+            request.getRequestDispatcher(url).forward(request, response);
+
+        } else {
             HttpSession session = req.getSession(false);
             if (null == session) {
-                res.sendRedirect("login.html");
+                res.sendRedirect("index.html");
             }
         }
-
-        chain.doFilter(request, response);
     }
 
     public void destroy() {
