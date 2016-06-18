@@ -11,6 +11,7 @@
 
     <link rel="import" href="home.html">
     <link rel="import" href="plans.html">
+    <link rel="import" href="options.html">
     <link rel="import" href="users.html">
 </head>
 
@@ -20,7 +21,7 @@
 <script src="js/jquery.cookie.js" type="text/javascript"></script>
 <script src="js/jquery.rest.min.js" type="text/javascript"></script>
 <script>
-
+    /* Set up REST-client */
     var client = new $.RestClient('rest/');
 
     client.add('login', {
@@ -31,10 +32,19 @@
         stripTrailingSlash: true,
         ajax: {async: true}
     });
+    client.add('plan', {
+        stripTrailingSlash: true,
+        ajax: {async: true}
+    });
+    client.add('option', {
+        stripTrailingSlash: true,
+        ajax: {async: true}
+    });
+    /* end */
 
-    if($.cookie("currentuser") == null) {
+    if ($.cookie("currentuser") == null) {
         var cpage = $.cookie("currentpage");
-        if(cpage != "home" && cpage != "plans") {
+        if (cpage != "home" && cpage != "plans" && cpage != "options") {
             $.cookie("currentpage", "home", {expires: 1, path: '/'});
         }
     }
@@ -53,50 +63,58 @@
                 $("#userData").html("<script>var cuser=" + JSON.stringify(customer) + ";<\/script>");
 
                 $.cookie('currentuser', customer.email, {expires: 1, path: '/'});
-                if(cuser.manager != null || cuser.admin != null) {cuser.suser = true;}
-                if(cuser.suser != null) {
+                if (cuser.manager != null || cuser.admin != null) {
+                    cuser.suser = true;
+                }
+                if (cuser.suser != null) {
                     $("#nav_users").show();
                 }
                 $("#nav_fullname").empty();
                 $("#nav_fullname").append(customer.username);
                 $("#nav_username").show();
             }
-            $("#topnav").fadeIn("slow");
+            $("#topnavcover").hide().removeClass('hidden').fadeIn();
         });
     }
     loadRights();
 </script>
-<div id="userData"></div>
-<nav class="navbar navbar-inverse navbar-fixed-top" id="topnav" hidden="hidden">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">eCare Mobile</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
-            <ul class="nav navbar-nav" id="left_nav">
-                <li id="nav_home" onclick="loadPage('home')"><a href="#">Home</a></li>
-                <li id="nav_plans" onclick="loadPage('plans')"><a href="#">Plans</a></li>
-                <li id="nav_users" onclick="loadPage('users')"><a href="#">Customers</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right" id="right_nav">
-                <li id="nav_login"><a href="#" data-toggle="modal" data-target="#loginModal" onfocus="this.blur()">Sign in</a></li>
-                <p id="nav_username" class="navbar-text navbar-right">
-                    Signed in as
-                    <a href="#" id="nav_fullname" class="navbar-link"></a> [<a href="#" class="navbar-link" onclick="logout()">Sign out</a>]
-                </p>
-            </ul>
+<div id="userData">
+    <script>cuser = null;</script>
+</div>
+<div id="topnavcover" class="hidden">
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="topnav">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="navbar-brand">eCare Mobile</div>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+                <ul class="nav navbar-nav" id="left_nav">
+                    <li id="nav_home" onclick="loadPage('home')"><a href="#">Home</a></li>
+                    <li id="nav_plans" onclick="loadPage('plans')"><a href="#">Plans</a></li>
+                    <li id="nav_options" onclick="loadPage('options')"><a href="#">Options</a></li>
+                    <li id="nav_users" onclick="loadPage('users')"><a href="#">Customers</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right" id="right_nav">
+                    <li id="nav_login"><a href="#" data-toggle="modal" data-target="#loginModal" onfocus="this.blur()">Sign
+                        in</a></li>
+                    <p id="nav_username" class="navbar-text navbar-right">
+                        Signed in as
+                        <a href="#" id="nav_fullname" class="navbar-link"></a> [<a href="#" class="navbar-link"
+                                                                                   onclick="logout()">Sign out</a>]
+                    </p>
+                </ul>
 
+            </div>
         </div>
-    </div>
-</nav>
-
+    </nav>
+</div>
 <div class="modal fade" id="loginModal" role="dialog" data-backdrop="static">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -104,12 +122,20 @@
                 <form class="form-signin" onsubmit="return submitModal()">
                     <h2 class="form-signin-heading">Please sign in</h2>
                     <label for="inputEmail" class="sr-only">Email address</label>
-                    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+                    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required=""
+                           autofocus="">
                     <label for="inputPassword" class="sr-only">Password</label>
                     <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
-                    <button class="btn btn-lg btn-primary btn-block" type="submit" id="loginSubmit">Sign in</button>
-                    <button class="btn btn-lg btn-default btn-block" type="button" id="loginCancel" onclick="closeModal()">Cancel</button>
-                    <div class="alert alert-info" id="loginError" role="alert" hidden="hidden">E-mail and password pair doesn't exist</div>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit" id="loginSubmit"
+                            data-toggle="popover" data-placement="right" title="Popover title"
+                            data-content="Popover on right.">Sign in
+                    </button>
+                    <button class="btn btn-lg btn-default btn-block" type="button" id="loginCancel"
+                            onclick="closeModal()">Cancel
+                    </button>
+                    <div class="alert alert-info" id="loginError" role="alert" hidden="hidden">E-mail and password pair
+                        doesn't exist
+                    </div>
                 </form>
             </div>
         </div>
@@ -124,6 +150,19 @@
         var currentpage = $.cookie("currentpage");
         if (currentpage == null) currentpage = "home";
         loadPage(currentpage);
+
+        $(".navbar-brand").animate({
+            opacity: 1,
+        }, 2000, function () {
+            $(".navbar-brand").animate({
+                opacity: 0.0,
+            }, 1000, function () {
+                $(".navbar-brand").css('color', '#e20074');
+                $(".navbar-brand").animate({
+                    opacity: 1,
+                }, 200);
+            });
+        });
     });
 
     function loadPage(page) {
@@ -135,24 +174,32 @@
         $("#navbar li").removeClass("active");
         document.querySelector("#nav_" + page).setAttribute("class", "active");
         if (page == "users") {
-            createPagination();
+            createUsersPagination();
+        }
+        if (page == "plans") {
+            getAllPlans();
+        }
+        if (page == "options") {
+            getAllOptions();
         }
     }
+
     function closeModal() {
         $("#loginModal").modal("hide");
+        $("#inputEmail").val("");
+        $("#inputPassword").val("");
+        $("#loginError").hide();
     }
+
     function submitModal() {
         client.login.read("?email=" + $("#inputEmail").val() + "&password=" + $("#inputPassword").val()).done(function (customer) {
             if (customer == null) {
-                $("#loginError").fadeIn("slow");
+                $("#loginError").fadeOut().fadeIn("slow");
+                $("#inputEmail").focus();
+                $("#inputPassword").val("");
             } else {
-//                $("#userData").empty();
-//                $("#userData").html("<script>var user=" + JSON.stringify(customer) + ";<\/script>");
                 loadRights();
                 closeModal();
-                $("#inputEmail").val("");
-                $("#inputPassword").val("");
-                $("#loginError").hide();
             }
         });
         return false;
@@ -166,9 +213,17 @@
         });
         return false;
     }
-
 </script>
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
 
+<div class="navbar-fixed-bottom row-fluid navbar-inverse">
+    <div class="navbar-inner">
+        <div class="container">
+            <p class="text-muted text-center">T-Systems - <a href="http://vk.com/daddyksen" id="nav_fullname"
+                                                             class="navbar-link" target="_blank">Andrei Makarevich</a> -
+                2016</p>
+        </div>
+    </div>
+</div>
 </body>
 </html>

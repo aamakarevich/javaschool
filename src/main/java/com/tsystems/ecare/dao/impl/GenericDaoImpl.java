@@ -31,7 +31,9 @@ public abstract class GenericDaoImpl <T, ID extends Serializable> implements Gen
     }
 
     public void delete(T entity) {
+        entityManager.getTransaction().begin();
         this.entityManager.remove(entity);
+        entityManager.getTransaction().commit();
     }
 
     public List findAll(Class clazz) {

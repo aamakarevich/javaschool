@@ -1,4 +1,4 @@
-package com.tsystems.ecare.controllers;
+package com.tsystems.ecare.filters;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

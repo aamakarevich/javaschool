@@ -10,7 +10,7 @@
 
 <!--  <filter>
     <filter-name>AuthenticationFilter</filter-name>
-    <filter-class>com.tsystems.ecare.controllers.AuthenticationFilter</filter-class>
+    <filter-class>com.tsystems.ecare.listeners.AuthenticationFilter</filter-class>
     <init-param>
       <param-name>allowed-urls</param-name>
       <param-value>/index.html</param-value>
@@ -46,7 +46,25 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>customer</servlet-name>
-    <url-pattern>/rest/customer/</url-pattern>
+    <url-pattern>/rest/customer/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>plan</servlet-name>
+    <servlet-class>com.tsystems.ecare.controllers.PlanServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>plan</servlet-name>
+    <url-pattern>/rest/plan/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>option</servlet-name>
+    <servlet-class>com.tsystems.ecare.controllers.FeatureServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>option</servlet-name>
+    <url-pattern>/rest/option/*</url-pattern>
   </servlet-mapping>
   <!-- end REST -->
 

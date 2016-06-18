@@ -13,6 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,15 +27,19 @@ public class Feature implements Serializable {
     private String description;
     private BigDecimal additionFee;
     private BigDecimal monthlyFee;
-    private List<Feature> blockers;
-    private List<Feature> blockedFeatures;
+    private transient List<Feature> blockers;
+    private transient List<Feature> blockedFeatures;
     private List<Feature> neededFeatures;
-    private List<Feature> dependentFeatures;
+    private transient List<Feature> dependentFeatures;
 
     private transient List<Contract> contracts;
     private transient List<Plan> plans;
 
     public Feature() {
+        blockers = new ArrayList<>();
+        blockedFeatures = new ArrayList<>();
+        neededFeatures = new ArrayList<>();
+        dependentFeatures = new ArrayList<>();
     }
 
     @Id
