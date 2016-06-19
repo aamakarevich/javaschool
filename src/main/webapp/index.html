@@ -80,7 +80,6 @@
                 $("#nav_username").show();
             }
             $("#topnavcover").hide().removeClass('hidden').fadeIn();
-            startUp();
         });
     }
     loadRights();
@@ -224,6 +223,7 @@
                 $("#inputPassword").val("");
             } else {
                 loadRights();
+                startUp();
                 closeModal();
             }
         });
