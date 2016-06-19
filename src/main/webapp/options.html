@@ -7,21 +7,6 @@
     </div>
     <div class="container">
 
-        <div class="form-group">
-            <div class="row">
-                <div class="col-lg-9">
-                    <div class="input-group">
-
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="btn-group pull-right">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div id="options_table_cover" hidden="hidden">
             <div id="options_table"></div>
 
@@ -70,7 +55,7 @@
                     if (i == 3) i = 0;
                 }
                 var addButton = "<div class=\"col-lg-4\">" +
-                        "<div id=\"addNewOption\" class=\"panel panel-info\">" +
+                        "<div id=\"addNewOption\" onclick=\"addOption();\" class=\"panel panel-info\">" +
                         "<div class=\"panel-heading\">" +
                         "<h3 class=\"panel-title text-uppercase\"><strong>Add new option</strong></h3></div>" +
                         "<div class=\"panel-body text-center\"><h1>+</h1>" +
@@ -93,7 +78,7 @@
                 $("#options_table").empty();
                 $("#options_table").append(optionsRows);
             });
-            $("#options_table_cover").fadeIn(1500);
+            $("#options_table_cover").fadeOut(1).fadeIn(1000);
         }
     </script>
 
@@ -101,7 +86,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Realy delete option?</h4>
+                    <h4 class="modal-title">Realy delete option? If it has any linked options, all links will be released.</h4>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="deleteOptionId"/>
@@ -115,12 +100,20 @@
         function presetDeleteId(id) {
             $("#deleteOptionId").val(id);
         }
+        function addOption() {
+            window.localStorage.setItem("optionId", 0);
+            loadPage('option', 'options');
+
+        }
+        function editOption(id) {
+            window.localStorage.setItem("optionId", id);
+            loadPage('option', 'options');
+        }
         function deleteOption() {
-            client.option.del($("#deleteOptionId").val()).done(function (result) {
-                alert(result);
+            client.option.del($("#deleteOptionId").val()).always(function (result) {
+                $("#deleteOptionModal").modal("hide");
+                getAllOptions();
             });
-            $("#deleteOptionModal").modal("hide");
-            getAllOptions();
         }
         function closeDeleteOptionModal() {
             $("#deleteOptionModal").modal("hide");
