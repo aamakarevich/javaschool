@@ -16,6 +16,11 @@ public class PlanServiceImpl implements PlanService {
     private PlanDao planDao = new PlanDaoImpl();
 
     @Override
+    public void deletePlan(Plan plan) {
+        planDao.delete(plan);
+    }
+
+    @Override
     public Plan getPlan(Integer id) {
         Plan plan = planDao.findById(Plan.class, id);
         return plan;
@@ -40,5 +45,11 @@ public class PlanServiceImpl implements PlanService {
     @Override
     public Long getPlansCount() {
         return planDao.getTotalCount(Plan.class);
+    }
+
+    @Override
+    public Plan updatePlan(Plan plan) {
+        plan = planDao.merge(plan);
+        return plan;
     }
 }

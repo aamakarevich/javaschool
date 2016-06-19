@@ -17,5 +17,5 @@ public interface FeatureService {
 
     Feature saveNewFeature(Feature feature);
 
-    Feature udpateFeature(Feature feature);
+    Feature updateFeature(Feature feature);
 }

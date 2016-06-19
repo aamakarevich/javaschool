@@ -25,11 +25,11 @@ public class FeatureServlet extends HttpServlet {
         if (feature != null) {
             if (feature.getContracts().size() == 0) {
                 service.deleteFeature(feature);
-                resp.getWriter().write("ok");
+                resp.setStatus(HttpServletResponse.SC_OK);
                 return;
             }
         }
-        resp.getWriter().write("fail");
+        resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
 
     @Override
@@ -55,8 +55,9 @@ public class FeatureServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         Feature feature = JsonUtil.getObjectFromJson(req, Feature.class);
-        new FeatureServiceImpl().udpateFeature(feature);
+        new FeatureServiceImpl().updateFeature(feature);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

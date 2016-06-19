@@ -30,14 +30,22 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = request.getSession(true);
 
         if (request.getParameter("out") != null) {
-            session.setAttribute("currentuser", null);
-            session.invalidate();
+            try {
+                session.removeAttribute("currentuser");
+                session.invalidate();
+            } catch (IllegalStateException ex) {
+
+            } finally {
+                response.setStatus(HttpServletResponse.SC_OK);
+                return;
+            }
         }
 
         for (Cookie cookie : request.getCookies()) {
             if (cookie.getName().equals("currentuser")) {
                 if(session.getAttribute("currentuser") == null) {
-                    session.setAttribute("currentuser", cookie.getValue().replace("%40", "@"));
+                    String ck = cookie.getValue().replace("%40", "@");
+                    session.setAttribute("currentuser", ck.trim().equals("null") ? null : ck);
                 }
             }
         }
@@ -45,6 +53,10 @@ public class LoginServlet extends HttpServlet {
         if (session.getAttribute("currentuser") != null ) {
 
             Customer customer = new CustomerServiceImpl().getUserByEmail((String) session.getAttribute("currentuser"));
+            if (customer == null) {
+                JsonUtil.writeObjectToJson(response, null);
+                return;
+            }
             final Map<String, String> userData = new HashMap<String, String>();
             userData.put("email", customer.getEmail());
             userData.put("username", customer.getFirstName() + " " + customer.getLastName());

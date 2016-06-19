@@ -54,7 +54,7 @@ public class FeatureServiceImpl implements FeatureService {
     }
 
     @Override
-    public Feature udpateFeature(Feature feature) {
+    public Feature updateFeature(Feature feature) {
         feature = featureDao.merge(feature);
         return feature;
     }

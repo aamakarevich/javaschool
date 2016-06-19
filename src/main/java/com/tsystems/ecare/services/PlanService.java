@@ -10,6 +10,8 @@ import java.util.List;
  */
 public interface PlanService {
 
+    void deletePlan(Plan plan);
+
     Plan getPlan(Integer id);
 
     Plan saveNewPlan(Plan plan);
@@ -19,4 +21,6 @@ public interface PlanService {
     List<Plan> getPlansPaged(Integer pageNumber, Integer pageSize);
 
     Long getPlansCount();
+
+    Plan updatePlan(Plan plan);
 }

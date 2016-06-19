@@ -17,18 +17,28 @@ import java.io.IOException;
 public class PlanServlet extends HttpServlet {
 
     @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Integer idToDelete = Integer.parseInt(req.getPathInfo().replace("/", ""));
+        PlanService service = new PlanServiceImpl();
+        Plan plan = service.getPlan(idToDelete);
+        if (plan != null) {
+            if (plan.getContracts().size() == 0) {
+                service.deletePlan(plan);
+                resp.setStatus(HttpServletResponse.SC_OK);
+                return;
+            }
+        }
+        resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    }
+
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        if (req.getParameter("count") != null) {
-            JsonUtil.writeObjectToJson(resp, new PlanServiceImpl().getPlansCount());
-            return;
-        }
-
-        if(req.getParameter("page") != null && req.getParameter("size") != null) {
-            JsonUtil.writeObjectToJson(resp,
-                    new PlanServiceImpl().getPlansPaged(
-                            Integer.parseInt(req.getParameter("page")),
-                            Integer.parseInt(req.getParameter("size"))));
+        if (!req.getPathInfo().equals("/")) {
+            Integer idToGet = Integer.parseInt(req.getPathInfo().replace("/", ""));
+            Plan plan = new PlanServiceImpl().getPlan(idToGet);
+            JsonUtil.writeObjectToJson(resp, plan);
             return;
         }
 
@@ -36,13 +46,18 @@ public class PlanServlet extends HttpServlet {
     }
 
     @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Plan plan = JsonUtil.getObjectFromJson(req, Plan.class);
+        new PlanServiceImpl().saveNewPlan(plan);
+        resp.setStatus(HttpServletResponse.SC_CREATED);
+    }
+
+    @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Plan plan = JsonUtil.getObjectFromJson(req, Plan.class);
-
-        PlanService planService = new PlanServiceImpl();
-        planService.saveNewPlan(plan);
-
-        resp.getWriter().write("ok");
+        new PlanServiceImpl().updatePlan(plan);
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

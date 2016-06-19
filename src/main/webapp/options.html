@@ -40,7 +40,7 @@
                                     "<div class=\"btn-group pull-right\">" +
                                     "<a href=\"#\" class=\"btn btn-info btn-sm\" onclick=\"editOption(" + options[c].id + ");\">Edit option</a>" +
                                     "<a href=\"#\" class=\"btn btn-danger btn-sm\" data-toggle=\"modal\" data-target=\"#deleteOptionModal\" " +
-                                    "onclick=\"presetDeleteId(" + options[c].id + ");\" onfocus=\"this.blur()\">Delete option</a></div>";
+                                    "onclick=\"presetDeleteOptionId(" + options[c].id + ");\" onfocus=\"this.blur()\">Delete option</a></div>";
                         }
                     }
                     optionsRows += "</div>" +
@@ -86,7 +86,8 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Realy delete option? If it has any linked options, all links will be released.</h4>
+                    <h4 class="modal-title">Realy delete option? If it has any linked options, all links will be
+                        released.</h4>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="deleteOptionId"/>
@@ -97,7 +98,7 @@
         </div>
     </div>
     <script>
-        function presetDeleteId(id) {
+        function presetDeleteOptionId(id) {
             $("#deleteOptionId").val(id);
         }
         function addOption() {

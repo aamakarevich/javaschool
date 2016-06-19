@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/theme.css">
 
     <link rel="import" href="home.html">
+    <link rel="import" href="plan.html">
     <link rel="import" href="plans.html">
     <link rel="import" href="option.html">
     <link rel="import" href="options.html">
@@ -31,10 +32,12 @@
     });
     client.add('customer', {
         stripTrailingSlash: true,
+        stringifyData: true,
         ajax: {async: true}
     });
     client.add('plan', {
         stripTrailingSlash: true,
+        stringifyData: true,
         ajax: {async: true}
     });
     client.add('option', {
@@ -76,6 +79,7 @@
                 $("#nav_username").show();
             }
             $("#topnavcover").hide().removeClass('hidden').fadeIn();
+            startUp();
         });
     }
     loadRights();
@@ -148,12 +152,17 @@
 
 <script>
     $(document).ready(function () {
+        startUp();
+    });
+
+    function startUp() {
         var currentpage = $.cookie("currentpage");
         if (currentpage == null) currentpage = "home";
         var currentpagen = currentpage;
-        if(currentpage == "option") {
-            currentpagen = "options";
-        }
+
+        if(currentpage == "option") currentpagen = "options";
+        if(currentpage == "plan") currentpagen = "plans";
+
         loadPage(currentpage, currentpagen);
 
         $(".navbar-brand").animate({
@@ -168,7 +177,7 @@
                 }, 200);
             });
         });
-    });
+    }
 
     function loadPage(page, pagen) {
         $.cookie("currentpage", page, {expires: 1, path: '/'});
@@ -183,6 +192,9 @@
         }
         if (page == "plans") {
             getAllPlans();
+        }
+        if (page == "plan") {
+            getPlan();
         }
         if (page == "options") {
             getAllOptions();
@@ -214,10 +226,11 @@
     }
 
     function logout() {
-        client.login.read("?out").done(function (success) {
+        client.login.read("?out").always(function (success) {
             $.cookie("currentuser", null);
+            cuser = null;
             loadRights();
-            loadPage("home");
+            loadPage("home", "home");
         });
         return false;
     }
