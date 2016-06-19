@@ -14,6 +14,7 @@
     <link rel="import" href="plans.html">
     <link rel="import" href="option.html">
     <link rel="import" href="options.html">
+    <link rel="import" href="user.html">
     <link rel="import" href="users.html">
 </head>
 
@@ -162,6 +163,7 @@
 
         if(currentpage == "option") currentpagen = "options";
         if(currentpage == "plan") currentpagen = "plans";
+        if(currentpage == "user") currentpagen = "users";
 
         loadPage(currentpage, currentpagen);
 
@@ -190,6 +192,9 @@
         if (page == "users") {
             createUsersPagination();
         }
+        if (page == "user") {
+            getCustomer();
+        }
         if (page == "plans") {
             getAllPlans();
         }
@@ -201,7 +206,7 @@
         }
         if (page == "option") {
             getOption();
-        }
+    }
     }
 
     function closeModal() {

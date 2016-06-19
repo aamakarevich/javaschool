@@ -9,9 +9,11 @@ import java.util.List;
  */
 public interface CustomerService {
 
-    Customer getUser(Integer id);
+    void deleteCustomer(Customer customer);
 
-    Customer getUserByEmail(String email);
+    Customer getCustomer(Integer id);
+
+    Customer getCustomerByEmail(String email);
 
     Customer saveNewCustomer(Customer customer);
 
@@ -22,4 +24,6 @@ public interface CustomerService {
     List<Customer> getCustomersPaged(Integer pageNumber, Integer pageSize);
 
     Long getCustomersCount();
+
+    Customer updateCustomer(Customer customer);
 }

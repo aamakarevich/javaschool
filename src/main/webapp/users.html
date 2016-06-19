@@ -9,13 +9,16 @@
 
         <div class="form-group">
             <div class="row">
-                <div class="col-lg-9">
+                <div class="col-lg-6">
                     <div class="input-group">
                         <span class="input-group-addon">Filter</span>
                         <input type="text" class="form-control" id="users_filter" onkeyup="filter()">
                         <span class="input-group-btn"><button class="btn btn-default" type="button"
                                                               onclick="resetFilter()">Reset</button></span>
                     </div>
+                </div>
+                <div class="col-lg-3">
+                    <button class="btn btn-default" type="button" onclick="addCustomer();">Add new customer</button>
                 </div>
                 <div class="col-lg-3">
                     <div class="btn-group pull-right">
@@ -141,11 +144,11 @@
                     for (var c in customers) {
                         customersRows += "<div class=\"panel panel-default\">" +
                                 "<div class=\"panel-heading\">" +
-                                "<h3 class=\"panel-title text-uppercase\"><strong>" + customers[c].lastName + " " + customers[c].firstName + "</strong> / " + customers[c].email + "</h3>";
+                                "<h3 class=\"panel-title\"><strong class=\"text-uppercase\">" + customers[c].lastName + " " + customers[c].firstName + "</strong> " + customers[c].email + "</h3>";
                         if (cuser != null) {
                             if (cuser.suser != null) {
-                                customersRows += "<div class=\"btn-group pull-right\"><a href=\"#\" class=\"btn btn-default btn-sm\">Edit customer info</a>" +
-                                        "<a href=\"#\" class=\"btn btn-default btn-sm\">Delete customer</a></div>";
+                                customersRows += "<div class=\"btn-group pull-right\"><a href=\"#\" class=\"btn btn-primary btn-sm\" onclick=\"editCustomer(" + customers[c].id + ");\">Edit</a>" +
+                                        "<a href=\"#\" class=\"btn btn-danger btn-sm\" data-toggle=\"modal\" data-target=\"#deleteCustomerModal\" onclick=\"presetDeleteCustomerId(" + customers[c].id + ");\" onfocus=\"this.blur()\">Delete</a></div>";
                             }
                         }
                         customersRows += "</div>" +
@@ -170,6 +173,42 @@
                 $("#users_filter").keyup();
             }
         </script>
-
     </div>
+    <div class="modal fade" id="deleteCustomerModal" role="dialog" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Realy delete customer? If customer owns any contracts, they will be also deleted.</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="deleteCustomerId"/>
+                    <button class="btn btn-primary" type="button" onclick="deleteCustomer();">Yes</button>
+                    <button class="btn btn-default" type="button" onclick="closeDeleteCustomerModal();">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function presetDeleteCustomerId(id) {
+            $("#deleteCustomerId").val(id);
+        }
+        function addCustomer() {
+            window.localStorage.setItem("customerId", 0);
+            loadPage('user', 'users');
+
+        }
+        function editCustomer(id) {
+            window.localStorage.setItem("customerId", id);
+            loadPage('user', 'users');
+        }
+        function deleteCustomer() {
+            client.customer.del($("#deleteCustomerId").val()).always(function (result) {
+                $("#deleteCustomerModal").modal("hide");
+                getPagedCustomers();
+            });
+        }
+        function closeDeleteCustomerModal() {
+            $("#deleteCustomerModal").modal("hide");
+        }
+    </script>
 </div>

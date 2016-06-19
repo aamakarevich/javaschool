@@ -17,12 +17,17 @@ public class CustomerServiceImpl implements CustomerService {
 
     private CustomerDao customerDao = new CustomerDaoImpl();
 
-    public Customer getUser(Integer id) {
+    @Override
+    public void deleteCustomer(Customer customer) {
+        customerDao.delete(customer);
+    }
+
+    public Customer getCustomer(Integer id) {
         Customer customer = customerDao.findById(Customer.class, id);
         return customer;
     }
 
-    public Customer getUserByEmail(String email) {
+    public Customer getCustomerByEmail(String email) {
         Customer customer = customerDao.findByEmail(email);
         return customer;
     }
@@ -49,5 +54,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     public Long getCustomersCount() {
         return customerDao.getTotalCount(Customer.class);
+    }
+
+    @Override
+    public Customer updateCustomer(Customer customer) {
+        customer = customerDao.merge(customer);
+        return customer;
     }
 }

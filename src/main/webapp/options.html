@@ -1,8 +1,9 @@
 <div id="options">
     <div class="jumbotron">
         <div class="container">
-            <h1>Available options</h1>
-            <p>Flexibility is our major! Customise your services!</p>
+            <h1>Available options
+                <button type="button" id="bOptionsLinks" class="btn btn-primary" style="display: none;" onclick="loadPage('','options');">Edit links between options</button></h1>
+            <p id="optionsSubHeader">Flexibility is our major! Customise your services!</p>
         </div>
     </div>
     <div class="container">
@@ -79,6 +80,12 @@
                 $("#options_table").append(optionsRows);
             });
             $("#options_table_cover").fadeOut(1).fadeIn(1000);
+            if (cuser != null) {
+                if (cuser.suser != null) {
+//                    $("#optionsSubHeader").fadeOut();
+                    $("#bOptionsLinks").fadeIn(1000);
+                }
+            }
         }
     </script>
 

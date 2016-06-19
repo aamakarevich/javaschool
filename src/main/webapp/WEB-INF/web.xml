@@ -30,15 +30,6 @@
     <url-pattern>/rest/login/</url-pattern>
   </servlet-mapping>
 
-  <servlet>
-    <servlet-name>users</servlet-name>
-    <servlet-class>com.tsystems.ecare.controllers.UsersServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>users</servlet-name>
-    <url-pattern>/users.html</url-pattern>
-  </servlet-mapping>
-
   <!-- REST -->
   <servlet>
     <servlet-name>customer</servlet-name>

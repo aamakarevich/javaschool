@@ -1,8 +1,6 @@
 package com.tsystems.ecare.controllers;
 
-import com.google.gson.Gson;
 import com.tsystems.ecare.entities.Customer;
-import com.tsystems.ecare.services.CustomerService;
 import com.tsystems.ecare.services.impl.CustomerServiceImpl;
 import com.tsystems.ecare.utils.HashUtil;
 import com.tsystems.ecare.utils.JsonUtil;
@@ -14,10 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author Andrei Makarevich
@@ -52,7 +48,7 @@ public class LoginServlet extends HttpServlet {
 
         if (session.getAttribute("currentuser") != null ) {
 
-            Customer customer = new CustomerServiceImpl().getUserByEmail((String) session.getAttribute("currentuser"));
+            Customer customer = new CustomerServiceImpl().getCustomerByEmail((String) session.getAttribute("currentuser"));
             if (customer == null) {
                 JsonUtil.writeObjectToJson(response, null);
                 return;
