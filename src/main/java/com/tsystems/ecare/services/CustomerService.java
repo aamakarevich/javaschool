@@ -19,8 +19,6 @@ public interface CustomerService {
 
     Customer verifyUser(String email, String password);
 
-    Customer merge(Customer customer);
-
     List<Customer> getCustomersPaged(Integer pageNumber, Integer pageSize);
 
     Long getCustomersCount();

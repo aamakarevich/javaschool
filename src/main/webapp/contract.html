@@ -1,0 +1,153 @@
+<div id="user">
+    <div class="jumbotron">
+        <div class="container">
+            <h1>Customer management
+                <button type="button" class="btn btn-lg btn-default" onclick="usersGoBack();">Go back to customers
+                    list
+                </button>
+            </h1>
+        </div>
+    </div>
+
+    <script>
+        function getCustomer() {
+
+            var customerId = window.localStorage.getItem("customerId");
+
+            if (customerId != 0) {
+                client.customer.read(customerId).done(function (customer) {
+
+                    $("#formHeader").html("Changing customer information");
+
+                    $("#inputCustomerId").val(customer.id);
+                    $("#inputLastName").val(customer.lastName);
+                    $("#inputFirstName").val(customer.firstName);
+                    $("#inputBirthdate").val(customer.birthdate);
+                    $("#inputPassport").val(customer.passport);
+                    $("#inputCity").val(customer.address.city);
+                    $("#inputAddress1").val(customer.address.address1);
+                    $("#inputAddress2").val(customer.address.address2);
+
+                    $("#bReset").hide();
+                    $("#bSubmit").html("Save changes");
+
+                    $("#customerPageCover").fadeOut(1).fadeIn(1000);
+                });
+            }
+            if (customerId == 0) {
+
+                $("#formHeader").html("Adding new customer");
+
+                $("#inputCustomerId").val(0);
+
+                $("#bCancel").hide();
+
+                $("#customerPageCover").fadeOut(1).fadeIn(1000);
+            }
+        }
+
+        function saveCustomer() {
+            if ($("#inputCustomerId").val() == 0) {
+                var customer = {
+                    lastName:   $("#inputLastName").val(),
+                    firstName:  $("#inputFirstName").val(),
+                    birthdate:  $("#inputBirthdate").val(),
+                    passport:   $("#inputPassport").val(),
+                    id:         $("#inputCustomerId").val(),
+                    address:    {
+                        city:       $("#inputCity").val(),
+                        address1:   $("#inputAddress1").val(),
+                        address2:   $("#inputAddress2").val()
+                    }
+                };
+
+                client.customer.create(customer).always(function (result) {
+                    loadPage("users", "users");
+                });
+            } else {
+
+                var customer = {
+                    id:         $("#inputCustomerId").val(),
+                    lastName:   $("#inputLastName").val(),
+                    firstName:  $("#inputFirstName").val(),
+                    birthdate:  $("#inputBirthdate").val(),
+                    passport:   $("#inputPassport").val(),
+                    id:         $("#inputCustomerId").val(),
+                    address:    {
+                        city:       $("#inputCity").val(),
+                        address1:   $("#inputAddress1").val(),
+                        address2:   $("#inputAddress2").val()
+                    }
+                };
+
+                client.customer.update(customer).always(function (result) {
+                    loadPage("users", "users");
+                });
+            }
+
+            return false;
+        }
+
+        function usersGoBack() {
+            loadPage("users", "users");
+        }
+    </script>
+
+    <div class="container" id="customerPageCover" hidden="hidden">
+        <h3 id="formHeader"></h3>
+        <form class="form-horizontal" onsubmit="return saveCustomer();">
+            <input type="hidden" id="inputCustomerId"/>
+            <div class="form-group form-group-lg">
+                <label for="inputLastName" class="col-lg-2 control-label">Last name</label>
+                <div class="col-lg-6">
+                    <input type="text" required maxlength="40" class="form-control" id="inputLastName" placeholder="Ivanov">
+                </div>
+            </div>
+            <div class="form-group form-group-lg">
+                <label for="inputFirstName" class="col-lg-2 control-label">First name</label>
+                <div class="col-lg-6">
+                    <input type="text" required     maxlength="40" class="form-control" id="inputFirstName" placeholder="Ivan">
+                </div>
+            </div>
+            <div class="form-group form-group-lg">
+                <label for="inputBirthdate" class="col-lg-2 control-label">Birthdate</label>
+                <div class="col-lg-6">
+                    <input type="text" id="inputBirthdate" class="form-control" disabled="disabled">
+                </div>
+            </div>
+            <div class="form-group form-group-lg">
+                <label for="inputPassport" class="col-lg-2 control-label">Passport</label>
+                <div class="col-lg-6">
+                    <input type="text" required maxlength="60" class="form-control" id="inputPassport" placeholder="Passport data">
+                </div>
+            </div>
+            <div class="form-group form-group-lg">
+                <label for="inputCity" class="col-lg-2 control-label">City</label>
+                <div class="col-lg-6">
+                    <input type="text" class="form-control" id="inputCity" placeholder="Saint Petersburg" required maxlength="40"></input>
+                </div>
+            </div>
+            <div class="form-group form-group-lg">
+                <label for="inputAddress1" class="col-lg-2 control-label">Address 1</label>
+                <div class="col-lg-6">
+                    <input type="text" class="form-control" id="inputAddress1" placeholder="VO 13th Lane" required maxlength="100"></input>
+                </div>
+            </div>
+            <div class="form-group form-group-lg">
+                <label for="inputAddress2" class="col-lg-2 control-label">Address 2</label>
+                <div class="col-lg-6">
+                    <input type="text" class="form-control" id="inputAddress2" placeholder="Building 14" required maxlength="100"></input>
+                </div>
+            </div>
+            <div class="form-group form-group-lg">
+                <div class="col-lg-offset-2 col-lg-6">
+                    <button type="submit" id="bSubmit" class="btn btn-lg btn-primary">Save new customer</button>
+                    <button type="button" id="bCancel" class="btn btn-lg btn-default" onclick="usersGoBack()">Cancel
+                    </button>
+                    <button type="reset" id="bReset" class="btn btn-lg btn-default">Reset form data</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>

@@ -1,8 +1,7 @@
 <div id="options">
     <div class="jumbotron">
         <div class="container">
-            <h1>Available options
-                <button type="button" id="bOptionsLinks" class="btn btn-primary" style="display: none;" onclick="loadPage('','options');">Edit links between options</button></h1>
+            <h1>Available options</h1>
             <p id="optionsSubHeader">Flexibility is our major! Customise your services!</p>
         </div>
     </div>
@@ -19,8 +18,6 @@
         </div>
     </div>
 
-    <script src="js/jquery.min.js" type="text/javascript"></script>
-    <script src="js/jquery.rest.min.js" type="text/javascript"></script>
     <script>
 
         function getAllOptions() {
@@ -39,9 +36,9 @@
                         if (cuser.suser != null) {
                             optionsRows +=
                                     "<div class=\"btn-group pull-right\">" +
-                                    "<a href=\"#\" class=\"btn btn-info btn-sm\" onclick=\"editOption(" + options[c].id + ");\">Edit option</a>" +
+                                    "<a href=\"#\" class=\"btn btn-info btn-sm\" onclick=\"editOption(" + options[c].id + ");\">Edit</a>" +
                                     "<a href=\"#\" class=\"btn btn-danger btn-sm\" data-toggle=\"modal\" data-target=\"#deleteOptionModal\" " +
-                                    "onclick=\"presetDeleteOptionId(" + options[c].id + ");\" onfocus=\"this.blur()\">Delete option</a></div>";
+                                    "onclick=\"presetDeleteOptionId(" + options[c].id + ");\" onfocus=\"this.blur()\">Delete</a></div>";
                         }
                     }
                     optionsRows += "</div>" +

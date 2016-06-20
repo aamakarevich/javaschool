@@ -16,12 +16,16 @@ public class AddressServiceImpl implements AddressService {
     private AddressDao addressDao = new AddressDaoImpl();
 
     public Address saveNewAddress(Address address) {
+        addressDao.beginTransaction();
         address = addressDao.save(address);
+        addressDao.commitTransaction();
         return address;
     }
 
-    public Address merge(Address address) {
+    public Address updateAddress(Address address) {
+        addressDao.beginTransaction();
         address = addressDao.merge(address);
+        addressDao.commitTransaction();
         return address;
     }
 }

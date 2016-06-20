@@ -9,5 +9,5 @@ public interface AddressService {
 
     Address saveNewAddress(Address address);
 
-    Address merge(Address address);
+    Address updateAddress(Address address);
 }

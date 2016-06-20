@@ -1,5 +1,6 @@
 package com.tsystems.ecare.dao;
 
+import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
 
@@ -7,6 +8,12 @@ import java.util.List;
  * @author Andrei Makarevich
  */
 public interface GenericDao<T, ID extends Serializable> {
+
+    void beginTransaction();
+
+    void commitTransaction();
+
+    void rollbackTransaction();
 
     T save(T entity);
 

@@ -16,24 +16,33 @@ public abstract class GenericDaoImpl <T, ID extends Serializable> implements Gen
 
     protected EntityManager entityManager = PersistenceProvider.getEntityManager();
 
-    public T save(T entity) {
+    @Override
+    public void beginTransaction() {
         entityManager.getTransaction().begin();
-        entityManager.persist(entity);
+    }
+
+    @Override
+    public void commitTransaction() {
         entityManager.getTransaction().commit();
+    }
+
+    @Override
+    public void rollbackTransaction() {
+        entityManager.getTransaction().rollback();
+    }
+
+    public T save(T entity) {
+        entityManager.persist(entity);
         return entity;
     }
 
     public T merge(T entity) {
-        entityManager.getTransaction().begin();
         entity = this.entityManager.merge(entity);
-        entityManager.getTransaction().commit();
         return entity;
     }
 
     public void delete(T entity) {
-        entityManager.getTransaction().begin();
         this.entityManager.remove(entity);
-        entityManager.getTransaction().commit();
     }
 
     public List findAll(Class clazz) {

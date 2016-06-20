@@ -9,8 +9,73 @@
         </div>
     </div>
 
-    <script src="js/jquery.min.js" type="text/javascript"></script>
-    <script src="js/jquery.rest.min.js" type="text/javascript"></script>
+    <div class="container" id="customerPageCover" hidden="hidden">
+        <h3 id="formHeader"></h3>
+        <form class="form-horizontal" onsubmit="return saveCustomer();">
+            <input type="hidden" id="inputCustomerId"/>
+            <div class="form-group form-group-lg">
+                <label for="inputLastName" class="col-lg-2 control-label">Last name</label>
+                <div class="col-lg-6">
+                    <input type="text" required maxlength="40" class="form-control" id="inputLastName"
+                           placeholder="Ivanov">
+                </div>
+            </div>
+            <div class="form-group form-group-lg">
+                <label for="inputFirstName" class="col-lg-2 control-label">First name</label>
+                <div class="col-lg-6">
+                    <input type="text" required maxlength="40" class="form-control" id="inputFirstName"
+                           placeholder="Ivan">
+                </div>
+            </div>
+            <div class="form-group form-group-lg">
+                <label for="inputBirthdate" class="col-lg-2 control-label">Birthdate</label>
+                <div class="col-lg-6">
+                    <input type="text" id="inputBirthdate" class="form-control" disabled="disabled">
+                </div>
+            </div>
+            <div class="form-group form-group-lg">
+                <label for="inputPassport" class="col-lg-2 control-label">Passport</label>
+                <div class="col-lg-6">
+                    <input type="text" required maxlength="60" class="form-control" id="inputPassport"
+                           placeholder="Passport data">
+                </div>
+            </div>
+            <div class="form-group form-group-lg">
+                <label for="inputCity" class="col-lg-2 control-label">City</label>
+                <div class="col-lg-6">
+                    <input type="text" class="form-control" id="inputCity" placeholder="Saint Petersburg" required
+                           maxlength="40"></input>
+                </div>
+            </div>
+            <div class="form-group form-group-lg">
+                <label for="inputAddress1" class="col-lg-2 control-label">Address 1</label>
+                <div class="col-lg-6">
+                    <input type="text" class="form-control" id="inputAddress1" placeholder="VO 13th Lane" required
+                           maxlength="100"></input>
+                </div>
+            </div>
+            <div class="form-group form-group-lg">
+                <label for="inputAddress2" class="col-lg-2 control-label">Address 2</label>
+                <div class="col-lg-6">
+                    <input type="text" class="form-control" id="inputAddress2" placeholder="Building 14" required
+                           maxlength="100"></input>
+                </div>
+            </div>
+            <div class="form-group form-group-lg">
+                <div class="col-lg-offset-2 col-lg-6">
+                    <button type="submit" id="bSubmit" class="btn btn-lg btn-primary">Save new customer</button>
+                    <button type="button" id="bCancel" class="btn btn-lg btn-default" onclick="usersGoBack()">Cancel
+                    </button>
+                    <button type="reset" id="bReset" class="btn btn-lg btn-default">Reset form data</button>
+                </div>
+            </div>
+        </form>
+        <h3 id="subformHeader">Available options</h3>
+        <!--<form class="form-horizontal">-->
+        <!--<input type="date" class="form-control"/>-->
+        <!--</form>-->
+    </div>
+
     <script>
         function getCustomer() {
 
@@ -35,8 +100,7 @@
 
                     $("#customerPageCover").fadeOut(1).fadeIn(1000);
                 });
-            }
-            if (customerId == 0) {
+            } else {
 
                 $("#formHeader").html("Adding new customer");
 
@@ -94,62 +158,4 @@
             loadPage("users", "users");
         }
     </script>
-
-    <div class="container" id="customerPageCover" hidden="hidden">
-        <h3 id="formHeader"></h3>
-        <form class="form-horizontal" onsubmit="return saveCustomer();">
-            <input type="hidden" id="inputCustomerId"/>
-            <div class="form-group form-group-lg">
-                <label for="inputLastName" class="col-lg-2 control-label">Last name</label>
-                <div class="col-lg-6">
-                    <input type="text" required maxlength="40" class="form-control" id="inputLastName" placeholder="Ivanov">
-                </div>
-            </div>
-            <div class="form-group form-group-lg">
-                <label for="inputFirstName" class="col-lg-2 control-label">First name</label>
-                <div class="col-lg-6">
-                    <input type="text" required     maxlength="40" class="form-control" id="inputFirstName" placeholder="Ivan">
-                </div>
-            </div>
-            <div class="form-group form-group-lg">
-                <label for="inputBirthdate" class="col-lg-2 control-label">Birthdate</label>
-                <div class="col-lg-6">
-                    <input type="text" id="inputBirthdate" class="form-control" disabled="disabled">
-                </div>
-            </div>
-            <div class="form-group form-group-lg">
-                <label for="inputPassport" class="col-lg-2 control-label">Passport</label>
-                <div class="col-lg-6">
-                    <input type="text" required maxlength="60" class="form-control" id="inputPassport" placeholder="Passport data">
-                </div>
-            </div>
-            <div class="form-group form-group-lg">
-                <label for="inputCity" class="col-lg-2 control-label">City</label>
-                <div class="col-lg-6">
-                    <input type="text" class="form-control" id="inputCity" placeholder="Saint Petersburg" required maxlength="40"></input>
-                </div>
-            </div>
-            <div class="form-group form-group-lg">
-                <label for="inputAddress1" class="col-lg-2 control-label">Address 1</label>
-                <div class="col-lg-6">
-                    <input type="text" class="form-control" id="inputAddress1" placeholder="VO 13th Lane" required maxlength="100"></input>
-                </div>
-            </div>
-            <div class="form-group form-group-lg">
-                <label for="inputAddress2" class="col-lg-2 control-label">Address 2</label>
-                <div class="col-lg-6">
-                    <input type="text" class="form-control" id="inputAddress2" placeholder="Building 14" required maxlength="100"></input>
-                </div>
-            </div>
-            <div class="form-group form-group-lg">
-                <div class="col-lg-offset-2 col-lg-6">
-                    <button type="submit" id="bSubmit" class="btn btn-lg btn-primary">Save new customer</button>
-                    <button type="button" id="bCancel" class="btn btn-lg btn-default" onclick="usersGoBack()">Cancel
-                    </button>
-                    <button type="reset" id="bReset" class="btn btn-lg btn-default">Reset form data</button>
-                </div>
-            </div>
-        </form>
-    </div>
-
 </div>

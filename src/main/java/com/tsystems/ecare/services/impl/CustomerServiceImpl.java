@@ -23,29 +23,23 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     public Customer getCustomer(Integer id) {
-        Customer customer = customerDao.findById(Customer.class, id);
-        return customer;
+        return customerDao.findById(Customer.class, id);
     }
 
     public Customer getCustomerByEmail(String email) {
-        Customer customer = customerDao.findByEmail(email);
-        return customer;
+        return customerDao.findByEmail(email);
     }
 
     public Customer saveNewCustomer(Customer customer) {
+        customerDao.beginTransaction();
         customer.setPassword(HashUtil.getSHA256(customer.getPassword()));
         customer = customerDao.save(customer);
+        customerDao.commitTransaction();
         return customer;
     }
 
     public Customer verifyUser(String email, String password) {
-        Customer customer = customerDao.findByEmailAndPassword(email, password);
-        return customer;
-    }
-
-    public Customer merge(Customer customer) {
-        customer = customerDao.merge(customer);
-        return customer;
+        return customerDao.findByEmailAndPassword(email, password);
     }
 
     public List<Customer> getCustomersPaged(Integer pageNumber, Integer pageSize) {
@@ -58,7 +52,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer updateCustomer(Customer customer) {
+        customerDao.beginTransaction();
         customer = customerDao.merge(customer);
+        customerDao.commitTransaction();
         return customer;
     }
 }

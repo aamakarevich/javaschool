@@ -17,18 +17,21 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public void deletePlan(Plan plan) {
+        planDao.beginTransaction();
         planDao.delete(plan);
+        planDao.commitTransaction();
     }
 
     @Override
     public Plan getPlan(Integer id) {
-        Plan plan = planDao.findById(Plan.class, id);
-        return plan;
+        return planDao.findById(Plan.class, id);
     }
 
     @Override
     public Plan saveNewPlan(Plan plan) {
+        planDao.beginTransaction();
         plan = planDao.save(plan);
+        planDao.commitTransaction();
         return plan;
     }
 
@@ -49,7 +52,9 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public Plan updatePlan(Plan plan) {
+        planDao.beginTransaction();
         plan = planDao.merge(plan);
+        planDao.commitTransaction();
         return plan;
     }
 }

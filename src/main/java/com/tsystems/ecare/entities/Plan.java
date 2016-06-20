@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,9 +30,6 @@ public class Plan implements Serializable {
     private List<Feature> allowedFeatures;
 
     private transient List<Contract> contracts;
-
-    public Plan() {
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -110,6 +108,9 @@ public class Plan implements Serializable {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "allowed_feature", schema = "ecare", joinColumns = @JoinColumn(name = "plan_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "feature_id", referencedColumnName = "id", nullable = false))
     public List<Feature> getAllowedFeatures() {
+        if(allowedFeatures == null) {
+            allowedFeatures = new ArrayList<>();
+        }
         return allowedFeatures;
     }
 

@@ -16,24 +16,33 @@ public class FeatureServiceImpl implements FeatureService {
 
     @Override
     public void deleteFeature(Feature feature) {
-        for (Feature f : feature.getBlockedFeatures()) {
-            f.getBlockers().remove(feature);
-            featureDao.merge(f);
+
+        try {
+            featureDao.beginTransaction();
+            for (Feature f : feature.getBlockedFeatures()) {
+                f.getBlockers().remove(feature);
+                featureDao.merge(f);
+            }
+            for (Feature f : feature.getBlockers()) {
+                f.getBlockedFeatures().remove(feature);
+                featureDao.merge(f);
+            }
+            for (Feature f : feature.getNeededFeatures()) {
+                f.getDependentFeatures().remove(feature);
+                featureDao.merge(f);
+            }
+            for (Feature f : feature.getDependentFeatures()) {
+                f.getNeededFeatures().remove(feature);
+                featureDao.merge(f);
+            }
+            feature = featureDao.merge(feature);
+            featureDao.delete(feature);
+
+            featureDao.commitTransaction();
+        } catch (Exception ex) {
+
+            featureDao.rollbackTransaction();
         }
-        for (Feature f : feature.getBlockers()) {
-            f.getBlockedFeatures().remove(feature);
-            featureDao.merge(f);
-        }
-        for (Feature f : feature.getNeededFeatures()) {
-            f.getDependentFeatures().remove(feature);
-            featureDao.merge(f);
-        }
-        for (Feature f : feature.getDependentFeatures()) {
-            f.getNeededFeatures().remove(feature);
-            featureDao.merge(f);
-        }
-        feature = featureDao.merge(feature);
-        featureDao.delete(feature);
     }
 
     @Override
@@ -43,19 +52,22 @@ public class FeatureServiceImpl implements FeatureService {
 
     @Override
     public Feature getFeature(Integer id) {
-        Feature feature = featureDao.findById(Feature.class, id);
-        return feature;
+        return featureDao.findById(Feature.class, id);
     }
 
     @Override
     public Feature saveNewFeature(Feature feature) {
+        featureDao.beginTransaction();
         feature = featureDao.save(feature);
+        featureDao.commitTransaction();
         return feature;
     }
 
     @Override
     public Feature updateFeature(Feature feature) {
+        featureDao.beginTransaction();
         feature = featureDao.merge(feature);
+        featureDao.commitTransaction();
         return feature;
     }
 }

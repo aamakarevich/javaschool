@@ -17,7 +17,9 @@ public class RoleServiceImpl implements RoleService {
     }
 
     public Role saveNewRole(Role role) {
+        roleDao.beginTransaction();
         role = roleDao.save(role);
+        roleDao.commitTransaction();
         return role;
     }
 }
