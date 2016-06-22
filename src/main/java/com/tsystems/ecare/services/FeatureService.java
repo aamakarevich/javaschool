@@ -9,6 +9,14 @@ import java.util.List;
  */
 public interface FeatureService {
 
+    void setBlock(Feature f1, Feature f2);
+
+    void deleteBlock(Feature f1, Feature f2);
+
+    void setDependency(Feature dependent, Feature dependence);
+
+    void deleteDependency(Feature dependent, Feature dependence);
+
     void deleteFeature(Feature feature);
 
     List<Feature> getAllFeatures();

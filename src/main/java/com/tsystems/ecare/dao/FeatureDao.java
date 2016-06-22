@@ -7,4 +7,5 @@ import com.tsystems.ecare.entities.Feature;
  */
 public interface FeatureDao extends GenericDao<Feature, Integer> {
 
+
 }

@@ -56,59 +56,58 @@
                 </div>
             </div>
         </form>
-        <h3 id="subformHeader">Available options</h3>
-        <div class="col-lg-offset-2 col-lg-6 col-xs-12">
+        <h3 id="subformHeader">Dependencies</h3>
+        <div id="subformBody" class="col-lg-offset-2 col-lg-6 col-xs-12">
             <table class="table">
                 <thead>
                 <tr>
-                    <th class="col-lg-8 col-xs-6">Option</th>
-                    <th class="col-lg-4 col-xs-6">Availability</th>
+                    <th class="col-lg-6 col-xs-4">Option</th>
+                    <th class="col-lg-3 col-xs-4">Blocker</th>
+                    <th class="col-lg-3 col-xs-4">Prerequisite</th>
                 </tr>
                 </thead>
-                <tbody id="tAvailableOptions">
-                <tr>
-                    <td>Care for eCare</td>
-                    <td>
-                        <button type="button" id="av1" class="btn btn-default btn-block" data-toggle="button" aria-pressed="false"
-                                autocomplete="off" onclick="toggleOption(1)">
-                            Unavailable
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>V for Vendetta</td>
-                    <td>
-                        <button type="button" id="av2" class="btn btn-primary btn-block active" data-toggle="button" aria-pressed="false"
-                                autocomplete="off" onclick="toggleOption(2)">
-                            Available
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
+                <tbody id="tDepenpencies"></tbody>
             </table>
         </div>
     </div>
 
     <script>
+        var blockers;
+        var needs;
         function getOption() {
-
+            blockers = [];
+            needs = [];
             var optionId = window.localStorage.getItem("optionId");
 
             if (optionId != 0) {
                 client.option.read(optionId).done(function (option) {
 
-                    $("#formHeader").html("Changing option information");
+                    client.option.read("?blockers=" + optionId).done(function (options) {
+                        options.forEach(function (o) {
+                            blockers.push(o);
+                        });
 
-                    $("#inputOptionId").val(option.id);
-                    $("#inputTitle").val(option.title);
-                    $("#inputAdditionFee").val(option.additionFee);
-                    $("#inputMonthlyFee").val(option.monthlyFee);
-                    $("#inputDescription").val(option.description);
+                        client.option.read("?needs=" + optionId).done(function (options) {
+                            options.forEach(function (o) {
+                                needs.push(o);
+                            });
 
-                    $("#bReset").hide();
-                    $("#bSubmit").html("Save changes");
+                            getAllOptionsForOption();
 
-                    $("#optionPageCover").fadeOut(1).fadeIn(1000);
+                            $("#formHeader").html("Changing option information");
+
+                            $("#inputOptionId").val(option.id);
+                            $("#inputTitle").val(option.title);
+                            $("#inputAdditionFee").val(option.additionFee);
+                            $("#inputMonthlyFee").val(option.monthlyFee);
+                            $("#inputDescription").val(option.description);
+
+                            $("#bReset").hide();
+                            $("#bSubmit").html("Save changes");
+
+                            $("#optionPageCover").fadeOut(1).fadeIn(1000);
+                        });
+                    });
                 });
             } else {
 
@@ -117,6 +116,8 @@
                 $("#inputOptionId").val(0);
 
                 $("#bCancel").hide();
+                $("#subformHeader").hide();
+                $("#subformBody").hide();
 
                 $("#optionPageCover").fadeOut(1).fadeIn(1000);
             }
@@ -147,7 +148,6 @@
                     loadPage("options", "options");
                 });
             }
-
             return false;
         }
 
@@ -155,26 +155,94 @@
             loadPage("options", "options");
         }
 
-        function toggleOption(id) {
+        function toggleBlock(id) {
 
-            var element = $("#av" + id);
-            if(element.hasClass("active")) {
-                element.removeClass("btn-primary");
+            var element = $("#bl" + id);
+            var second = $("#pr" + id);
+            if (element.hasClass("active")) {
+                client.option.update("?unblock=" + id + "&option=" + $("#inputOptionId").val());
+                element.removeClass("btn-danger");
                 element.addClass("btn-default");
                 element.blur();
-                element.html("Unavailable");
+                element.html("No");
             } else {
+                client.option.update("?block=" + id + "&option=" + $("#inputOptionId").val());
                 element.removeClass("btn-default");
-                element.addClass("btn-primary");
+                element.addClass("btn-danger");
                 element.blur();
-                element.html("Available");
+                element.html("Yes");
+
+                second.removeClass("btn-primary");
+                second.removeClass("active");
+                second.addClass("btn-default");
+                second.blur();
+                second.removeAttr("aria-pressed");
+                second.attr("aria-pressed", false);
+                second.html("No");
             }
         }
 
-        function getAllPlansForOption() {
+        function togglePrer(id) {
 
-            client.plan.read("").done(function (plans) {
+            var element = $("#pr" + id);
+            var second = $("#bl" + id);
+            if (element.hasClass("active")) {
+                client.option.update("?unlink=" + id + "&option=" + $("#inputOptionId").val());
+                element.removeClass("btn-primary");
+                element.addClass("btn-default");
+                element.blur();
+                element.html("No");
+            } else {
+                client.option.update("?link=" + id + "&option=" + $("#inputOptionId").val());
+                element.removeClass("btn-default");
+                element.addClass("btn-primary");
+                element.blur();
+                element.html("Yes");
 
+                second.removeClass("btn-danger");
+                second.removeClass("active")
+                second.addClass("btn-default");
+                second.blur();
+                second.removeAttr("aria-pressed");
+                second.attr("aria-pressed", false);
+                second.html("No");
+            }
+        }
+
+        function getAllOptionsForOption() {
+            client.option.read("").done(function (options) {
+                var optionsContent = "";
+                var optionsContent = "";
+                options.forEach(function (option) {
+                    var id = option.id;
+
+                    if(id == $("#inputOptionId").val()) {
+                        return;
+                    }
+
+                    var bl = blockers.indexOf(id) > -1;
+                    var pr = needs.indexOf(id) > -1;
+
+                    optionsContent += "<tr><td>" + option.title + "</td><td>";
+                    optionsContent += "<button type=\"button\" id=\"bl" + id + "\" ";
+                    optionsContent += "onclick=\"toggleBlock(" + id + ")\" data-toggle=\"button\" autocomplete=\"off\" class=\"btn btn-block ";
+                    if (bl) {
+                        optionsContent += "btn-danger active\" aria-pressed=\"true\">Yes</button>";
+                    } else {
+                        optionsContent += "btn-default\" aria-pressed=\"false\">No</button>";
+                    }
+                    optionsContent += "</td><td>";
+                    optionsContent += "<button type=\"button\" id=\"pr" + id + "\" ";
+                    optionsContent += "onclick=\"togglePrer(" + id + ")\" data-toggle=\"button\" autocomplete=\"off\" class=\"btn btn-block ";
+                    if (pr) {
+                        optionsContent += "btn-primary active\" aria-pressed=\"true\">Yes</button>";
+                    } else {
+                        optionsContent += "btn-default\" aria-pressed=\"false\">No</button>";
+                    }
+
+                    optionsContent += "</td></tr>";
+                });
+                $("#tDepenpencies").html(optionsContent);
             });
         }
     </script>

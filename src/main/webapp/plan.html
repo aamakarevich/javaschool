@@ -46,11 +46,24 @@
                 </div>
             </div>
         </form>
+        <h3 id="subformHeader">Available options</h3>
+        <div id="subformBody" class="col-lg-offset-2 col-lg-6 col-xs-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="col-lg-8 col-xs-6">Option</th>
+                    <th class="col-lg-4 col-xs-6">Availability</th>
+                </tr>
+                </thead>
+                <tbody id="tAvailableOptions"></tbody>
+            </table>
+        </div>
     </div>
 
     <script>
+        var availableOptions;
         function getPlan() {
-
+            availableOptions = [];
             var planId = window.localStorage.getItem("planId");
 
             if (planId != 0) {
@@ -62,6 +75,11 @@
                     $("#inputTitle").val(plan.title);
                     $("#inputMonthlyFee").val(plan.monthlyFee);
                     $("#inputDescription").val(plan.description);
+
+                    plan.allowedFeatures.forEach(function (opt) {
+                        availableOptions.push(opt.id);
+                    });
+                    getAllOptionsForPlan();
 
                     $("#bReset").hide();
                     $("#bSubmit").html("Save changes");
@@ -75,6 +93,8 @@
                 $("#inputPlanId").val(0);
 
                 $("#bCancel").hide();
+                $("#subformHeader").hide();
+                $("#subformBody").hide();
 
                 $("#planPageCover").fadeOut(1).fadeIn(1000);
             }
@@ -109,6 +129,48 @@
 
         function plansGoBack() {
             loadPage("plans", "plans");
+        }
+
+
+        function toggleOption(id) {
+
+            var element = $("#av" + id);
+            if (element.hasClass("active")) {
+                client.plan.update("?unlink=" + id + "&from=" + $("#inputPlanId").val());
+                element.removeClass("btn-primary");
+                element.addClass("btn-default");
+                element.blur();
+                element.html("Unavailable");
+            } else {
+                client.plan.update("?link=" + id + "&to=" + $("#inputPlanId").val());
+                element.removeClass("btn-default");
+                element.addClass("btn-primary");
+                element.blur();
+                element.html("Available");
+            }
+        }
+
+        function getAllOptionsForPlan() {
+
+            client.option.read("").done(function (options) {
+                var optionsContent = "";
+                options.forEach(function (option) {
+                    var id = option.id;
+                    var av = availableOptions.indexOf(id) > -1;
+
+                    optionsContent += "<tr><td>" + option.title + "</td><td>";
+                    optionsContent += "<button type=\"button\" id=\"av" + id + "\" ";
+                    optionsContent += "onclick=\"toggleOption(" + id + ")\" data-toggle=\"button\" autocomplete=\"off\" class=\"btn btn-block ";
+                    if (av) {
+                        optionsContent += "btn-primary active\" aria-pressed=\"true\">Available</button>";
+                    } else {
+                        optionsContent += "btn-default\" aria-pressed=\"false\">Unavailable</button>";
+                    }
+
+                    optionsContent += "</td></tr>";
+                });
+                $("#tAvailableOptions").html(optionsContent);
+            });
         }
     </script>
 </div>

@@ -30,7 +30,7 @@
             <div class="form-group form-group-lg">
                 <label for="inputBirthdate" class="col-lg-2 control-label">Birthdate</label>
                 <div class="col-lg-6">
-                    <input type="text" id="inputBirthdate" class="form-control" disabled="disabled">
+                    <input type="text" id="inputBirthdate" class="form-control">
                 </div>
             </div>
             <div class="form-group form-group-lg">
@@ -63,17 +63,22 @@
             </div>
             <div class="form-group form-group-lg">
                 <div class="col-lg-offset-2 col-lg-6">
-                    <button type="submit" id="bSubmit" class="btn btn-lg btn-primary">Save new customer</button>
-                    <button type="button" id="bCancel" class="btn btn-lg btn-default" onclick="usersGoBack()">Cancel
+                    <button type="submit" id="bSubmit" class="btn btn-lg btn-primary col-lg-12 col-xs-12">Save new
+                        customer
                     </button>
-                    <button type="reset" id="bReset" class="btn btn-lg btn-default">Reset form data</button>
+                    <button type="button" id="bCancel" class="btn btn-lg btn-default col-lg-12 col-xs-12"
+                            onclick="usersGoBack()">Cancel
+                    </button>
+                    <button type="reset" id="bReset" class="btn btn-lg btn-default col-lg-12 col-xs-12">Reset form
+                        data
+                    </button>
                 </div>
             </div>
         </form>
-        <h3 id="subformHeader">Available options</h3>
-        <!--<form class="form-horizontal">-->
-        <!--<input type="date" class="form-control"/>-->
-        <!--</form>-->
+        <h3 id="subformHeader">Contracts</h3>
+        <form class="form-horizontal">
+            <!--<input type="date" class="form-control"/>-->
+        </form>
     </div>
 
     <script>
@@ -89,11 +94,18 @@
                     $("#inputCustomerId").val(customer.id);
                     $("#inputLastName").val(customer.lastName);
                     $("#inputFirstName").val(customer.firstName);
-                    $("#inputBirthdate").val(customer.birthdate);
                     $("#inputPassport").val(customer.passport);
                     $("#inputCity").val(customer.address.city);
                     $("#inputAddress1").val(customer.address.address1);
                     $("#inputAddress2").val(customer.address.address2);
+
+                    var date = new Date(customer.birthdate);
+                    $("#inputBirthdate").datepicker({
+                                autoclose: true,
+                                defaultViewDate: {year: date.getFullYear(), month: date.getMonth(), day: date.getDate()}
+                            }
+                    );
+                    $("#inputBirthdate").val(getPrettyDate(customer.birthdate));
 
                     $("#bReset").hide();
                     $("#bSubmit").html("Save changes");
@@ -103,6 +115,8 @@
             } else {
 
                 $("#formHeader").html("Adding new customer");
+
+                $("#inputBirthdate").datepicker({autoclose: true});
 
                 $("#inputCustomerId").val(0);
 
@@ -115,15 +129,15 @@
         function saveCustomer() {
             if ($("#inputCustomerId").val() == 0) {
                 var customer = {
-                    lastName:   $("#inputLastName").val(),
-                    firstName:  $("#inputFirstName").val(),
-                    birthdate:  $("#inputBirthdate").val(),
-                    passport:   $("#inputPassport").val(),
-                    id:         $("#inputCustomerId").val(),
-                    address:    {
-                        city:       $("#inputCity").val(),
-                        address1:   $("#inputAddress1").val(),
-                        address2:   $("#inputAddress2").val()
+                    lastName: $("#inputLastName").val(),
+                    firstName: $("#inputFirstName").val(),
+                    birthdate: dateFromPretty($("#inputBirthdate").val()),
+                    passport: $("#inputPassport").val(),
+                    id: $("#inputCustomerId").val(),
+                    address: {
+                        city: $("#inputCity").val(),
+                        address1: $("#inputAddress1").val(),
+                        address2: $("#inputAddress2").val()
                     }
                 };
 
@@ -133,16 +147,16 @@
             } else {
 
                 var customer = {
-                    id:         $("#inputCustomerId").val(),
-                    lastName:   $("#inputLastName").val(),
-                    firstName:  $("#inputFirstName").val(),
-                    birthdate:  $("#inputBirthdate").val(),
-                    passport:   $("#inputPassport").val(),
-                    id:         $("#inputCustomerId").val(),
-                    address:    {
-                        city:       $("#inputCity").val(),
-                        address1:   $("#inputAddress1").val(),
-                        address2:   $("#inputAddress2").val()
+                    id: $("#inputCustomerId").val(),
+                    lastName: $("#inputLastName").val(),
+                    firstName: $("#inputFirstName").val(),
+                    birthdate: dateFromPretty($("#inputBirthdate").val()),
+                    passport: $("#inputPassport").val(),
+                    id: $("#inputCustomerId").val(),
+                    address: {
+                        city: $("#inputCity").val(),
+                        address1: $("#inputAddress1").val(),
+                        address2: $("#inputAddress2").val()
                     }
                 };
 

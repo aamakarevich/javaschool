@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>eCare mobile</title>
 
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
     <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/bootstrap-datepicker3.min.css">
 
     <link rel="import" href="home.html">
     <link rel="import" href="plan.html">
@@ -16,7 +19,7 @@
     <link rel="import" href="options.html">
     <link rel="import" href="user.html">
     <link rel="import" href="users.html">
-    <link rel="import" href="contract.html">
+    <link rel="import" href="contract1.html">
 </head>
 
 <body>
@@ -25,6 +28,7 @@
 <script src="js/jquery.cookie.js" type="text/javascript"></script>
 <script src="js/jquery.rest.min.js" type="text/javascript"></script>
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
+<script src="js/bootstrap-datepicker.min.js" type="text/javascript"></script>
 
 <script>
     /* Set up REST-client */
@@ -70,6 +74,7 @@
                 $("#nav_username").hide();
                 $("#nav_logout").hide();
                 $("#nav_users").hide();
+                $("#nav_basket").hide();
                 $("#nav_login").show();
             } else {
                 $("#userData").empty();
@@ -82,6 +87,7 @@
                 }
                 if (cuser.suser != null) {
                     $("#nav_users").show();
+                    $("#nav_basket").show();
                 }
                 $("#nav_fullname").empty();
                 $("#nav_fullname").append(customer.username);
@@ -114,6 +120,7 @@
                     <li id="nav_plans" onclick="loadPage('plans', 'plans')"><a href="#">Plans</a></li>
                     <li id="nav_options" onclick="loadPage('options', 'options')"><a href="#">Options</a></li>
                     <li id="nav_users" onclick="loadPage('users', 'users')"><a href="#">Customers</a></li>
+                    <li id="nav_basket"><a href="#" onfocus="this.blur()"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"/></a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right" id="right_nav">
                     <li id="nav_login"><a href="#" data-toggle="modal" data-target="#loginModal" onfocus="this.blur()">Sign
@@ -161,6 +168,21 @@
 <script>
     $(document).ready(function () {
         startUp();
+
+        $(".numbersonly").keydown(function(event) {
+            // Allow special chars + arrows
+            if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9
+                    || event.keyCode == 27 || event.keyCode == 13
+                    || (event.keyCode == 65 && event.ctrlKey === true)
+                    || (event.keyCode >= 35 && event.keyCode <= 39)){
+                return;
+            }else {
+                // If it's not a number stop the keypress
+                if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
+                    event.preventDefault();
+                }
+            }
+        });
     });
 
     function startUp() {
@@ -171,7 +193,7 @@
         if (currentpage == "option") currentpagen = "options";
         if (currentpage == "plan") currentpagen = "plans";
         if (currentpage == "user") currentpagen = "users";
-        if (currentpage == "contract") currentpagen = "users";
+        if (currentpage == "contract1") currentpagen = "basket";
 
         loadPage(currentpage, currentpagen);
 
@@ -215,8 +237,8 @@
         if (page == "option") {
             getOption();
         }
-        if (page == "contract") {
-            getContract();
+        if (page == "contract1") {
+            getContract1();
         }
     }
 
@@ -256,10 +278,27 @@
         var date = new Date(longdate);
         var day = date.getDate();
         var month = date.getMonth() + 1;
-        var year = date.getYear();
+        var year = date.getFullYear();
         day = day < 10 ? "0" + day : day;
         month = month < 10 ? "0" + month : month;
         return month + "/" + day + "/" + year;
+    }
+
+    function dateFromPretty(prettydate) {
+        var date = new Date();
+        var strings = prettydate.split("/");
+        date.setDate(strings[1]);
+        date.setMonth(strings[0] - 1);
+        date.setFullYear(strings[2]);
+        return date;
+    }
+
+    function setLs(name, value) {
+        window.localStorage.setItem(name, value);
+    }
+
+    function getLs(name) {
+        return window.localStorage.getItem(name);
     }
 </script>
 <script src="js/validator.js" type="text/javascript"></script>

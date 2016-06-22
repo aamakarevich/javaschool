@@ -19,7 +19,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void deleteCustomer(Customer customer) {
+        customerDao.beginTransaction();
         customerDao.delete(customer);
+        customerDao.commitTransaction();
     }
 
     public Customer getCustomer(Integer id) {

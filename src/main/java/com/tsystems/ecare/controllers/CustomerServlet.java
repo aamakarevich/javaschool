@@ -76,8 +76,7 @@ public class CustomerServlet extends HttpServlet {
         customer.setPassport(gotCustomer.getPassport());
         customer.setAddress(gotCustomer.getAddress());
 
-        CustomerService customerService = new CustomerServiceImpl();
-        customerService.updateCustomer(customer);
+        new CustomerServiceImpl().updateCustomer(customer);
 
         resp.setStatus(HttpServletResponse.SC_OK);
     }

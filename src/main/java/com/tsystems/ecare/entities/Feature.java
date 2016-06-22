@@ -29,14 +29,14 @@ public class Feature implements Serializable {
     private BigDecimal monthlyFee;
     private transient List<Feature> blockers;
     private transient List<Feature> blockedFeatures;
-    private List<Feature> neededFeatures;
+    private transient List<Feature> neededFeatures;
     private transient List<Feature> dependentFeatures;
 
     private transient List<Contract> contracts;
     private transient List<Plan> plans;
 
     public Feature() {
-        blockers = new ArrayList<>();
+
         blockedFeatures = new ArrayList<>();
         neededFeatures = new ArrayList<>();
         dependentFeatures = new ArrayList<>();
@@ -122,6 +122,9 @@ public class Feature implements Serializable {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "block", schema = "ecare", joinColumns = @JoinColumn(name = "blocked", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "blocker", referencedColumnName = "id", nullable = false))
     public List<Feature> getBlockers() {
+        if(blockers == null) {
+            blockers = new ArrayList<>();
+        }
         return blockers;
     }
 
@@ -131,6 +134,9 @@ public class Feature implements Serializable {
 
     @ManyToMany(mappedBy = "blockers", fetch = FetchType.LAZY)
     public List<Feature> getBlockedFeatures() {
+        if(blockedFeatures == null) {
+            blockedFeatures = new ArrayList<>();
+        }
         return blockedFeatures;
     }
 
@@ -141,6 +147,9 @@ public class Feature implements Serializable {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "need", schema = "ecare", joinColumns = @JoinColumn(name = "dependent", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "needed", referencedColumnName = "id", nullable = false))
     public List<Feature> getNeededFeatures() {
+        if(neededFeatures == null) {
+            neededFeatures = new ArrayList<>();
+        }
         return neededFeatures;
     }
 
@@ -150,6 +159,9 @@ public class Feature implements Serializable {
 
     @ManyToMany(mappedBy = "neededFeatures", fetch = FetchType.LAZY)
     public List<Feature> getDependentFeatures() {
+        if(dependentFeatures == null) {
+            dependentFeatures = new ArrayList<>();
+        }
         return dependentFeatures;
     }
 
