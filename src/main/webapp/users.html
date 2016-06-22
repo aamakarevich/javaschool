@@ -149,10 +149,15 @@
                                         "<a href=\"#\" class=\"btn btn-danger btn-sm\" data-toggle=\"modal\" data-target=\"#deleteCustomerModal\" onclick=\"presetDeleteCustomerId(" + customers[c].id + ");\" onfocus=\"this.blur()\">Delete</a></div>";
                             }
                         }
-                        customersRows += "</div><br />" +
+                        contractsStr = "";
+                        customers[c].contracts.forEach(function (contract) {
+                            contractsStr += "<a href=\"#\" class=\"btn btn-primary btn-xs\" onclick=\"editContract(" + customers[c].id + "," + contract.id + ");\">8" + contract.number + "</a> ";
+                        });
+                        customersRows += "</div>" +
                                 "<div class=\"panel-body\">" +
                                 "<strong>BIRTHDATE</strong>: " + getPrettyDate(customers[c].birthdate) + "<br />" +
-                                "<strong>ADDRESS</strong>: " + customers[c].address.city + ", " + customers[c].address.address1 + " " + customers[c].address.address2 +
+                                "<strong>ADDRESS</strong>: " + customers[c].address.city + ", " + customers[c].address.address1 + " " + customers[c].address.address2 + "<br />" +
+                                "<strong>CONTRACTS</strong>: " + contractsStr +
                                 "</div></div>";
                     }
 
@@ -187,17 +192,29 @@
         </div>
     </div>
     <script>
-        function presetDeleteCustomerId(id) {
-            $("#deleteCustomerId").val(id);
+        function addContract(id) {
+            clearBasket();
+            setLs(BASKET_CUSTOMER, id);
+            loadPage('contract1', 'basket');
+        }
+        function editContract(id, contractId) {
+            clearBasket();
+            setLs(BASKET_CUSTOMER, id);
+            client.contract.read(contractId).done(function (contract) {
+                setLs(BASKET_CONTRACT, contract.id);
+                setLs(BASKET_NUMBER, contract.number.substr(3));
+                setLs(BASKET_PLAN, contract.plan.id);
+                var fIds = [];
+                contract.activeFeatures.forEach(function (feature) {
+                    fIds.push(feature.id);
+                })
+                setLsArray(BASKET_OPTIONS, fIds);
+                loadPage('contract1', 'basket');
+            });
         }
         function addCustomer() {
             window.localStorage.setItem("customerId", 0);
             loadPage('user', 'users');
-
-        }
-        function addContract(id) {
-            window.localStorage.setItem("basketCustomerId", id);
-            loadPage('contract1', 'basket');
 
         }
         function editCustomer(id) {
@@ -209,6 +226,9 @@
                 $("#deleteCustomerModal").modal("hide");
                 getPagedCustomers();
             });
+        }
+        function presetDeleteCustomerId(id) {
+            $("#deleteCustomerId").val(id);
         }
         function closeDeleteCustomerModal() {
             $("#deleteCustomerModal").modal("hide");

@@ -1,0 +1,61 @@
+<div id="profile">
+    <div class="jumbotron">
+        <div class="container">
+            <h1>Customer profile</h1>
+            <p></p>
+        </div>
+    </div>
+
+    <div class="container" id="profilePageCover" hidden="hidden">
+        <h3 id="profileHeader">Customer information</h3>
+        <div id="profileBody" class="col-lg-offset-1 col-lg-4 col-xs-12 input-group">
+            <table class="table">
+                <tbody id="tProfile"></tbody>
+            </table>
+        </div>
+        <h3 id="contractsHeader">Contracts</h3>
+        <div id="profileBody" class="col-lg-offset-1 col-lg-4 col-xs-12 input-group">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Phone number</th>
+                        <th>Plan</th>
+                        <th>State</th>
+                    </tr>
+                </thead>
+                <tbody id="tContracts"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function loadProfile() {
+
+            client.customer.read(cuser.id).done(function (customer) {
+
+                var profileBody = "";
+                profileBody += "<tr><td><strong>Name</strong></td><td>" + customer.lastName + " " + customer.firstName + "</td></tr>";
+                profileBody += "<tr><td><strong>E-mail</strong></td><td>" + customer.email + "</td></tr>";
+                profileBody += "<tr><td><strong>Birthdate</strong></td><td>" + getPrettyDate(customer.birthdate) + "</td></tr>";
+                profileBody += "<tr><td><strong>Passport</strong></td><td>" + customer.passport + "</td></tr>";
+                profileBody += "<tr><td><strong>Address</strong></td><td>" + customer.address.city + ", " + customer.address.address1 + " " + customer.address.address2 + "</td></tr>";
+
+                $("#tProfile").html(profileBody);
+
+                var contractsBody = "";
+                customer.contracts.forEach(function (contract) {
+                    var strNumber = contract.number.substr(3);
+                    strNumber = strNumber.substr(0, 5) + "-" + strNumber.substr(5);
+                    strNumber = strNumber.substr(0, 3) + "-" + strNumber.substr(3);
+                    strNumber = "8 (999) " + strNumber;
+                    contractsBody += "<tr><td><a href='#' onclick='editContract(" + customer.id + "," + contract.id + ")'>" + strNumber + "</a></td>" +
+                            "<td>" + contract.plan.title + "</td><td>" + contract.numberLock + "</td></tr>";
+                });
+
+                $("#tContracts").html(contractsBody);
+
+                $("#profilePageCover").fadeOut(1).fadeIn(1000);
+            });
+        }
+    </script>
+</div>

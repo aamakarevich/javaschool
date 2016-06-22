@@ -6,8 +6,8 @@
     </div>
 
     <div class="container" id="contract1PageCover" hidden="hidden">
-        <h3 id="formHeader">Choose phone number and plan for contract</h3>
-        <form class="form-horizontal" onsubmit="return contractPage(id);">
+        <h3 id="formHeader"></h3>
+        <form class="form-horizontal" onsubmit="return contract1Proceed();">
             <div class="input-group col-lg-4">
                 <div class="input-group-addon" id="addonNumber">8 (999)</div>
                 <input type="text" required minlength="7" maxlength="7" class="form-control numbersonly"
@@ -36,11 +36,21 @@
     <script>
         function getContract1() {
 
-            var lsNumberId = getLs("basketNumber");
-            if (lsNumberId == null) {
+            var lsNumberId = getLs(BASKET_NUMBER);
+            var lsPlanId = getLs(BASKET_PLAN);
 
+            $("#inputNumber").val(lsNumberId == null ? "" : lsNumberId);
+
+            var basketContract = getLs(BASKET_CONTRACT);
+            if (basketContract == null) {
+                $("#formHeader").html("Choose phone number and plan for contract");
             } else {
+                $("#formHeader").html("Choose new plan for contract");
+                $("#inputNumber").prop("disabled", true);
+            }
 
+            if(lsPlanId == null) {
+                $("#bSubmit").prop("disabled", true);
             }
 
             getPlansForContract();
@@ -54,7 +64,7 @@
                 plans.forEach(function (plan) {
 
                     var id = plan.id;
-                    var lsId = getLs("basketPlan");
+                    var lsId = getLs(BASKET_PLAN);
 
                     plansContent += "<tr><td>" + plan.title + "</td><td>";
                     plansContent += "<button type=\"button\" id=\"pl" + id + "\" ";
@@ -73,8 +83,11 @@
 
         function togglePlan(id) {
             var element = $("#pl" + id);
+            removeLs(BASKET_OPTIONS);
             if (element.hasClass("active")) {
-                setLs("basketPlan", null);
+                removeLs(BASKET_PLAN);
+
+                $("#bSubmit").prop("disabled", true);
 
                 element.removeClass("btn-primary");
                 element.addClass("btn-default");
@@ -82,7 +95,9 @@
                 element.html("Choose");
 
             } else {
-                setLs("basketPlan", id);
+                setLs(BASKET_PLAN, id);
+
+                $("#bSubmit").removeAttr("disabled");
 
                 var ap = $("#tAllPlans button");
                 ap.removeClass("btn-primary");
@@ -97,6 +112,12 @@
                 element.blur();
                 element.html("Chosen");
             }
+        }
+
+        function contract1Proceed() {
+            setLs(BASKET_NUMBER, $("#inputNumber").val());
+            loadPage("contract2", "basket");
+            return false;
         }
     </script>
 </div>

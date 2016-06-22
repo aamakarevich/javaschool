@@ -1,6 +1,7 @@
 package com.tsystems.ecare.entities;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -26,11 +27,11 @@ public class Contract implements Serializable {
     private Integer id;
     private String number;
     private Lock numberLock;
-    private Customer customer;
+    private transient Customer customer;
     private Plan plan;
     private List<Feature> activeFeatures;
 
-    enum Lock {
+    public enum Lock {
         UNLOCKED,
         USERLOCKED,
         LOCKED
@@ -102,7 +103,7 @@ public class Contract implements Serializable {
         this.customer = customer;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "plan_id", referencedColumnName = "id", nullable = false)
     public Plan getPlan() {
         return plan;

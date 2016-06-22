@@ -1,0 +1,209 @@
+<div id="contract2">
+    <div class="jumbotron">
+        <div class="container">
+            <h1>Contract management</h1>
+        </div>
+    </div>
+
+    <div class="container" id="contract2PageCover" hidden="hidden">
+        <h3 id="formHeader">Choose options applied to contract</h3>
+        <h4 id="formSubheaderNumber"></h4>
+        <h4 id="formSubheader"></h4>
+        <form class="form-horizontal" onsubmit="return contract2Proceed();">
+            <div class="input-group col-lg-4 col-xs-12">
+                <div id="subformBody">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th class="col-lg-8 col-xs-6">Option</th>
+                            <th class="col-lg-4 col-xs-6"></th>
+                        </tr>
+                        </thead>
+                        <tbody id="tActiveOptions"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="input-group col-lg-4 col-xs-12">
+                <button type="submit" id="bSubmit" class="btn btn-primary btn-block"></button>
+            </div>
+        </form>
+
+    </div>
+
+    <script>
+        var firstLoad;
+        function getContract2() {
+
+            firstLoad = true;
+
+            var basketContract = getLs(BASKET_CONTRACT);
+            if (basketContract == null) {
+                $("#bSubmit").html("Create contract with these terms");
+            } else {
+                $("#bSubmit").html("Update contract with these terms");
+            }
+
+            var strNumber = getLs(BASKET_NUMBER);
+            var strNumber = strNumber.substr(0, 5) + "-" + strNumber.substr(5);
+            var strNumber = strNumber.substr(0, 3) + "-" + strNumber.substr(3);
+            $("#formSubheaderNumber").html("Number is 8 (999) " + strNumber);
+
+            var plan = getLs(BASKET_PLAN);
+            client.plan.read(plan).done(function (cp) {
+                $("#formSubheader").html("Chosen plan is \"" + cp.title + "\" " +
+                        "<button type=\"button\" id=\"bChange\" class=\"btn btn-xs btn-primary\" onclick=\"loadPage('contract1', 'basket');\">Change</button>");
+            });
+
+            getAvailablePlansForContract();
+        }
+
+        function getAvailablePlansForContract() {
+            var plan = getLs(BASKET_PLAN);
+            var opts = getLsArray(BASKET_OPTIONS);
+
+            var optsParam = "";
+            if(opts != null) {
+                opts.forEach(function (opt) {
+                    optsParam += opt + " ";
+                });
+                optsParam = optsParam.trim();
+                optsParam = optsParam.split(" ").join(",");
+            }
+
+            var optionsContent = "";
+
+            client.option.read("?available=" + optsParam + "&for=" + plan).done(function (availableOptions) {
+                client.option.read("?listed=" + optsParam).done(function (options) {
+                    if (options != null) {
+                        options.forEach(function (option) {
+                            optionsContent += "<tr><td>" + option.title + "</td><td>";
+                            optionsContent += "<button type=\"button\" id=\"op" + option.id + "\" ";
+                            optionsContent += "onclick=\"toggleActiveOption(" + option.id + ")\" data-toggle=\"button\" autocomplete=\"off\" class=\"btn btn-block ";
+                            optionsContent += "btn-primary active\" aria-pressed=\"true\">Active</button>";
+                            optionsContent += "</td></tr>";
+                        });
+                    }
+
+                    client.option.read("").done(function (allOptions) {
+                        if (allOptions != null) {
+                            allOptions.forEach(function (option) {
+
+                                var id = option.id;
+                                var av = ~availableOptions.indexOf(id);
+
+                                if(!~opts.indexOf(id)) {
+                                    optionsContent += "<tr><td>" + option.title + "</td><td>";
+                                    optionsContent += "<button type=\"button\" id=\"op" + option.id + "\" ";
+                                    optionsContent += "onclick=\"toggleActiveOption(" + option.id + ")\" data-toggle=\"button\" autocomplete=\"off\" class=\"btn btn-block ";
+                                    if (av) {
+                                        optionsContent += "btn-default\" aria-pressed=\"false\">Activate</button>";
+                                    } else {
+                                        optionsContent += "btn-default\" aria-pressed=\"false\" disabled=\"disabled\">Blocked</button>";
+                                    }
+                                    optionsContent += "</td></tr>";
+                                }
+                            });
+                        }
+                        $("#tActiveOptions").html(optionsContent);
+
+                        if(firstLoad) {
+                            firstLoad = false;
+                            $("#contract2PageCover").fadeOut(1).fadeIn(1000);
+                        }
+                    });
+                });
+            });
+        }
+
+        function toggleActiveOption(id) {
+            var element = $("#op" + id);
+            if (element.hasClass("active")) {
+                var options = getLsArray(BASKET_OPTIONS);
+                var position = options.indexOf(id);
+                if(~position) options.splice(position, 1);
+                setLsArray(BASKET_OPTIONS, options);
+
+                element.removeClass("btn-primary");
+                element.addClass("btn-default");
+                element.blur();
+                element.html("Activate");
+
+            } else {
+                var options = getLsArray(BASKET_OPTIONS);
+                options.push(id);
+                setLsArray(BASKET_OPTIONS, options);
+
+                var ap = $("#tAllPlans button");
+                ap.removeClass("btn-primary");
+                ap.removeClass("active");
+                ap.addClass("btn-default");
+                ap.html("Choose");
+                ap.removeAttr("aria-pressed");
+                ap.attr("aria-pressed", false);
+
+                element.removeClass("btn-default");
+                element.addClass("btn-primary");
+                element.blur();
+                element.html("Active");
+            }
+            getAvailablePlansForContract();
+        }
+
+        function contract2Proceed() {
+
+            var contractId = getLs(BASKET_CONTRACT);
+
+            var features = [];
+            getLsArray(BASKET_OPTIONS).forEach(function (op) {
+                var feature = {};
+                feature.id = op;
+                feature.title = "mock";
+                features.push(feature);
+            });
+
+            if (contractId == null) {
+
+                var opts = getLsArray(BASKET_OPTIONS);
+
+                var optsParam = "";
+                if(opts != null) {
+                    opts.forEach(function (opt) {
+                        optsParam += opt + " ";
+                    });
+                    optsParam = optsParam.trim();
+                    optsParam = optsParam.split(" ").join(",");
+                }
+
+                var params = "?";
+                params += "create=999" + getLs(BASKET_NUMBER);
+                params += "&cid=" + getLs(BASKET_CUSTOMER);
+                params += "&pid=" + getLs(BASKET_PLAN);
+                params += "&opts=" + optsParam;
+
+                client.contract.read(params).always(function () {
+                    clearBasket();
+                    loadPage("users", "users");
+                });
+            } else {
+
+                var contract = {
+                    id: getLs(BASKET_CONTRACT),
+                    number: "999" + getLs(BASKET_NUMBER),
+                    customer: {
+                        id: getLs(BASKET_CUSTOMER)
+                    },
+                    plan: {
+                        id: getLs(BASKET_PLAN)
+                    },
+                    activeFeatures: features
+                };
+
+                client.contract.update(contract).always(function () {
+
+                    clearBasket();
+                    loadPage("users", "users");
+                });
+            }
+        }
+    </script>
+</div>

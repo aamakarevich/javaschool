@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,6 +51,34 @@ public class FeatureServlet extends HttpServlet {
             List<Integer> ids = new ArrayList<>();
             feature.getNeededFeatures().forEach(b -> ids.add(b.getId()));
             JsonUtil.writeObjectToJson(resp, ids);
+            return;
+        }
+
+        if (req.getParameter("listed") != null) {
+            List<Integer> ids = new ArrayList<>();
+            if (req.getParameter("listed").length() > 0) {
+                Arrays.stream(req.getParameter("listed").split(","))
+                        .mapToInt(Integer::parseInt)
+                        .forEach(ids::add);
+            }
+            JsonUtil.writeObjectToJson(resp, new FeatureServiceImpl().getListedFeatures(ids));
+            return;
+        }
+
+        String available = req.getParameter("available");
+        String planId = req.getParameter("for");
+        if (available != null && planId != null) {
+            List<Integer> ids = new ArrayList<>();
+            if (available.length() > 0) {
+                Arrays.stream(available.split(","))
+                        .mapToInt(Integer::parseInt)
+                        .forEach(ids::add);
+            }
+            List<Integer> availableIds = new ArrayList<>();
+            new FeatureServiceImpl()
+                    .getAvailableFeatures(ids, Integer.parseInt(planId))
+                    .forEach(b -> availableIds.add(b.getId()));
+            JsonUtil.writeObjectToJson(resp, availableIds);
             return;
         }
 

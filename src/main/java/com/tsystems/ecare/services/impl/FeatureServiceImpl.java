@@ -3,8 +3,11 @@ package com.tsystems.ecare.services.impl;
 import com.tsystems.ecare.dao.FeatureDao;
 import com.tsystems.ecare.dao.impl.FeatureDaoImpl;
 import com.tsystems.ecare.entities.Feature;
+import com.tsystems.ecare.entities.Plan;
 import com.tsystems.ecare.services.FeatureService;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -132,6 +135,9 @@ public class FeatureServiceImpl implements FeatureService {
                 f.getNeededFeatures().remove(feature);
                 featureDao.merge(f);
             }
+            for (Plan p : feature.getPlans()) {
+                p.getAllowedFeatures().remove(feature);
+            }
             feature = featureDao.merge(feature);
             featureDao.delete(feature);
 
@@ -140,6 +146,38 @@ public class FeatureServiceImpl implements FeatureService {
 
             featureDao.rollbackTransaction();
         }
+    }
+
+    @Override
+    public List<Feature> getAvailableFeatures(List<Integer> ids, Integer planId) {
+
+        List<Feature> features = getListedFeatures(ids);
+        if(features == null) {
+            features = new ArrayList<>();
+        }
+        Plan plan = new PlanServiceImpl().getPlan(planId);
+        List<Feature> avaiableFeatures = plan.getAllowedFeatures();
+        Iterator<Feature> iterator = avaiableFeatures.iterator();
+        while (iterator.hasNext()) {
+            Feature af = iterator.next();
+            if (features.contains(af)
+                    || !features.containsAll(af.getNeededFeatures())) {
+                iterator.remove();
+                continue;
+            }
+            for (Feature feature : features) {
+                if (feature.getBlockedFeatures().contains(af)) {
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
+        return avaiableFeatures;
+    }
+
+    @Override
+    public List<Feature> getListedFeatures(List<Integer> ids) {
+        return featureDao.getListed(ids);
     }
 
     @Override
@@ -163,7 +201,12 @@ public class FeatureServiceImpl implements FeatureService {
     @Override
     public Feature updateFeature(Feature feature) {
         featureDao.beginTransaction();
-        feature = featureDao.merge(feature);
+        Feature oldFeature = getFeature(feature.getId());
+        oldFeature.setTitle(feature.getTitle());
+        oldFeature.setMonthlyFee(feature.getMonthlyFee());
+        oldFeature.setAdditionFee(feature.getAdditionFee());
+        oldFeature.setDescription(feature.getDescription());
+        feature = featureDao.merge(oldFeature);
         featureDao.commitTransaction();
         return feature;
     }

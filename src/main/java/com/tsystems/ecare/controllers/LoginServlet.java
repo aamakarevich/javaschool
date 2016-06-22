@@ -54,6 +54,7 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
             final Map<String, String> userData = new HashMap<String, String>();
+            userData.put("id", customer.getId().toString());
             userData.put("email", customer.getEmail());
             userData.put("username", customer.getFirstName() + " " + customer.getLastName());
             customer.getRoles().forEach(r -> userData.put(r.getTitle(), String.valueOf(true)));
@@ -68,6 +69,7 @@ public class LoginServlet extends HttpServlet {
             if (customer != null) {
                 request.getSession(true).setAttribute("currentuser", customer.getEmail());
                 Map<String, String> userData = new HashMap<String, String>();
+                userData.put("id", customer.getId().toString());
                 userData.put("email", customer.getEmail());
                 userData.put("username", customer.getFirstName() + " " + customer.getLastName());
                 JsonUtil.writeObjectToJson(response, userData);

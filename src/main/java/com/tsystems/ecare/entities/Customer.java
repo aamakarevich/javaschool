@@ -151,7 +151,7 @@ public class Customer implements Serializable {
         return result;
     }
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public List<Contract> getContracts() {
         return contracts;
     }

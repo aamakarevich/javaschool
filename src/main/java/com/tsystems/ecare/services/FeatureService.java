@@ -19,6 +19,10 @@ public interface FeatureService {
 
     void deleteFeature(Feature feature);
 
+    List<Feature> getAvailableFeatures(List<Integer> ids, Integer planId);
+
+    List<Feature> getListedFeatures(List<Integer> ids);
+
     List<Feature> getAllFeatures();
 
     Feature getFeature(Integer id);

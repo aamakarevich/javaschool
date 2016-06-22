@@ -34,7 +34,20 @@ public class CustomerServiceImpl implements CustomerService {
 
     public Customer saveNewCustomer(Customer customer) {
         customerDao.beginTransaction();
-        customer.setPassword(HashUtil.getSHA256(customer.getPassword()));
+
+        customer.setId(null);
+        customer.setPassword(HashUtil.getSHA256(customer.getLastName()));
+        String lastName = customer.getLastName().toLowerCase();
+        lastName = lastName.length() > 7 ? lastName.substring(0, 7) : lastName;
+        String uniqueEmail = customer.getFirstName().toLowerCase().substring(0, 1) + lastName;
+        int counter = 1;
+        while (customerDao.findByEmail(uniqueEmail + "@ecare.com") != null) {
+            if(counter != 1) uniqueEmail = uniqueEmail.substring(0, uniqueEmail.length() - 1);
+            uniqueEmail += counter;
+            counter++;
+        }
+        uniqueEmail += "@ecare.com";
+        customer.setEmail(uniqueEmail);
         customer = customerDao.save(customer);
         customerDao.commitTransaction();
         return customer;

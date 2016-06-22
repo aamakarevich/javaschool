@@ -57,6 +57,15 @@
     <servlet-name>option</servlet-name>
     <url-pattern>/rest/option/*</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>contract</servlet-name>
+    <servlet-class>com.tsystems.ecare.controllers.ContractServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>contract</servlet-name>
+    <url-pattern>/rest/contract/*</url-pattern>
+  </servlet-mapping>
   <!-- end REST -->
 
   <listener>
