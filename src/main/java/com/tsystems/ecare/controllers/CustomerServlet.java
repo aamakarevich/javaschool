@@ -55,7 +55,7 @@ public class CustomerServlet extends HttpServlet {
             return;
         }
 
-//        JsonUtil.writeObjectToJson(resp, new CustomerServiceImpl().getAllCustomers());
+        JsonUtil.writeObjectToJson(resp, new CustomerServiceImpl().getAllCustomers());
     }
 
     @Override

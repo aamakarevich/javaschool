@@ -57,6 +57,11 @@ public class CustomerServiceImpl implements CustomerService {
         return customerDao.findByEmailAndPassword(email, password);
     }
 
+    @Override
+    public List<Customer> getAllCustomers() {
+        return customerDao.findAll(Customer.class);
+    }
+
     public List<Customer> getCustomersPaged(Integer pageNumber, Integer pageSize) {
         return customerDao.findAllPaged(Customer.class, pageNumber, pageSize);
     }

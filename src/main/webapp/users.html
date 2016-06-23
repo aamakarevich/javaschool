@@ -83,12 +83,11 @@
             }
 
             function changeElementsCount(value) {
-                if ($("#items_count").val == value) return;
+                if ($("#items_count").val() == value) return;
+                $("#items_count").val(value);
                 if (value == "all") {
-                    $("#items_count").val(1000000);
                     $("#paging_change").html("Show all elements on page <span class=\"caret\">");
                 } else {
-                    $("#items_count").val(value);
                     $("#paging_change").html("Show " + value + " elements on page <span class=\"caret\">");
                 }
                 createUsersPagination();
@@ -98,7 +97,8 @@
                 client.customer.read("?count").done(function (count) {
                     $("#pagination").empty();
                     var itemsCount = +$("#items_count").val();
-                    if (count < itemsCount) {
+                    if (isNaN(itemsCount) || count < itemsCount) {
+                        $("#current_page").val(1);
                         getPagedCustomers();
                         return;
                     }
@@ -135,7 +135,12 @@
 
             function getPagedCustomers() {
 
-                client.customer.read("?page=" + $("#current_page").val() + "&size=" + $("#items_count").val()).done(function (customers) {
+                var query = "";
+                if($("#items_count").val() != "all") {
+                    query = "?page=" + $("#current_page").val() + "&size=" + $("#items_count").val();
+                }
+
+                client.customer.read(query).done(function (customers) {
 
                     var customersRows = "";
                     for (var c in customers) {
@@ -224,7 +229,7 @@
         function deleteCustomer() {
             client.customer.del($("#deleteCustomerId").val()).always(function (result) {
                 $("#deleteCustomerModal").modal("hide");
-                getPagedCustomers();
+                createUsersPagination();
             });
         }
         function presetDeleteCustomerId(id) {

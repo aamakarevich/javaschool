@@ -39,6 +39,7 @@
     const BASKET_NUMBER = "basketNumber";
     const BASKET_PLAN = "basketPlan";
     const BASKET_OPTIONS = "basketOptions";
+    const BASKET_UP = "basketUp";
 
     /* Set up REST-client */
     var client = new $.RestClient('rest/');
@@ -133,18 +134,17 @@
                     <li id="nav_options" onclick="loadPage('options', 'options')"><a href="#">Options</a></li>
                     <li id="nav_users" onclick="loadPage('users', 'users')"><a href="#">Customers</a></li>
                     <li id="nav_profile" onclick="loadPage('profile', 'profile')"><a href="#" onfocus="this.blur()"><span class="glyphicon glyphicon-user" aria-hidden="true"/></a></li>
-                    <li id="nav_basket"><a href="#" onfocus="this.blur()"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"/></a></li>
+                    <li id="nav_basket" onclick="loadBasket()"><a href="#" onfocus="this.blur()"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"/></a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right" id="right_nav">
                     <li id="nav_login"><a href="#" data-toggle="modal" data-target="#loginModal" onfocus="this.blur()">Sign
                         in</a></li>
                     <p id="nav_username" class="navbar-text navbar-right">
                         Signed in as
-                        <a href="#" id="nav_fullname" class="navbar-link"></a> [<a href="#" class="navbar-link"
+                        <a href="#" id="nav_fullname" class="navbar-link" onclick="loadPage('profile', 'profile')"></a> [<a href="#" class="navbar-link"
                                                                                    onclick="logout()">Sign out</a>]
                     </p>
                 </ul>
-
             </div>
         </div>
     </nav>
@@ -181,21 +181,6 @@
 <script>
     $(document).ready(function () {
         startUp();
-
-        $(".numbersonly").keydown(function(event) {
-            // Allow special chars + arrows
-            if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9
-                    || event.keyCode == 27 || event.keyCode == 13
-                    || (event.keyCode == 65 && event.ctrlKey === true)
-                    || (event.keyCode >= 35 && event.keyCode <= 39)){
-                return;
-            }else {
-                // If it's not a number stop the keypress
-                if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
-                    event.preventDefault();
-                }
-            }
-        });
     });
 
     function startUp() {
@@ -260,6 +245,16 @@
         }
         if (page == "profile") {
             loadProfile();
+        }
+    }
+
+    function loadBasket() {
+        if(getLs(BASKET_UP) != null) {
+            if (getLs(BASKET_PLAN) == null) {
+                loadPage("contract1", "basket");
+            } else {
+                loadPage("contract2", "basket");
+            }
         }
     }
 
@@ -342,6 +337,7 @@
         removeLs(BASKET_NUMBER);
         removeLs(BASKET_PLAN);
         removeLs(BASKET_OPTIONS);
+        removeLs(BASKET_UP);
     }
 
 </script>
