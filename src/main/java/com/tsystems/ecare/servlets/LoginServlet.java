@@ -1,4 +1,4 @@
-package com.tsystems.ecare.controllers;
+package com.tsystems.ecare.servlets;
 
 import com.tsystems.ecare.entities.Customer;
 import com.tsystems.ecare.services.impl.CustomerServiceImpl;

@@ -63,18 +63,43 @@
             </div>
             <div class="form-group form-group-lg">
                 <div class="col-lg-offset-2 col-lg-6">
-                    <button type="submit" id="bSubmit" class="btn btn-lg btn-primary col-lg-12 col-xs-12">Save new
+                    <button type="submit" id="bSubmit" class="btn btn-lg btn-primary">Save new
                         customer
                     </button>
-                    <button type="button" id="bCancel" class="btn btn-lg btn-default col-lg-12 col-xs-12"
+                    <button type="button" id="bCancel" class="btn btn-lg btn-default"
                             onclick="usersGoBack()">Cancel
                     </button>
-                    <button type="reset" id="bReset" class="btn btn-lg btn-default col-lg-12 col-xs-12">Reset form
+                    <button type="reset" id="bReset" class="btn btn-lg btn-default col-xs-12">Reset form
                         data
                     </button>
                 </div>
             </div>
         </form>
+        <h3 id="contractsHeader">Contracts</h3>
+        <div id="profileBody" class="col-lg-offset-1 col-lg-6 col-xs-12 input-group">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="col-xs-5">Phone number</th>
+                    <th class="col-xs-4">Plan</th>
+                    <th class="col-xs-3">State</th>
+                </tr>
+                </thead>
+                <tbody id="tContracts"></tbody>
+            </table>
+        </div>
+        <h3 id="rolesHeader">Roles</h3>
+        <div id="rolesBody" class="col-lg-offset-1 col-lg-3 col-xs-6 input-group">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="col-xs-6">Role</th>
+                    <th class="col-xs-6"></th>
+                </tr>
+                </thead>
+                <tbody id="tRoles"></tbody>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -106,6 +131,72 @@
                     $("#bReset").hide();
                     $("#bSubmit").html("Save changes");
 
+                    var contractsBody = "";
+                    customer.contracts.forEach(function (contract) {
+                        var strNumber = contract.number.substr(3);
+                        strNumber = strNumber.substr(0, 5) + "-" + strNumber.substr(5);
+                        strNumber = strNumber.substr(0, 3) + "-" + strNumber.substr(3);
+                        strNumber = "8 (999) " + strNumber;
+
+                        var button = "<button type=\"button\" id=\"lk" + contract.id + "\" onclick=\"toggleLock(" + contract.id + ");\" class=\"btn btn-block btn-xs ";
+                        if(contract.numberLock == "UNLOCKED") {
+                            button += "btn-default\">Unlocked";
+                        } else {
+                            if(contract.numberLock == "USERLOCKED") {
+                                button += "btn-danger\">Locked";
+                            } else {
+                                if(cuser.suser == null) {
+                                    button += "btn-danger\" disabled=\"disabled\">Locked";
+                                } else {
+                                    button += "btn-danger\">Locked";
+                                }
+                            }
+                        }
+                        button + "</button>";
+
+                        contractsBody += "<tr><td><a href='#' onclick='editContract(" + customer.id + "," + contract.id + ")'>" + strNumber + "</a></td>" +
+                                "<td>" + contract.plan.title + "</td><td>" + button + "</td></tr>";
+                    });
+
+                    $("#tContracts").html(contractsBody);
+
+                    if(cuser.admin == null) {
+                        $("#rolesHeader").hide();
+                        $("#rolesBody").hide();
+                    } else {
+                        var rolesStr = "";
+                        var adm = false;
+                        var mng = false;
+                        customer.roles.forEach(function (role) {
+                            if(role.title == "admin") {
+                                adm = true;
+                            }
+                            if(role.title == "manager") {
+                                mng = true;
+                            }
+                        });
+                        rolesStr += "<tr><td>Admin</td><td>" +
+                                "<button type=\"button\" id=\"rl1\" onclick=\"toggleRole(1, " + customer.id + ");\" class=\"btn btn-block btn-xs ";
+                        if(adm) {
+                            rolesStr += "btn-primary\">Active</button>";
+                        } else {
+                            rolesStr += "btn-default\">Inactive</button>";
+                        }
+
+                        rolesStr += "</td></tr>";
+
+                        rolesStr += "<tr><td>Manager</td><td>" +
+                                "<button type=\"button\" id=\"rl2\" onclick=\"toggleRole(2, " + customer.id + ");\" class=\"btn btn-block btn-xs ";
+                        if(mng) {
+                            rolesStr += "btn-primary\">Active</button>";
+                        } else {
+                            rolesStr += "btn-default\">Inactive</button>";
+                        }
+                        rolesStr += "</td></tr>";
+
+                        $("#tRoles").html(rolesStr);
+                    }
+
                     $("#customerPageCover").fadeOut(1).fadeIn(1000);
                 });
             } else {
@@ -117,6 +208,9 @@
                 $("#inputCustomerId").val(0);
 
                 $("#bCancel").hide();
+
+                $("#rolesHeader").hide();
+                $("#rolesBody").hide();
 
                 $("#customerPageCover").fadeOut(1).fadeIn(1000);
             }
@@ -166,6 +260,23 @@
 
         function usersGoBack() {
             loadPage("users", "users");
+        }
+
+        function toggleRole(id, cid) {
+            var element = $("#rl" + id);
+            if (element.hasClass("btn-default")) {
+                client.customer.update("?activate=" + id + "&for=" + cid);
+                element.removeClass("btn-default");
+                element.addClass("btn-primary");
+                element.blur();
+                element.html("Active");
+            } else {
+                client.customer.update("?deactivate=" + id + "&for=" + cid);
+                element.removeClass("btn-primary");
+                element.addClass("btn-default");
+                element.blur();
+                element.html("Inactive");
+            }
         }
     </script>
 </div>

@@ -8,6 +8,9 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
 
 /**
+ * Stores the only instanse of Entity Manager Factory.
+ * Stores and manages thread local entity manager.
+ *
  * @author Andrei Makarevich
  */
 public final class PersistenceProvider {

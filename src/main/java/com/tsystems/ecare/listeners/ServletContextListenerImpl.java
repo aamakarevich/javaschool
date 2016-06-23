@@ -6,6 +6,9 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 /**
+ * Preinitializes persistence provider and
+ * releases it at the and of application work.
+ *
  * @author Andrei Makarevich
  */
 public class ServletContextListenerImpl implements ServletContextListener {

@@ -26,4 +26,8 @@ public interface CustomerService {
     Long getCustomersCount();
 
     Customer updateCustomer(Customer customer);
+
+    void activate(Integer id, Customer target, Customer user);
+
+    void deactivate(Integer id, Customer target, Customer user);
 }

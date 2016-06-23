@@ -3,6 +3,7 @@ package com.tsystems.ecare.services.impl;
 import com.tsystems.ecare.dao.CustomerDao;
 import com.tsystems.ecare.dao.impl.CustomerDaoImpl;
 import com.tsystems.ecare.entities.Customer;
+import com.tsystems.ecare.entities.Role;
 import com.tsystems.ecare.services.CustomerService;
 import com.tsystems.ecare.utils.HashUtil;
 import com.tsystems.ecare.utils.PersistenceProvider;
@@ -76,5 +77,31 @@ public class CustomerServiceImpl implements CustomerService {
         customer = customerDao.merge(customer);
         customerDao.commitTransaction();
         return customer;
+    }
+
+
+    @Override
+    public void activate(Integer id, Customer target, Customer user) {
+        customerDao.beginTransaction();
+        Role admin = new RoleServiceImpl().getRoleByTitle("admin");
+        Role role = new RoleServiceImpl().getRoleById(id);
+        if (user.getRoles().contains(admin)) {
+            target.getRoles().remove(role);
+            target.getRoles().add(role);
+        }
+        customerDao.merge(target);
+        customerDao.commitTransaction();
+    }
+
+    @Override
+    public void deactivate(Integer id, Customer target, Customer user) {
+        customerDao.beginTransaction();
+        Role admin = new RoleServiceImpl().getRoleByTitle("admin");
+        Role role = new RoleServiceImpl().getRoleById(id);
+        if (user.getRoles().contains(admin)) {
+            target.getRoles().remove(role);
+        }
+        customerDao.merge(target);
+        customerDao.commitTransaction();
     }
 }

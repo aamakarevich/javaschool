@@ -1,4 +1,4 @@
-package com.tsystems.ecare.controllers;
+package com.tsystems.ecare.servlets;
 
 import com.tsystems.ecare.entities.Feature;
 import com.tsystems.ecare.entities.Plan;
@@ -14,11 +14,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * Provides advanced REST-full CRUD for Plan entity.
+ *
  * @author Andrei Makarevich
  */
 public class PlanServlet extends HttpServlet {
 
-    /* REST create */
+    /**
+     * Create
+     * /rest/plan   POST creates new plan
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -27,7 +32,11 @@ public class PlanServlet extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_CREATED);
     }
 
-    /* REST read */
+    /**
+     * Read
+     * /rest/plan       GET returns all plans
+     * /rest/plan/ID    GET returns plan with id = ID
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -41,7 +50,12 @@ public class PlanServlet extends HttpServlet {
         JsonUtil.writeObjectToJson(resp, new PlanServiceImpl().getAllPlans());
     }
 
-    /* REST update */
+    /**
+     * Update
+     * /rest/plan/                  PUT updates plan
+     * /rest/plan/?link=A&to=B      PUT makes feature A available for plan B
+     * /rest/plan/?unlink=A&from=B  PUT makes feature A unavailable for plan B
+     */
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -81,7 +95,10 @@ public class PlanServlet extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 
-    /* REST delete */
+    /**
+     * Delete
+     * /rest/plan/ID    DELETE deletes plan with id = ID
+     */
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 

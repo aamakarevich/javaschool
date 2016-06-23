@@ -13,6 +13,11 @@
                 <input type="text" required minlength="7" maxlength="7" class="form-control numbersonly"
                        id="inputNumber" aria-describedby="addonNumber" placeholder="1234567">
             </div>
+            <div class="input-group col-lg-4">
+                <div class="alert alert-info" id="phoneError" role="alert">This phone number is already in use. Please
+                    choose another one.
+                </div>
+            </div>
             <div class="input-group col-lg-4 col-xs-12">
                 <div id="subformBody">
                     <table class="table">
@@ -36,6 +41,14 @@
     <script>
         function getContract1() {
 
+            var error = getLs("duplicateNumber");
+            $("#phoneError").hide();
+            if(error != null) {
+                $("#phoneError").show();
+                $("#inputNumber").focus();
+                removeLs("duplicateNumber");
+            }
+
             setLs(BASKET_UP, true);
 
             var lsNumberId = getLs(BASKET_NUMBER);
@@ -45,26 +58,26 @@
 
             var basketContract = getLs(BASKET_CONTRACT);
             if (basketContract == null) {
-                $("#formHeader").html("Choose phone number and plan for contract");
+                $("#formHeader").html("Choose phone number and plan");
             } else {
                 $("#formHeader").html("Choose new plan for contract");
                 $("#inputNumber").prop("disabled", true);
             }
 
-            if(lsPlanId == null) {
+            if (lsPlanId == null) {
                 $("#bSubmit").prop("disabled", true);
             }
 
             getPlansForContract();
 
-            $(".numbersonly").keydown(function(event) {
+            $(".numbersonly").keydown(function (event) {
                 // Allow special chars + arrows
                 if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9
                         || event.keyCode == 27 || event.keyCode == 13
                         || (event.keyCode == 65 && event.ctrlKey === true)
-                        || (event.keyCode >= 35 && event.keyCode <= 39)){
+                        || (event.keyCode >= 35 && event.keyCode <= 39)) {
                     return;
-                }else {
+                } else {
                     // If it's not a number stop the keypress
                     if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
                         event.preventDefault();

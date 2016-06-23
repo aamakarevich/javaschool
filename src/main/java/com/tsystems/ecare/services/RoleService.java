@@ -7,6 +7,8 @@ import com.tsystems.ecare.entities.Role;
  */
 public interface RoleService {
 
+    Role getRoleById(Integer id);
+
     Role getRoleByTitle(String title);
 
     Role saveNewRole(Role role);

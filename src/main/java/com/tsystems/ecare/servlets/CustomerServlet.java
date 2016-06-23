@@ -1,7 +1,8 @@
-package com.tsystems.ecare.controllers;
+package com.tsystems.ecare.servlets;
 
 import com.tsystems.ecare.entities.Customer;
 import com.tsystems.ecare.services.CustomerService;
+import com.tsystems.ecare.services.impl.ContractServiceImpl;
 import com.tsystems.ecare.services.impl.CustomerServiceImpl;
 import com.tsystems.ecare.utils.JsonUtil;
 
@@ -9,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -43,8 +45,7 @@ public class CustomerServlet extends HttpServlet {
             List<Customer> customers = new CustomerServiceImpl().getCustomersPaged(
                     Integer.parseInt(req.getParameter("page")),
                     Integer.parseInt(req.getParameter("size")));
-            JsonUtil.writeObjectToJson(resp,
-                    customers);
+            JsonUtil.writeObjectToJson(resp, customers);
             return;
         }
 
@@ -68,6 +69,23 @@ public class CustomerServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        HttpSession session = req.getSession(true);
+        Customer user = new CustomerServiceImpl().getCustomerByEmail((String) session.getAttribute("currentuser"));
+
+        if (req.getParameter("activate") != null) {
+            Customer target = new CustomerServiceImpl().getCustomer(Integer.parseInt(req.getParameter("for")));
+            new CustomerServiceImpl().activate(Integer.parseInt(req.getParameter("activate")), target, user);
+            resp.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+
+        if (req.getParameter("deactivate") != null) {
+            Customer target = new CustomerServiceImpl().getCustomer(Integer.parseInt(req.getParameter("for")));
+            new CustomerServiceImpl().deactivate(Integer.parseInt(req.getParameter("deactivate")), target, user);
+            resp.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
 
         Customer gotCustomer = JsonUtil.getObjectFromJson(req, Customer.class);
 

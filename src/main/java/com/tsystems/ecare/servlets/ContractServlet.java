@@ -1,6 +1,7 @@
-package com.tsystems.ecare.controllers;
+package com.tsystems.ecare.servlets;
 
 import com.tsystems.ecare.entities.Contract;
+import com.tsystems.ecare.entities.Customer;
 import com.tsystems.ecare.entities.Feature;
 import com.tsystems.ecare.services.impl.ContractServiceImpl;
 import com.tsystems.ecare.services.impl.CustomerServiceImpl;
@@ -12,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +30,11 @@ public class ContractServlet extends HttpServlet {
             Integer idToGet = Integer.parseInt(req.getPathInfo().replace("/", ""));
             Contract contract = new ContractServiceImpl().getContract(idToGet);
             JsonUtil.writeObjectToJson(resp, contract);
+            return;
+        }
+
+        if (req.getParameter("number") != null) {
+            JsonUtil.writeObjectToJson(resp, new ContractServiceImpl().getContractByNumber(req.getParameter("number")));
             return;
         }
 
@@ -59,6 +66,22 @@ public class ContractServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        HttpSession session = req.getSession(true);
+        Customer customer = new CustomerServiceImpl().getCustomerByEmail((String) session.getAttribute("currentuser"));
+
+        if (req.getParameter("lock") != null) {
+            new ContractServiceImpl().lock(Integer.parseInt(req.getParameter("lock")), customer);
+            resp.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+
+        if (req.getParameter("unlock") != null) {
+            new ContractServiceImpl().unlock(Integer.parseInt(req.getParameter("unlock")), customer);
+            resp.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+
         Contract contract = JsonUtil.getObjectFromJson(req, Contract.class);
         new ContractServiceImpl().updateContract(contract);
         resp.setStatus(HttpServletResponse.SC_OK);

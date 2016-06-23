@@ -4,7 +4,9 @@ import com.tsystems.ecare.dao.ContractDao;
 import com.tsystems.ecare.dao.impl.ContractDaoImpl;
 import com.tsystems.ecare.dao.impl.PlanDaoImpl;
 import com.tsystems.ecare.entities.Contract;
+import com.tsystems.ecare.entities.Customer;
 import com.tsystems.ecare.entities.Plan;
+import com.tsystems.ecare.entities.Role;
 import com.tsystems.ecare.services.ContractService;
 
 /**
@@ -20,11 +22,15 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    public Contract getContractByNumber(String number) {
+        return contractDao.findByNumber(number);
+    }
+
+    @Override
     public Contract saveNewContract(Contract contract) {
         contractDao.beginTransaction();
         contract.setNumberLock(Contract.Lock.UNLOCKED);
         contract.setPlan(new PlanServiceImpl().getPlan(contract.getPlan().getId()));
-//        contract.setCustomer(new CustomerServiceImpl().getCustomer(contract.getCustomer().getId()));
         contract = contractDao.save(contract);
         contractDao.commitTransaction();
         return contract;
@@ -40,4 +46,35 @@ public class ContractServiceImpl implements ContractService {
         contractDao.commitTransaction();
         return contract;
     }
+
+    @Override
+    public void lock(Integer id, Customer user) {
+        contractDao.beginTransaction();
+        Contract contract = getContract(id);
+        Role admin = new RoleServiceImpl().getRoleByTitle("admin");
+        Role manager = new RoleServiceImpl().getRoleByTitle("manager");
+        if (user.getRoles().contains(admin) || user.getRoles().contains(manager)) {
+            contract.setNumberLock(Contract.Lock.LOCKED);
+        } else {
+            contract.setNumberLock(Contract.Lock.USERLOCKED);
+        }
+        contractDao.merge(contract);
+        contractDao.commitTransaction();
+    }
+
+    @Override
+    public void unlock(Integer id, Customer user) {
+        contractDao.beginTransaction();
+        Contract contract = getContract(id);
+        Role admin = new RoleServiceImpl().getRoleByTitle("admin");
+        Role manager = new RoleServiceImpl().getRoleByTitle("manager");
+        if (user.getRoles().contains(admin)
+                || user.getRoles().contains(manager)
+                || contract.getNumberLock() == Contract.Lock.USERLOCKED) {
+            contract.setNumberLock(Contract.Lock.UNLOCKED);
+        }
+        contractDao.merge(contract);
+        contractDao.commitTransaction();
+    }
+
 }

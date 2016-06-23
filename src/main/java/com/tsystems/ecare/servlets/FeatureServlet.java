@@ -1,4 +1,4 @@
-package com.tsystems.ecare.controllers;
+package com.tsystems.ecare.servlets;
 
 import com.tsystems.ecare.entities.Feature;
 import com.tsystems.ecare.services.FeatureService;
@@ -15,26 +15,34 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * Provides advanced REST-full CRUD for Feature entity.
+ *
  * @author Andrei Makarevich
  */
 public class FeatureServlet extends HttpServlet {
 
+    /**
+     * Create
+     * /rest/option POST creates new feature
+     */
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Integer idToDelete = Integer.parseInt(req.getPathInfo().replace("/", ""));
-        FeatureService service = new FeatureServiceImpl();
-        Feature feature = service.getFeature(idToDelete);
-        if (feature != null) {
-            if (feature.getContracts().size() == 0) {
-                service.deleteFeature(feature);
-                resp.setStatus(HttpServletResponse.SC_OK);
-                return;
-            }
-        }
-        resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        Feature feature = JsonUtil.getObjectFromJson(req, Feature.class);
+        new FeatureServiceImpl().saveNewFeature(feature);
+        resp.setStatus(HttpServletResponse.SC_CREATED);
     }
 
+    /**
+     * Read
+     * /rest/option                                     GET returns all features
+     * /rest/option/ID                                  GET returns feature with id = ID
+     * /rest/option/?blockers=ID                        GET returns blocking features for feature with id = ID
+     * /rest/option/?needs=ID                           GET returns needed features for feature with id = ID
+     * /rest/option/?listed=ID1,ID2,...,IDN             GET returns features with ids contained in listed IDs
+     * /rest/option/?available=ID1,ID2,...,IDN&for=ID   GET returns features available for plan with id = ID
+     *                                                      and active features listed in IDs
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -92,14 +100,14 @@ public class FeatureServlet extends HttpServlet {
         JsonUtil.writeObjectToJson(resp, new FeatureServiceImpl().getAllFeatures());
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        Feature feature = JsonUtil.getObjectFromJson(req, Feature.class);
-        new FeatureServiceImpl().saveNewFeature(feature);
-        resp.setStatus(HttpServletResponse.SC_CREATED);
-    }
-
+    /**
+     * Update
+     * /rest/option/                    PUT updates feature
+     * /rest/option/?block=A&option=B   PUT makes features with ids A and B bi-directionaly blocked
+     * /rest/option/?unblock=A&option=B PUT releases block between features with ids A and B
+     * /rest/option/?link=A&option=B    PUT makes feature with id = B dependent from feature with id = A
+     * /rest/option/?unlink=A&option=B  PUT releases dependency between features with ids A and B
+     */
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -138,5 +146,25 @@ public class FeatureServlet extends HttpServlet {
         Feature feature = JsonUtil.getObjectFromJson(req, Feature.class);
         new FeatureServiceImpl().updateFeature(feature);
         resp.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    /**
+     * Delete
+     * /rest/option/ID  DELETE deletes feature with id = ID
+     */
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Integer idToDelete = Integer.parseInt(req.getPathInfo().replace("/", ""));
+        FeatureService service = new FeatureServiceImpl();
+        Feature feature = service.getFeature(idToDelete);
+        if (feature != null) {
+            if (feature.getContracts().size() == 0) {
+                service.deleteFeature(feature);
+                resp.setStatus(HttpServletResponse.SC_OK);
+                return;
+            }
+        }
+        resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
 }

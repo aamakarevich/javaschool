@@ -12,6 +12,10 @@ public class RoleServiceImpl implements RoleService {
 
     private RoleDao roleDao = new RoleDaoImpl();
 
+    public Role getRoleById(Integer id) {
+        return roleDao.findById(Role.class, id);
+    }
+
     public Role getRoleByTitle(String title) {
         return roleDao.findByTitle(title);
     }

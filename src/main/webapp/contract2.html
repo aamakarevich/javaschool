@@ -6,7 +6,7 @@
     </div>
 
     <div class="container" id="contract2PageCover" hidden="hidden">
-        <h3 id="formHeader">Choose options applied to contract</h3>
+        <h3 id="formHeader">Choose options applied to plan</h3>
         <h4 id="formSubheaderNumber"></h4>
         <h4 id="formSubheader"></h4>
         <form class="form-horizontal" onsubmit="return contract2Proceed();">
@@ -33,6 +33,8 @@
     <script>
         var firstLoad;
         function getContract2() {
+
+            setLs(BASKET_UP, true);
 
             firstLoad = true;
 
@@ -151,61 +153,68 @@
 
         function contract2Proceed() {
 
-            setLs(BASKET_UP, true);
+            client.contract.read("?number=999" + getLs(BASKET_NUMBER)).done(function (exists) {
 
-            var contractId = getLs(BASKET_CONTRACT);
-
-            var features = [];
-            getLsArray(BASKET_OPTIONS).forEach(function (op) {
-                var feature = {};
-                feature.id = op;
-                feature.title = "mock";
-                features.push(feature);
-            });
-
-            if (contractId == null) {
-
-                var opts = getLsArray(BASKET_OPTIONS);
-
-                var optsParam = "";
-                if(opts != null) {
-                    opts.forEach(function (opt) {
-                        optsParam += opt + " ";
-                    });
-                    optsParam = optsParam.trim();
-                    optsParam = optsParam.split(" ").join(",");
+                if(exists != null) {
+                    setLs("duplicateNumber", true);
+                    loadPage("contract1", "basket");
+                    return;
                 }
 
-                var params = "?";
-                params += "create=999" + getLs(BASKET_NUMBER);
-                params += "&cid=" + getLs(BASKET_CUSTOMER);
-                params += "&pid=" + getLs(BASKET_PLAN);
-                params += "&opts=" + optsParam;
+                var contractId = getLs(BASKET_CONTRACT);
 
-                client.contract.read(params).always(function () {
-                    clearBasket();
-                    loadPage("users", "users");
+                var features = [];
+                getLsArray(BASKET_OPTIONS).forEach(function (op) {
+                    var feature = {};
+                    feature.id = op;
+                    feature.title = "mock";
+                    features.push(feature);
                 });
-            } else {
 
-                var contract = {
-                    id: getLs(BASKET_CONTRACT),
-                    number: "999" + getLs(BASKET_NUMBER),
-                    customer: {
-                        id: getLs(BASKET_CUSTOMER)
-                    },
-                    plan: {
-                        id: getLs(BASKET_PLAN)
-                    },
-                    activeFeatures: features
-                };
+                if (contractId == null) {
 
-                client.contract.update(contract).always(function () {
+                    var opts = getLsArray(BASKET_OPTIONS);
 
-                    clearBasket();
-                    loadPage("users", "users");
-                });
-            }
+                    var optsParam = "";
+                    if (opts != null) {
+                        opts.forEach(function (opt) {
+                            optsParam += opt + " ";
+                        });
+                        optsParam = optsParam.trim();
+                        optsParam = optsParam.split(" ").join(",");
+                    }
+
+                    var params = "?";
+                    params += "create=999" + getLs(BASKET_NUMBER);
+                    params += "&cid=" + getLs(BASKET_CUSTOMER);
+                    params += "&pid=" + getLs(BASKET_PLAN);
+                    params += "&opts=" + optsParam;
+
+                    client.contract.read(params).always(function () {
+                        clearBasket();
+                        loadPage("users", "users");
+                    });
+                } else {
+
+                    var contract = {
+                        id: getLs(BASKET_CONTRACT),
+                        number: "999" + getLs(BASKET_NUMBER),
+                        customer: {
+                            id: getLs(BASKET_CUSTOMER)
+                        },
+                        plan: {
+                            id: getLs(BASKET_PLAN)
+                        },
+                        activeFeatures: features
+                    };
+
+                    client.contract.update(contract).always(function () {
+
+                        clearBasket();
+                        loadPage("users", "users");
+                    });
+                }
+            });
         }
     </script>
 </div>

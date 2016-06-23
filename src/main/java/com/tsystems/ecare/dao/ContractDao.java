@@ -7,4 +7,5 @@ import com.tsystems.ecare.entities.Contract;
  */
 public interface ContractDao extends GenericDao<Contract, Integer> {
 
+    public Contract findByNumber(String number);
 }
