@@ -155,12 +155,6 @@
 
             client.contract.read("?number=999" + getLs(BASKET_NUMBER)).done(function (exists) {
 
-                if(exists != null) {
-                    setLs("duplicateNumber", true);
-                    loadPage("contract1", "basket");
-                    return;
-                }
-
                 var contractId = getLs(BASKET_CONTRACT);
 
                 var features = [];
@@ -172,6 +166,11 @@
                 });
 
                 if (contractId == null) {
+                    if(exists != null) {
+                        setLs("duplicateNumber", true);
+                        loadPage("contract1", "basket");
+                        return;
+                    }
 
                     var opts = getLsArray(BASKET_OPTIONS);
 

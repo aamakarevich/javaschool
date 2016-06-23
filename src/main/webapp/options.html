@@ -79,7 +79,6 @@
             $("#options_table_cover").fadeOut(1).fadeIn(1000);
             if (cuser != null) {
                 if (cuser.suser != null) {
-//                    $("#optionsSubHeader").fadeOut();
                     $("#bOptionsLinks").fadeIn(1000);
                 }
             }
@@ -91,7 +90,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Realy delete option? If it has any linked options, all links will be
-                        released.</h4>
+                        released. But option will not be deleted if any customers use it.</h4>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="deleteOptionId"/>

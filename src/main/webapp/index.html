@@ -212,13 +212,18 @@
     }
 
     function loadPage(page, pagen) {
+
         $.cookie("currentpage", page, {expires: 1, path: '/'});
+
+        /* Loading new content page */
         $("#page").empty();
         var link = document.querySelector('link[href^=' + page + ']');
         var content = link.import.querySelector("#" + page);
         document.querySelector("#page").appendChild(content.cloneNode(true));
         $("#navbar li").removeClass("active");
         document.querySelector("#nav_" + pagen).setAttribute("class", "active");
+        /* end */
+
         if (page == "users") {
             createUsersPagination();
         }

@@ -18,6 +18,103 @@ public class FeatureServiceImpl implements FeatureService {
     FeatureDao featureDao = new FeatureDaoImpl();
 
     @Override
+    public Feature saveNewFeature(Feature feature) {
+        featureDao.beginTransaction();
+        feature = featureDao.save(feature);
+        featureDao.commitTransaction();
+        return feature;
+    }
+
+    @Override
+    public Feature getFeature(Integer id) {
+        return featureDao.findById(Feature.class, id);
+    }
+
+    @Override
+    public Feature updateFeature(Feature feature) {
+        featureDao.beginTransaction();
+        Feature oldFeature = getFeature(feature.getId());
+        oldFeature.setTitle(feature.getTitle());
+        oldFeature.setMonthlyFee(feature.getMonthlyFee());
+        oldFeature.setAdditionFee(feature.getAdditionFee());
+        oldFeature.setDescription(feature.getDescription());
+        feature = featureDao.merge(oldFeature);
+        featureDao.commitTransaction();
+        return feature;
+    }
+
+    @Override
+    public void deleteFeature(Feature feature) {
+
+        try {
+            featureDao.beginTransaction();
+            for (Feature f : feature.getBlockedFeatures()) {
+                f.getBlockers().remove(feature);
+                featureDao.merge(f);
+            }
+            for (Feature f : feature.getBlockers()) {
+                f.getBlockedFeatures().remove(feature);
+                featureDao.merge(f);
+            }
+            for (Feature f : feature.getNeededFeatures()) {
+                f.getDependentFeatures().remove(feature);
+                featureDao.merge(f);
+            }
+            for (Feature f : feature.getDependentFeatures()) {
+                f.getNeededFeatures().remove(feature);
+                featureDao.merge(f);
+            }
+            for (Plan p : feature.getPlans()) {
+                p.getAllowedFeatures().remove(feature);
+            }
+            feature = featureDao.merge(feature);
+            featureDao.delete(feature);
+
+            featureDao.commitTransaction();
+        } catch (Exception ex) {
+
+            featureDao.rollbackTransaction();
+        }
+    }
+
+    @Override
+    public List<Feature> getAllFeatures() {
+        return featureDao.findAll(Feature.class);
+    }
+
+    @Override
+    public List<Feature> getListedFeatures(List<Integer> ids) {
+        return featureDao.getListed(ids);
+    }
+
+    @Override
+    public List<Feature> getAvailableFeatures(List<Integer> ids, Integer planId) {
+
+        List<Feature> features = getListedFeatures(ids);
+        if(features == null) {
+            features = new ArrayList<>();
+        }
+        Plan plan = new PlanServiceImpl().getPlan(planId);
+        List<Feature> avaiableFeatures = plan.getAllowedFeatures();
+        Iterator<Feature> iterator = avaiableFeatures.iterator();
+        while (iterator.hasNext()) {
+            Feature af = iterator.next();
+            if (features.contains(af)
+                    || !features.containsAll(af.getNeededFeatures())) {
+                iterator.remove();
+                continue;
+            }
+            for (Feature feature : features) {
+                if (feature.getBlockedFeatures().contains(af)) {
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
+        return avaiableFeatures;
+    }
+
+    @Override
     public void setBlock(Feature f1, Feature f2) {
         try {
             featureDao.beginTransaction();
@@ -112,102 +209,5 @@ public class FeatureServiceImpl implements FeatureService {
         } catch (Exception ex) {
             featureDao.rollbackTransaction();
         }
-    }
-
-    @Override
-    public void deleteFeature(Feature feature) {
-
-        try {
-            featureDao.beginTransaction();
-            for (Feature f : feature.getBlockedFeatures()) {
-                f.getBlockers().remove(feature);
-                featureDao.merge(f);
-            }
-            for (Feature f : feature.getBlockers()) {
-                f.getBlockedFeatures().remove(feature);
-                featureDao.merge(f);
-            }
-            for (Feature f : feature.getNeededFeatures()) {
-                f.getDependentFeatures().remove(feature);
-                featureDao.merge(f);
-            }
-            for (Feature f : feature.getDependentFeatures()) {
-                f.getNeededFeatures().remove(feature);
-                featureDao.merge(f);
-            }
-            for (Plan p : feature.getPlans()) {
-                p.getAllowedFeatures().remove(feature);
-            }
-            feature = featureDao.merge(feature);
-            featureDao.delete(feature);
-
-            featureDao.commitTransaction();
-        } catch (Exception ex) {
-
-            featureDao.rollbackTransaction();
-        }
-    }
-
-    @Override
-    public List<Feature> getAvailableFeatures(List<Integer> ids, Integer planId) {
-
-        List<Feature> features = getListedFeatures(ids);
-        if(features == null) {
-            features = new ArrayList<>();
-        }
-        Plan plan = new PlanServiceImpl().getPlan(planId);
-        List<Feature> avaiableFeatures = plan.getAllowedFeatures();
-        Iterator<Feature> iterator = avaiableFeatures.iterator();
-        while (iterator.hasNext()) {
-            Feature af = iterator.next();
-            if (features.contains(af)
-                    || !features.containsAll(af.getNeededFeatures())) {
-                iterator.remove();
-                continue;
-            }
-            for (Feature feature : features) {
-                if (feature.getBlockedFeatures().contains(af)) {
-                    iterator.remove();
-                    break;
-                }
-            }
-        }
-        return avaiableFeatures;
-    }
-
-    @Override
-    public List<Feature> getListedFeatures(List<Integer> ids) {
-        return featureDao.getListed(ids);
-    }
-
-    @Override
-    public List<Feature> getAllFeatures() {
-        return featureDao.findAll(Feature.class);
-    }
-
-    @Override
-    public Feature getFeature(Integer id) {
-        return featureDao.findById(Feature.class, id);
-    }
-
-    @Override
-    public Feature saveNewFeature(Feature feature) {
-        featureDao.beginTransaction();
-        feature = featureDao.save(feature);
-        featureDao.commitTransaction();
-        return feature;
-    }
-
-    @Override
-    public Feature updateFeature(Feature feature) {
-        featureDao.beginTransaction();
-        Feature oldFeature = getFeature(feature.getId());
-        oldFeature.setTitle(feature.getTitle());
-        oldFeature.setMonthlyFee(feature.getMonthlyFee());
-        oldFeature.setAdditionFee(feature.getAdditionFee());
-        oldFeature.setDescription(feature.getDescription());
-        feature = featureDao.merge(oldFeature);
-        featureDao.commitTransaction();
-        return feature;
     }
 }

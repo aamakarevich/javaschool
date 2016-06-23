@@ -9,12 +9,6 @@ import java.util.List;
  */
 public interface GenericDao<T, ID extends Serializable> {
 
-    void beginTransaction();
-
-    void commitTransaction();
-
-    void rollbackTransaction();
-
     T save(T entity);
 
     T merge(T entity);
@@ -28,4 +22,9 @@ public interface GenericDao<T, ID extends Serializable> {
     T findById(Class clazz, ID id);
 
     Long getTotalCount(Class clazz);
+
+    /* API for transaction control from service level */
+    void beginTransaction();
+    void commitTransaction();
+    void rollbackTransaction();
 }

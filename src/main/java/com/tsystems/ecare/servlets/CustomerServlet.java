@@ -15,24 +15,32 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * Provides advanced REST-full CRUD for Customer entity.
+ *
  * @author Andrei Makarevich
  */
 public class CustomerServlet extends HttpServlet {
 
+    /**
+     * Create
+     * /rest/customer   POST creates new customer
+     */
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Integer idToDelete = Integer.parseInt(req.getPathInfo().replace("/", ""));
-        CustomerService service = new CustomerServiceImpl();
-        Customer customer = service.getCustomer(idToDelete);
-        if (customer != null) {
-            service.deleteCustomer(customer);
-            resp.setStatus(HttpServletResponse.SC_OK);
-            return;
-        }
-        resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        Customer customer = JsonUtil.getObjectFromJson(req, Customer.class);
+        new CustomerServiceImpl().saveNewCustomer(customer);
+        resp.setStatus(HttpServletResponse.SC_CREATED);
     }
 
+    /**
+     * Read
+     * /rest/customer                   GET returns all customers
+     * /rest/customer/ID                GET returns customer with id = ID
+     * /rest/customer/?count            GET returns total count of customers
+     * /rest/customer/?page=P&size=S    GET returns paginated list of all customers
+     *                                      counting page size = P and page number = P
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -59,14 +67,12 @@ public class CustomerServlet extends HttpServlet {
         JsonUtil.writeObjectToJson(resp, new CustomerServiceImpl().getAllCustomers());
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        Customer customer = JsonUtil.getObjectFromJson(req, Customer.class);
-        new CustomerServiceImpl().saveNewCustomer(customer);
-        resp.setStatus(HttpServletResponse.SC_CREATED);
-    }
-
+    /**
+     * Update
+     * /rest/customer/                      PUT updates customer
+     * /rest/customer/?activate=R&for=ID    PUT activates role with id = R for customer with id = ID
+     * /rest/customer/?deactivate=R&for=ID  PUT deactivates role with id = R for customer with id = ID
+     */
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -99,5 +105,23 @@ public class CustomerServlet extends HttpServlet {
         new CustomerServiceImpl().updateCustomer(customer);
 
         resp.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    /**
+     * Delete
+     * /rest/customer/ID    DELETE deletes customer with id = ID
+     */
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Integer idToDelete = Integer.parseInt(req.getPathInfo().replace("/", ""));
+        CustomerService service = new CustomerServiceImpl();
+        Customer customer = service.getCustomer(idToDelete);
+        if (customer != null) {
+            service.deleteCustomer(customer);
+            resp.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+        resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
 }

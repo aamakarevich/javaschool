@@ -4,7 +4,6 @@ import com.tsystems.ecare.dao.GenericDao;
 import com.tsystems.ecare.utils.PersistenceProvider;
 
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.List;
@@ -15,21 +14,6 @@ import java.util.List;
 public abstract class GenericDaoImpl <T, ID extends Serializable> implements GenericDao<T, ID> {
 
     protected EntityManager entityManager = PersistenceProvider.getEntityManager();
-
-    @Override
-    public void beginTransaction() {
-        entityManager.getTransaction().begin();
-    }
-
-    @Override
-    public void commitTransaction() {
-        entityManager.getTransaction().commit();
-    }
-
-    @Override
-    public void rollbackTransaction() {
-        entityManager.getTransaction().rollback();
-    }
 
     public T save(T entity) {
         entityManager.persist(entity);
@@ -70,5 +54,20 @@ public abstract class GenericDaoImpl <T, ID extends Serializable> implements Gen
     public Long getTotalCount(Class clazz) {
         Query query = entityManager.createQuery("select count(id) from " + clazz.getName());
         return (Long) query.getSingleResult();
+    }
+
+    @Override
+    public void beginTransaction() {
+        entityManager.getTransaction().begin();
+    }
+
+    @Override
+    public void commitTransaction() {
+        entityManager.getTransaction().commit();
+    }
+
+    @Override
+    public void rollbackTransaction() {
+        entityManager.getTransaction().rollback();
     }
 }
