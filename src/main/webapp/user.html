@@ -62,16 +62,14 @@
                 </div>
             </div>
             <div class="form-group form-group-lg">
-                <div class="col-lg-offset-2 col-lg-6">
+                <div class="col-lg-offset-2 col-lg-6 col-xs-12">
                     <button type="submit" id="bSubmit" class="btn btn-lg btn-primary">Save new
                         customer
                     </button>
                     <button type="button" id="bCancel" class="btn btn-lg btn-default"
                             onclick="usersGoBack()">Cancel
                     </button>
-                    <button type="reset" id="bReset" class="btn btn-lg btn-default col-xs-12">Reset form
-                        data
-                    </button>
+                    <button type="reset" id="bReset" class="btn btn-lg btn-default" >Reset form</button>
                 </div>
             </div>
         </form>
@@ -208,6 +206,9 @@
                 $("#inputCustomerId").val(0);
 
                 $("#bCancel").hide();
+
+                $("#contractsHeader").hide();
+                $("#profileBody").hide();
 
                 $("#rolesHeader").hide();
                 $("#rolesBody").hide();
