@@ -2,7 +2,6 @@ package com.tsystems.ecare.app.servlets;
 
 import com.tsystems.ecare.app.model.Customer;
 import com.tsystems.ecare.app.services.CustomerService;
-import com.tsystems.ecare.app.services.impl.CustomerServiceImpl;
 import com.tsystems.ecare.app.utils.JsonUtil;
 
 import javax.servlet.ServletException;
@@ -28,7 +27,7 @@ public class CustomerServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Customer customer = JsonUtil.getObjectFromJson(req, Customer.class);
-        new CustomerServiceImpl().saveNewCustomer(customer);
+        new CustomerService().saveNewCustomer(customer);
         resp.setStatus(HttpServletResponse.SC_CREATED);
     }
 
@@ -44,12 +43,12 @@ public class CustomerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         if (req.getParameter("count") != null) {
-            JsonUtil.writeObjectToJson(resp, new CustomerServiceImpl().getCustomersCount());
+            JsonUtil.writeObjectToJson(resp, new CustomerService().getCustomersCount());
             return;
         }
 
         if (req.getParameter("page") != null && req.getParameter("size") != null) {
-            List<Customer> customers = new CustomerServiceImpl().getCustomersPaged(
+            List<Customer> customers = new CustomerService().getCustomersPaged(
                     Integer.parseInt(req.getParameter("page")),
                     Integer.parseInt(req.getParameter("size")));
             JsonUtil.writeObjectToJson(resp, customers);
@@ -58,12 +57,12 @@ public class CustomerServlet extends HttpServlet {
 
         if (!req.getPathInfo().equals("/")) {
             Integer idToGet = Integer.parseInt(req.getPathInfo().replace("/", ""));
-            Customer customer = new CustomerServiceImpl().getCustomer(idToGet);
+            Customer customer = new CustomerService().getCustomer(idToGet);
             JsonUtil.writeObjectToJson(resp, customer);
             return;
         }
 
-        JsonUtil.writeObjectToJson(resp, new CustomerServiceImpl().getAllCustomers());
+        JsonUtil.writeObjectToJson(resp, new CustomerService().getAllCustomers());
     }
 
     /**
@@ -76,32 +75,32 @@ public class CustomerServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         HttpSession session = req.getSession(true);
-        Customer user = new CustomerServiceImpl().getCustomerByEmail((String) session.getAttribute("currentuser"));
+        Customer user = new CustomerService().getCustomerByEmail((String) session.getAttribute("currentuser"));
 
         if (req.getParameter("activate") != null) {
-            Customer target = new CustomerServiceImpl().getCustomer(Integer.parseInt(req.getParameter("for")));
-            new CustomerServiceImpl().activate(Integer.parseInt(req.getParameter("activate")), target, user);
+            Customer target = new CustomerService().getCustomer(Integer.parseInt(req.getParameter("for")));
+            new CustomerService().activate(Integer.parseInt(req.getParameter("activate")), target, user);
             resp.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
         if (req.getParameter("deactivate") != null) {
-            Customer target = new CustomerServiceImpl().getCustomer(Integer.parseInt(req.getParameter("for")));
-            new CustomerServiceImpl().deactivate(Integer.parseInt(req.getParameter("deactivate")), target, user);
+            Customer target = new CustomerService().getCustomer(Integer.parseInt(req.getParameter("for")));
+            new CustomerService().deactivate(Integer.parseInt(req.getParameter("deactivate")), target, user);
             resp.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
         Customer gotCustomer = JsonUtil.getObjectFromJson(req, Customer.class);
 
-        Customer customer = null;// new CustomerServiceImpl().getCustomer(gotCustomer.getId());
+        Customer customer = null;// new CustomerService().getCustomer(gotCustomer.getId());
         customer.setFirstName(gotCustomer.getFirstName());
         customer.setLastName(gotCustomer.getLastName());
         customer.setBirthdate(gotCustomer.getBirthdate());
         customer.setPassport(gotCustomer.getPassport());
         customer.setAddress(gotCustomer.getAddress());
 
-        new CustomerServiceImpl().updateCustomer(customer);
+        new CustomerService().updateCustomer(customer);
 
         resp.setStatus(HttpServletResponse.SC_OK);
     }
@@ -114,7 +113,7 @@ public class CustomerServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Integer idToDelete = Integer.parseInt(req.getPathInfo().replace("/", ""));
-        CustomerService service = new CustomerServiceImpl();
+        CustomerService service = new CustomerService();
         Customer customer = service.getCustomer(idToDelete);
         if (customer != null) {
             service.deleteCustomer(customer);

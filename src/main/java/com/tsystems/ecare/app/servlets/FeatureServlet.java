@@ -2,7 +2,6 @@ package com.tsystems.ecare.app.servlets;
 
 import com.tsystems.ecare.app.model.Feature;
 import com.tsystems.ecare.app.services.FeatureService;
-import com.tsystems.ecare.app.services.impl.FeatureServiceImpl;
 import com.tsystems.ecare.app.utils.JsonUtil;
 
 import javax.servlet.ServletException;
@@ -29,7 +28,7 @@ public class FeatureServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Feature feature = JsonUtil.getObjectFromJson(req, Feature.class);
-        new FeatureServiceImpl().saveNewFeature(feature);
+        new FeatureService().saveFeature(feature);
         resp.setStatus(HttpServletResponse.SC_CREATED);
     }
 
@@ -47,7 +46,7 @@ public class FeatureServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         if (req.getParameter("blockers") != null) {
-            Feature feature = new FeatureServiceImpl().getFeature(Integer.parseInt(req.getParameter("blockers")));
+            Feature feature = new FeatureService().getFeature(Integer.parseInt(req.getParameter("blockers")));
             List<Integer> ids = new ArrayList<>();
 //            feature.getBlockers().forEach(b -> ids.add(b.getId()));
             JsonUtil.writeObjectToJson(resp, ids);
@@ -55,7 +54,7 @@ public class FeatureServlet extends HttpServlet {
         }
 
         if (req.getParameter("needs") != null) {
-            Feature feature = new FeatureServiceImpl().getFeature(Integer.parseInt(req.getParameter("needs")));
+            Feature feature = new FeatureService().getFeature(Integer.parseInt(req.getParameter("needs")));
             List<Integer> ids = new ArrayList<>();
 //            feature.getNeededFeatures().forEach(b -> ids.add(b.getId()));
             JsonUtil.writeObjectToJson(resp, ids);
@@ -69,7 +68,7 @@ public class FeatureServlet extends HttpServlet {
                         .mapToInt(Integer::parseInt)
                         .forEach(ids::add);
             }
-            JsonUtil.writeObjectToJson(resp, new FeatureServiceImpl().getListedFeatures(ids));
+            JsonUtil.writeObjectToJson(resp, new FeatureService().getListedFeatures(ids));
             return;
         }
 
@@ -83,7 +82,7 @@ public class FeatureServlet extends HttpServlet {
                         .forEach(ids::add);
             }
             List<Integer> availableIds = new ArrayList<>();
-//            new FeatureServiceImpl()
+//            new FeatureService()
 //                    .getAvailableFeatures(ids, Integer.parseInt(planId))
 //                    .forEach(b -> availableIds.add(b.getId()));
             JsonUtil.writeObjectToJson(resp, availableIds);
@@ -92,12 +91,12 @@ public class FeatureServlet extends HttpServlet {
 
         if (!req.getPathInfo().equals("/")) {
             Integer idToGet = Integer.parseInt(req.getPathInfo().replace("/", ""));
-            Feature feature = new FeatureServiceImpl().getFeature(idToGet);
+            Feature feature = new FeatureService().getFeature(idToGet);
             JsonUtil.writeObjectToJson(resp, feature);
             return;
         }
 
-        JsonUtil.writeObjectToJson(resp, new FeatureServiceImpl().getAllFeatures());
+        JsonUtil.writeObjectToJson(resp, new FeatureService().getAllFeatures());
     }
 
     /**
@@ -112,39 +111,39 @@ public class FeatureServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         if (req.getParameter("block") != null && req.getParameter("option") != null) {
-            Feature f1 = new FeatureServiceImpl().getFeature(Integer.parseInt(req.getParameter("option")));
-            Feature f2 = new FeatureServiceImpl().getFeature(Integer.parseInt(req.getParameter("block")));
-            new FeatureServiceImpl().setBlock(f1, f2);
+            Feature f1 = new FeatureService().getFeature(Integer.parseInt(req.getParameter("option")));
+            Feature f2 = new FeatureService().getFeature(Integer.parseInt(req.getParameter("block")));
+            new FeatureService().setBlock(f1, f2);
             resp.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
         if (req.getParameter("unblock") != null && req.getParameter("option") != null) {
-            Feature f1 = new FeatureServiceImpl().getFeature(Integer.parseInt(req.getParameter("option")));
-            Feature f2 = new FeatureServiceImpl().getFeature(Integer.parseInt(req.getParameter("unblock")));
-            new FeatureServiceImpl().deleteBlock(f1, f2);
+            Feature f1 = new FeatureService().getFeature(Integer.parseInt(req.getParameter("option")));
+            Feature f2 = new FeatureService().getFeature(Integer.parseInt(req.getParameter("unblock")));
+            new FeatureService().deleteBlock(f1, f2);
             resp.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
         if (req.getParameter("link") != null && req.getParameter("option") != null) {
-            Feature f1 = new FeatureServiceImpl().getFeature(Integer.parseInt(req.getParameter("option")));
-            Feature f2 = new FeatureServiceImpl().getFeature(Integer.parseInt(req.getParameter("link")));
-            new FeatureServiceImpl().setDependency(f1, f2);
+            Feature f1 = new FeatureService().getFeature(Integer.parseInt(req.getParameter("option")));
+            Feature f2 = new FeatureService().getFeature(Integer.parseInt(req.getParameter("link")));
+            new FeatureService().setDependency(f1, f2);
             resp.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
         if (req.getParameter("unlink") != null && req.getParameter("option") != null) {
-            Feature f1 = new FeatureServiceImpl().getFeature(Integer.parseInt(req.getParameter("option")));
-            Feature f2 = new FeatureServiceImpl().getFeature(Integer.parseInt(req.getParameter("unlink")));
-            new FeatureServiceImpl().deleteDependency(f1, f2);
+            Feature f1 = new FeatureService().getFeature(Integer.parseInt(req.getParameter("option")));
+            Feature f2 = new FeatureService().getFeature(Integer.parseInt(req.getParameter("unlink")));
+            new FeatureService().deleteDependency(f1, f2);
             resp.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
         Feature feature = JsonUtil.getObjectFromJson(req, Feature.class);
-        new FeatureServiceImpl().updateFeature(feature);
+        new FeatureService().updateFeature(feature);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 
@@ -156,7 +155,7 @@ public class FeatureServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Integer idToDelete = Integer.parseInt(req.getPathInfo().replace("/", ""));
-        FeatureService service = new FeatureServiceImpl();
+        FeatureService service = new FeatureService();
         Feature feature = service.getFeature(idToDelete);
         if (feature != null) {
             if (feature.getContracts().size() == 0) {

@@ -1,5 +1,5 @@
 import com.tsystems.ecare.app.model.Plan;
-import com.tsystems.ecare.app.services.impl.PlanServiceImpl;
+import com.tsystems.ecare.app.services.PlanService;
 import com.tsystems.ecare.config.root.DevelopmentConfiguration;
 import com.tsystems.ecare.config.root.RootContextConfig;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 public class PlanServiceTest {
 
     @Autowired
-    private PlanServiceImpl planService;
+    private PlanService planService;
 
     @Test
     public void test() {
@@ -25,6 +25,6 @@ public class PlanServiceTest {
         plan.setTitle("Title");
         plan.setDescription("Description");
         plan.setMonthlyFee(new BigDecimal(10));
-        planService.saveNewPlan(plan);
+        planService.savePlan(plan);
     }
 }

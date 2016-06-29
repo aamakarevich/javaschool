@@ -2,15 +2,14 @@ package com.tsystems.ecare.app.dao.impl;
 
 import com.tsystems.ecare.app.dao.FeatureDao;
 import com.tsystems.ecare.app.model.Feature;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.util.List;
 
-/**
- * @author Andrei Makarevich
- */
-public class FeatureDaoImpl extends GenericDaoImpl<Feature, Integer> implements FeatureDao {
+@Repository
+public class FeatureRepository extends GenericRepository<Feature, Integer> implements FeatureDao {
 
     @Override
     public List<Feature> getListed(List<Integer> ids) {

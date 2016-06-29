@@ -3,10 +3,10 @@ package com.tsystems.ecare.app.servlets;
 import com.tsystems.ecare.app.model.Contract;
 import com.tsystems.ecare.app.model.Customer;
 import com.tsystems.ecare.app.model.Feature;
-import com.tsystems.ecare.app.services.impl.ContractServiceImpl;
-import com.tsystems.ecare.app.services.impl.CustomerServiceImpl;
-import com.tsystems.ecare.app.services.impl.FeatureServiceImpl;
-import com.tsystems.ecare.app.services.impl.PlanServiceImpl;
+import com.tsystems.ecare.app.services.ContractService;
+import com.tsystems.ecare.app.services.CustomerService;
+import com.tsystems.ecare.app.services.FeatureService;
+import com.tsystems.ecare.app.services.PlanService;
 import com.tsystems.ecare.app.utils.JsonUtil;
 
 import javax.servlet.ServletException;
@@ -28,13 +28,13 @@ public class ContractServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!req.getPathInfo().equals("/")) {
             Integer idToGet = Integer.parseInt(req.getPathInfo().replace("/", ""));
-            Contract contract = new ContractServiceImpl().getContract(idToGet);
+            Contract contract = new ContractService().getContract(idToGet);
             JsonUtil.writeObjectToJson(resp, contract);
             return;
         }
 
         if (req.getParameter("number") != null) {
-            JsonUtil.writeObjectToJson(resp, new ContractServiceImpl().getContractByNumber(req.getParameter("number")));
+            JsonUtil.writeObjectToJson(resp, new ContractService().getContractByNumber(req.getParameter("number")));
             return;
         }
 
@@ -51,15 +51,15 @@ public class ContractServlet extends HttpServlet {
                         .forEach(ids::add);
             }
 
-            List<Feature> features = new FeatureServiceImpl().getListedFeatures(ids);
+            List<Feature> features = new FeatureService().getListedFeatures(ids);
 
             Contract contract = new Contract();
             contract.setNumber(number);
-            contract.setCustomer(new CustomerServiceImpl().getCustomer(customerId));
-            contract.setPlan(new PlanServiceImpl().getPlan(planId));
+            contract.setCustomer(new CustomerService().getCustomer(customerId));
+            contract.setPlan(new PlanService().getPlan(planId));
             contract.setActiveFeatures(features);
 
-            new ContractServiceImpl().saveNewContract(contract);
+            new ContractService().saveNewContract(contract);
             resp.setStatus(HttpServletResponse.SC_OK);
         }
     }
@@ -68,22 +68,22 @@ public class ContractServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         HttpSession session = req.getSession(true);
-        Customer customer = new CustomerServiceImpl().getCustomerByEmail((String) session.getAttribute("currentuser"));
+        Customer customer = new CustomerService().getCustomerByEmail((String) session.getAttribute("currentuser"));
 
         if (req.getParameter("lock") != null) {
-            new ContractServiceImpl().lock(Integer.parseInt(req.getParameter("lock")), customer);
+            new ContractService().lock(Integer.parseInt(req.getParameter("lock")), customer);
             resp.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
         if (req.getParameter("unlock") != null) {
-            new ContractServiceImpl().unlock(Integer.parseInt(req.getParameter("unlock")), customer);
+            new ContractService().unlock(Integer.parseInt(req.getParameter("unlock")), customer);
             resp.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
         Contract contract = JsonUtil.getObjectFromJson(req, Contract.class);
-        new ContractServiceImpl().updateContract(contract);
+        new ContractService().updateContract(contract);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 }

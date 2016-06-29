@@ -2,9 +2,8 @@ package com.tsystems.ecare.app.servlets;
 
 import com.tsystems.ecare.app.model.Feature;
 import com.tsystems.ecare.app.model.Plan;
+import com.tsystems.ecare.app.services.FeatureService;
 import com.tsystems.ecare.app.services.PlanService;
-import com.tsystems.ecare.app.services.impl.FeatureServiceImpl;
-import com.tsystems.ecare.app.services.impl.PlanServiceImpl;
 import com.tsystems.ecare.app.utils.JsonUtil;
 
 import javax.servlet.ServletException;
@@ -28,7 +27,7 @@ public class PlanServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Plan plan = JsonUtil.getObjectFromJson(req, Plan.class);
-        new PlanServiceImpl().saveNewPlan(plan);
+        new PlanService().savePlan(plan);
         resp.setStatus(HttpServletResponse.SC_CREATED);
     }
 
@@ -42,12 +41,12 @@ public class PlanServlet extends HttpServlet {
 
         if (!req.getPathInfo().equals("/")) {
             Integer idToGet = Integer.parseInt(req.getPathInfo().replace("/", ""));
-            Plan plan = new PlanServiceImpl().getPlan(idToGet);
+            Plan plan = new PlanService().getPlan(idToGet);
             JsonUtil.writeObjectToJson(resp, plan);
             return;
         }
 
-        JsonUtil.writeObjectToJson(resp, new PlanServiceImpl().getAllPlans());
+        JsonUtil.writeObjectToJson(resp, new PlanService().getAllPlans());
     }
 
     /**
@@ -60,23 +59,23 @@ public class PlanServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         if (req.getParameter("link") != null && req.getParameter("to") != null) {
-            Plan plan = new PlanServiceImpl().getPlan(Integer.parseInt(req.getParameter("to")));
-            Feature feature = new FeatureServiceImpl().getFeature(Integer.parseInt(req.getParameter("link")));
+            Plan plan = new PlanService().getPlan(Integer.parseInt(req.getParameter("to")));
+            Feature feature = new FeatureService().getFeature(Integer.parseInt(req.getParameter("link")));
             if(!plan.getAllowedFeatures().contains(feature)) {
                 plan.getAllowedFeatures().add(feature);
-                new PlanServiceImpl().updatePlan(plan);
+                new PlanService().savePlan(plan);
             }
             resp.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
         if (req.getParameter("unlink") != null && req.getParameter("from") != null) {
-            Plan plan = new PlanServiceImpl().getPlan(Integer.parseInt(req.getParameter("from")));
+            Plan plan = new PlanService().getPlan(Integer.parseInt(req.getParameter("from")));
             Integer featureToUnlinkId = Integer.parseInt(req.getParameter("unlink"));
             for (Feature feature : plan.getAllowedFeatures()) {
                 if (feature.getId().equals(featureToUnlinkId)) {
                     plan.getAllowedFeatures().remove(feature);
-                    new PlanServiceImpl().updatePlan(plan);
+                    new PlanService().savePlan(plan);
                     break;
                 }
             }
@@ -91,7 +90,7 @@ public class PlanServlet extends HttpServlet {
         plan.setDescription(gotPlan.getDescription());
         plan.setMonthlyFee(gotPlan.getMonthlyFee());
 
-        new PlanServiceImpl().updatePlan(plan);
+        new PlanService().savePlan(plan);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 

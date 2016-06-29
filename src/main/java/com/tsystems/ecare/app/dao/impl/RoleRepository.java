@@ -2,14 +2,13 @@ package com.tsystems.ecare.app.dao.impl;
 
 import com.tsystems.ecare.app.dao.RoleDao;
 import com.tsystems.ecare.app.model.Role;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
-/**
- * @author Andrei Makarevich
- */
-public class RoleDaoImpl extends GenericDaoImpl<Role, Integer> implements RoleDao {
+@Repository
+public class RoleRepository extends GenericRepository<Role, Integer> implements RoleDao {
 
     public Role findByTitle(String title) {
         Query query = em.createQuery(

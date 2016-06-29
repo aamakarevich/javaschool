@@ -2,14 +2,13 @@ package com.tsystems.ecare.app.dao.impl;
 
 import com.tsystems.ecare.app.dao.CustomerDao;
 import com.tsystems.ecare.app.model.Customer;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
-/**
- * @author Andrei Makarevich
- */
-public class CustomerDaoImpl extends GenericDaoImpl<Customer, Integer> implements CustomerDao {
+@Repository
+public class CustomerRepository extends GenericRepository<Customer, Integer> implements CustomerDao {
 
     public Customer findByEmail(String email) {
         Query query = em.createQuery(

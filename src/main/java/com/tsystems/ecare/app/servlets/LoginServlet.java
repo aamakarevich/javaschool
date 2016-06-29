@@ -1,7 +1,7 @@
 package com.tsystems.ecare.app.servlets;
 
 import com.tsystems.ecare.app.model.Customer;
-import com.tsystems.ecare.app.services.impl.CustomerServiceImpl;
+import com.tsystems.ecare.app.services.CustomerService;
 import com.tsystems.ecare.app.utils.HashUtil;
 import com.tsystems.ecare.app.utils.JsonUtil;
 
@@ -48,7 +48,7 @@ public class LoginServlet extends HttpServlet {
 
         if (session.getAttribute("currentuser") != null ) {
 
-            Customer customer = new CustomerServiceImpl().getCustomerByEmail((String) session.getAttribute("currentuser"));
+            Customer customer = new CustomerService().getCustomerByEmail((String) session.getAttribute("currentuser"));
             if (customer == null) {
                 JsonUtil.writeObjectToJson(response, null);
                 return;
@@ -63,7 +63,7 @@ public class LoginServlet extends HttpServlet {
         }
 
         if(request.getParameter("email") != null && request.getParameter("password") != null) {
-            Customer customer = new CustomerServiceImpl().verifyUser(
+            Customer customer = new CustomerService().verifyUser(
                     request.getParameter("email"),
                     HashUtil.getSHA256(request.getParameter("password")));
             if (customer != null) {
