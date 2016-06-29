@@ -1,0 +1,153 @@
+<div id="contract1">
+    <div class="jumbotron">
+        <div class="container">
+            <h1>Contract management</h1>
+        </div>
+    </div>
+
+    <div class="container" id="contract1PageCover" hidden="hidden">
+        <h3 id="formHeader"></h3>
+        <form class="form-horizontal" onsubmit="return contract1Proceed();">
+            <div class="input-group col-lg-4">
+                <div class="input-group-addon" id="addonNumber">8 (999)</div>
+                <input type="text" required minlength="7" maxlength="7" class="form-control numbersonly"
+                       id="inputNumber" aria-describedby="addonNumber" placeholder="1234567">
+            </div>
+            <div class="input-group col-lg-4">
+                <div class="alert alert-info" id="phoneError" role="alert">This phone number is already in use. Please
+                    choose another one.
+                </div>
+            </div>
+            <div class="input-group col-lg-4 col-xs-12">
+                <div id="subformBody">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th class="col-lg-8 col-xs-6">Plan</th>
+                            <th class="col-lg-4 col-xs-6"></th>
+                        </tr>
+                        </thead>
+                        <tbody id="tAllPlans"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="input-group col-lg-4 col-xs-12">
+                <button type="submit" id="bSubmit" class="btn btn-primary btn-block">Proceed to options set up</button>
+            </div>
+        </form>
+
+    </div>
+
+    <script>
+        function getContract1() {
+
+            var error = getLs("duplicateNumber");
+            $("#phoneError").hide();
+            if(error != null) {
+                $("#phoneError").show();
+                $("#inputNumber").focus();
+                removeLs("duplicateNumber");
+            }
+
+            setLs(BASKET_UP, true);
+
+            var lsNumberId = getLs(BASKET_NUMBER);
+            var lsPlanId = getLs(BASKET_PLAN);
+
+            $("#inputNumber").val(lsNumberId == null ? "" : lsNumberId);
+
+            var basketContract = getLs(BASKET_CONTRACT);
+            if (basketContract == null) {
+                $("#formHeader").html("Choose phone number and plan");
+            } else {
+                $("#formHeader").html("Choose new plan for contract");
+                $("#inputNumber").prop("disabled", true);
+            }
+
+            if (lsPlanId == null) {
+                $("#bSubmit").prop("disabled", true);
+            }
+
+            getPlansForContract();
+
+            $(".numbersonly").keydown(function (event) {
+                // Allow special chars + arrows
+                if (event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9
+                        || event.keyCode == 27 || event.keyCode == 13
+                        || (event.keyCode == 65 && event.ctrlKey === true)
+                        || (event.keyCode >= 35 && event.keyCode <= 39)) {
+                    return;
+                } else {
+                    // If it's not a number stop the keypress
+                    if (event.shiftKey || (event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
+                        event.preventDefault();
+                    }
+                }
+            });
+
+            $("#contract1PageCover").fadeOut(1).fadeIn(1000);
+        }
+
+        function getPlansForContract() {
+            client.plan.read("").done(function (plans) {
+                var plansContent = "";
+                plans.forEach(function (plan) {
+
+                    var id = plan.id;
+                    var lsId = getLs(BASKET_PLAN);
+
+                    plansContent += "<tr><td>" + plan.title + "</td><td>";
+                    plansContent += "<button type=\"button\" id=\"pl" + id + "\" ";
+                    plansContent += "onclick=\"togglePlan(" + id + ")\" data-toggle=\"button\" autocomplete=\"off\" class=\"btn btn-block ";
+                    if (id == lsId) {
+                        plansContent += "btn-primary active\" aria-pressed=\"true\">Chosen</button>";
+                    } else {
+                        plansContent += "btn-default\" aria-pressed=\"false\">Choose</button>";
+                    }
+
+                    plansContent += "</td></tr>";
+                });
+                $("#tAllPlans").html(plansContent);
+            });
+        }
+
+        function togglePlan(id) {
+            var element = $("#pl" + id);
+            removeLs(BASKET_OPTIONS);
+            if (element.hasClass("active")) {
+                removeLs(BASKET_PLAN);
+
+                $("#bSubmit").prop("disabled", true);
+
+                element.removeClass("btn-primary");
+                element.addClass("btn-default");
+                element.blur();
+                element.html("Choose");
+
+            } else {
+                setLs(BASKET_PLAN, id);
+
+                $("#bSubmit").removeAttr("disabled");
+
+                var ap = $("#tAllPlans button");
+                ap.removeClass("btn-primary");
+                ap.removeClass("active");
+                ap.addClass("btn-default");
+                ap.html("Choose");
+                ap.removeAttr("aria-pressed");
+                ap.attr("aria-pressed", false);
+
+                element.removeClass("btn-default");
+                element.addClass("btn-primary");
+                element.blur();
+                element.html("Chosen");
+            }
+        }
+
+        function contract1Proceed() {
+            setLs(BASKET_NUMBER, $("#inputNumber").val());
+            loadPage("contract2", "basket");
+            return false;
+        }
+    </script>
+</div>

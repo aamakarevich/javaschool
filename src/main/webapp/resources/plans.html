@@ -1,0 +1,118 @@
+<div id="plans">
+    <div class="jumbotron">
+        <div class="container">
+            <h1>Available plans</h1>
+            <p>What you want is what you get! Everyone finds his own way with eCare!</p>
+        </div>
+    </div>
+    <div class="container">
+
+        <div id="plans_table_cover" hidden="hidden">
+            <div id="plans_table"></div>
+
+            <nav class="text-center">
+                <ul class="pagination" id="pagination"></ul>
+                <input type="hidden" id="items_count" value="9"/>
+                <input type="hidden" id="current_page" value="1"/>
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        function getAllPlans() {
+
+            client.plan.read("").done(function (plans) {
+
+                var plansRows = "";
+                var i = 0;
+                for (var c in plans) {
+                    if (i == 0) plansRows += "<div class=\"row row-eq-height\">";
+                    plansRows += "<div class=\"col-lg-4\">";
+                    plansRows += "<div class=\"panel panel-info\">" +
+                            "<div class=\"panel-heading\">" +
+                            "<h3 class=\"panel-title text-uppercase\"><strong>" + plans[c].title + "</strong></h3>";
+                    if (cuser != null) {
+                        if (cuser.suser != null) {
+                            plansRows +=
+                                    "<div class=\"btn-group pull-right\">" +
+                                    "<a href=\"#\" class=\"btn btn-info btn-sm\" onclick=\"editPlan(" + plans[c].id + ");\">Edit</a>" +
+                                    "<a href=\"#\" class=\"btn btn-danger btn-sm\" data-toggle=\"modal\" data-target=\"#deletePlanModal\" " +
+                                    "onclick=\"presetDeletePlanId(" + plans[c].id + ");\" onfocus=\"this.blur()\">Delete</a></div>";
+                        }
+                    }
+                    plansRows += "</div>" +
+                            "<div class=\"panel-body\">" +
+                            "<strong>MONTHLY FEE</strong>: €" + plans[c].monthlyFee + "<br />" +
+                            "<strong>DESCRIPTION</strong>: " + plans[c].description +
+                            "</div></div>";
+                    plansRows += "</div>";
+                    if (i == 2) plansRows += "</div>";
+                    i++;
+                    if (i == 3) i = 0;
+                }
+                var addButton = "<div class=\"col-lg-4\">" +
+                        "<div id=\"addNewPlan\" onclick=\"addPlan();\" class=\"panel panel-info\">" +
+                        "<div class=\"panel-heading\">" +
+                        "<h3 class=\"panel-title text-uppercase\"><strong>Add new plan</strong></h3></div>" +
+                        "<div class=\"panel-body text-center\"><h1>+</h1>" +
+                        "</div></div></div>";
+                if (i != 0) {
+                    if (cuser != null) {
+                        if (cuser.suser != null) {
+                            plansRows += addButton;
+                        }
+                    }
+                    plansRows += "</div>";
+                } else {
+                    if (cuser != null) {
+                        if (cuser.suser != null) {
+                            plansRows += "<div class=\"row\">" + addButton + "</div>";
+                        }
+                    }
+                }
+
+                $("#plans_table").empty();
+                $("#plans_table").append(plansRows);
+            });
+            $("#plans_table_cover").fadeOut(1).fadeIn(1500);
+        }
+    </script>
+    <div class="modal fade" id="deletePlanModal" role="dialog" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Realy delete plan? Plan will not be deleted if any customers use it.</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="deletePlanId"/>
+                    <button class="btn btn-primary" type="button" onclick="deletePlan();">Yes</button>
+                    <button class="btn btn-default" type="button" onclick="closeDeletePlanModal();">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function presetDeletePlanId(id) {
+            $("#deletePlanId").val(id);
+        }
+        function addPlan() {
+            window.localStorage.setItem("planId", 0);
+            loadPage('plan', 'plans');
+
+        }
+        function editPlan(id) {
+            window.localStorage.setItem("planId", id);
+            loadPage('plan', 'plans');
+        }
+        function deletePlan() {
+            client.plan.del($("#deletePlanId").val()).always(function (result) {
+                $("#deletePlanModal").modal("hide");
+                getAllPlans();
+            });
+        }
+        function closeDeletePlanModal() {
+            $("#deletePlanModal").modal("hide");
+            $("#deletePlanModal").modal("hide");
+        }
+    </script>
+</div>

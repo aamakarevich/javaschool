@@ -55,8 +55,4 @@
     <url-pattern>/rest/login/</url-pattern>
   </servlet-mapping>
 
-  <listener>
-    <listener-class>com.tsystems.ecare.listeners.ServletContextListenerImpl</listener-class>
-    <listener-class>com.tsystems.ecare.listeners.ServletRequestListenerImpl</listener-class>
-  </listener>
 </web-app>
