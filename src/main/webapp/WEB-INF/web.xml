@@ -5,54 +5,11 @@
 <web-app>
   <display-name>eCare mobile web application</display-name>
   <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
+    <welcome-file>/resources/index.jsp</welcome-file>
   </welcome-file-list>
 
-  <!-- REST -->
-  <servlet>
-    <servlet-name>customer</servlet-name>
-    <servlet-class>com.tsystems.ecare.servlets.CustomerServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>customer</servlet-name>
-    <url-pattern>/rest/customer/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
-    <servlet-name>plan</servlet-name>
-    <servlet-class>com.tsystems.ecare.servlets.PlanServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>plan</servlet-name>
-    <url-pattern>/rest/plan/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
-    <servlet-name>option</servlet-name>
-    <servlet-class>com.tsystems.ecare.servlets.FeatureServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>option</servlet-name>
-    <url-pattern>/rest/option/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
-    <servlet-name>contract</servlet-name>
-    <servlet-class>com.tsystems.ecare.servlets.ContractServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>contract</servlet-name>
-    <url-pattern>/rest/contract/*</url-pattern>
-  </servlet-mapping>
-  <!-- end REST -->
-
-  <servlet>
-    <servlet-name>login</servlet-name>
-    <servlet-class>com.tsystems.ecare.servlets.LoginServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>login</servlet-name>
-    <url-pattern>/rest/login/</url-pattern>
-  </servlet-mapping>
-
+  <context-param>
+    <param-name>spring.profiles.active</param-name>
+    <param-value>development</param-value>
+  </context-param>
 </web-app>

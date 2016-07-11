@@ -5,7 +5,7 @@ import com.tsystems.ecare.app.model.Customer;
 /**
  * @author Andrei Makarevich
  */
-public interface CustomerDao extends GenericDao<Customer, Integer> {
+public interface CustomerDao extends GenericDao<Customer, Long> {
 
     Customer findByEmail(String email);
 

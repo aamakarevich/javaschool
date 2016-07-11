@@ -64,10 +64,10 @@
         var availableOptions;
         function getPlan() {
             availableOptions = [];
-            var planId = window.localStorage.getItem("planId");
+            var feature1Id = window.localStorage.getItem("feature1Id");
 
-            if (planId != 0) {
-                client.plan.read(planId).done(function (plan) {
+            if (feature1Id != 0) {
+                client.plan.read(feature1Id).done(function (plan) {
 
                     $("#formHeader").html("Changing plan information");
 
@@ -101,6 +101,11 @@
         }
 
         function savePlan() {
+            var token = $("meta[name='_csrf']").attr("content");
+            if (!token) token = "";
+            var header = $("meta[name='_csrf_header']").attr("content");
+            if (!header) header = "";
+
             if ($("#inputPlanId").val() == 0) {
                 var plan = {
                     title: $("#inputTitle").val(),
@@ -108,8 +113,20 @@
                     description: $("#inputDescription").val()
                 };
 
-                client.plan.create(plan).always(function (result) {
-                    loadPage("plans", "plans");
+                $.ajax({
+                    type: 'POST',
+                    url: '/plan',
+                    data: JSON.stringify(plan),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    success: function (response) {
+                        loadPage("plans", "plans");
+                    },
+                    error: function () {}
                 });
             } else {
                 var plan = {
@@ -119,8 +136,20 @@
                     description: $("#inputDescription").val()
                 };
 
-                client.plan.update(plan).always(function (result) {
-                    loadPage("plans", "plans");
+                $.ajax({
+                    type: 'PUT',
+                    url: '/plan',
+                    data: JSON.stringify(plan),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    success: function (response) {
+                        loadPage("plans", "plans");
+                    },
+                    error: function () {}
                 });
             }
 
@@ -133,26 +162,69 @@
 
 
         function toggleOption(id) {
+            var token = $("meta[name='_csrf']").attr("content");
+            if (!token) token = "";
+            var header = $("meta[name='_csrf_header']").attr("content");
+            if (!header) header = "";
 
             var element = $("#av" + id);
             if (element.hasClass("active")) {
-                client.plan.update("?unlink=" + id + "&from=" + $("#inputPlanId").val());
-                element.removeClass("btn-primary");
-                element.addClass("btn-default");
-                element.blur();
-                element.html("Unavailable");
+                var change = {
+                    planId: $("#inputPlanId").val(),
+                    featureId: id,
+                    available: false
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/allow',
+                    data: JSON.stringify(change),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    success: function (response) {
+                        element.removeClass("btn-primary");
+                        element.addClass("btn-default");
+                        element.blur();
+                        element.html("Unavailable");
+                    },
+                    error: function () {}
+                });
             } else {
-                client.plan.update("?link=" + id + "&to=" + $("#inputPlanId").val());
-                element.removeClass("btn-default");
-                element.addClass("btn-primary");
-                element.blur();
-                element.html("Available");
+                var change = {
+                    planId: $("#inputPlanId").val(),
+                    featureId: id,
+                    available: true
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/allow',
+                    data: JSON.stringify(change),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    success: function (response) {
+                        element.removeClass("btn-default");
+                        element.addClass("btn-primary");
+                        element.blur();
+                        element.html("Available");
+                    },
+                    error: function () {}
+                });
             }
         }
 
         function getAllOptionsForPlan() {
 
-            client.option.read("").done(function (options) {
+            client.option.read("").done(function (response) {
+                var options = response.features;
                 var optionsContent = "";
                 options.forEach(function (option) {
                     var id = option.id;

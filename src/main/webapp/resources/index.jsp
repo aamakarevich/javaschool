@@ -1,36 +1,39 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html>
 <head>
     <meta charset="utf-8"/>
+    <sec:csrfMetaTags/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>eCare mobile</title>
 
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/resources/img/favicon.ico" type="image/x-icon"/>
 
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/bootstrap-theme.css">
-    <link rel="stylesheet" href="css/theme.css">
-    <link rel="stylesheet" href="css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="/resources/css/bootstrap.css">
+    <link rel="stylesheet" href="/resources/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="/resources/css/theme.css">
+    <link rel="stylesheet" href="/resources/css/bootstrap-datepicker3.min.css">
 
-    <link rel="import" href="home.html">
-    <link rel="import" href="plan.html">
-    <link rel="import" href="plans.html">
-    <link rel="import" href="option.html">
-    <link rel="import" href="options.html">
-    <link rel="import" href="user.html">
-    <link rel="import" href="users.html">
-    <link rel="import" href="contract1.html">
-    <link rel="import" href="contract2.html">
-    <link rel="import" href="profile.html">
+    <link rel="import" href="/resources/public/home.html">
+    <link rel="import" href="/resources/public/plan.html">
+    <link rel="import" href="/resources/public/plans.html">
+    <link rel="import" href="/resources/public/option.html">
+    <link rel="import" href="/resources/public/options.html">
+    <link rel="import" href="/resources/public/user.html">
+    <link rel="import" href="/resources/public/users.html">
+    <link rel="import" href="/resources/public/contract1.html">
+    <link rel="import" href="/resources/public/contract2.html">
+    <link rel="import" href="/resources/public/profile.html">
 </head>
 
 <body>
-
-<script src="js/jquery.min.js" type="text/javascript"></script>
-<script src="js/jquery.cookie.js" type="text/javascript"></script>
-<script src="js/jquery.rest.min.js" type="text/javascript"></script>
-<script src="js/bootstrap.min.js" type="text/javascript"></script>
-<script src="js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="/resources/js/jquery.min.js" type="text/javascript"></script>
+<script src="/resources/js/jquery.cookie.js" type="text/javascript"></script>
+<script src="/resources/js/jquery.rest.min.js" type="text/javascript"></script>
+<script src="/resources/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="/resources/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
 
 <script>
     /* Globals */
@@ -42,9 +45,9 @@
     const BASKET_UP = "basketUp";
 
     /* Set up REST-client */
-    var client = new $.RestClient('rest/');
+    var client = new $.RestClient('/');
 
-    client.add('login', {
+    client.add('authenticate', {
         stripTrailingSlash: true,
         ajax: {async: true}
     });
@@ -70,7 +73,7 @@
     });
     /* end */
 
-    if ($.cookie("currentuser") == null) {
+    if ($.cookie("ecare.usrename") == null) {
         var cpage = $.cookie("currentpage");
         if (cpage != "home" && cpage != "plans" && cpage != "options") {
             $.cookie("currentpage", "home", {expires: 1, path: '/'});
@@ -78,42 +81,34 @@
     }
 
     function loadRights() {
-        client.login.read("").done(function (customer) {
-            if (customer == null) {
-                $("#userData").empty();
-                $("#nav_username").hide();
-                $("#nav_logout").hide();
-                $("#nav_users").hide();
-                $("#nav_basket").hide();
-                $("#nav_profile").hide();
-                $("#nav_login").show();
-            } else {
-                $("#userData").empty();
-                $("#nav_login").hide();
-                $("#nav_users").hide();
-                $("#nav_basket").show();
-                $("#nav_profile").show();
-                $("#userData").html("<script>var cuser=" + JSON.stringify(customer) + ";<\/script>");
+        if ($.cookie("ecare.username") == null) {
+            $("#userData").empty();
+            $("#nav_username").hide();
+            $("#nav_logout").hide();
+            $("#nav_users").hide();
+            $("#nav_basket").hide();
+            $("#nav_profile").hide();
+            $("#nav_login").show();
+        } else {
+            $("#userData").empty();
+            $("#nav_login").hide();
+            $("#nav_users").hide();
+            $("#nav_basket").show();
+            $("#nav_profile").show();
 
-                $.cookie('currentuser', customer.email, {expires: 1, path: '/'});
-                if (cuser.manager != null || cuser.admin != null) {
-                    cuser.suser = true;
-                }
-                if (cuser.suser != null) {
-                    $("#nav_users").show();
-                }
-                $("#nav_fullname").empty();
-                $("#nav_fullname").append(customer.username);
-                $("#nav_username").show();
+            if ($.cookie("ecare.admin") != null || $.cookie("ecare.manager") != null) {
+                $.cookie('ecare.suser', "true", {expires: 1, path: '/'});
             }
-            $("#topnavcover").hide().removeClass('hidden').fadeIn();
-        });
+            if ($.cookie("ecare.suser") != null) {
+                $("#nav_users").show();
+            }
+            $("#nav_fullname").empty();
+            $("#nav_fullname").append($.cookie("ecare.firstname") + " " + $.cookie("ecare.lastname"));
+            $("#nav_username").show();
+        }
+        $("#topnavcover").hide().removeClass('hidden').fadeIn();
     }
-    loadRights();
 </script>
-<div id="userData">
-    <script>cuser = null;</script>
-</div>
 <div id="topnavcover" class="hidden">
     <nav class="navbar navbar-inverse navbar-fixed-top" id="topnav">
         <div class="container">
@@ -133,16 +128,20 @@
                     <li id="nav_plans" onclick="loadPage('plans', 'plans')"><a href="#">Plans</a></li>
                     <li id="nav_options" onclick="loadPage('options', 'options')"><a href="#">Options</a></li>
                     <li id="nav_users" onclick="loadPage('users', 'users')"><a href="#">Customers</a></li>
-                    <li id="nav_profile" onclick="loadPage('profile', 'profile')"><a href="#" onfocus="this.blur()"><span class="glyphicon glyphicon-user" aria-hidden="true"/></a></li>
-                    <li id="nav_basket" onclick="loadBasket()"><a href="#" onfocus="this.blur()"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"/></a></li>
+                    <li id="nav_profile" onclick="loadPage('profile', 'profile')"><a href="#"
+                                                                                     onfocus="this.blur()"><span
+                            class="glyphicon glyphicon-user" aria-hidden="true"/></a></li>
+                    <li id="nav_basket" onclick="loadBasket()"><a href="#" onfocus="this.blur()"><span
+                            class="glyphicon glyphicon-shopping-cart" aria-hidden="true"/></a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right" id="right_nav">
                     <li id="nav_login"><a href="#" data-toggle="modal" data-target="#loginModal" onfocus="this.blur()">Sign
                         in</a></li>
                     <p id="nav_username" class="navbar-text navbar-right">
                         Signed in as
-                        <a href="#" id="nav_fullname" class="navbar-link" onclick="loadPage('profile', 'profile')"></a> [<a href="#" class="navbar-link"
-                                                                                   onclick="logout()">Sign out</a>]
+                        <a href="#" id="nav_fullname" class="navbar-link" onclick="loadPage('profile', 'profile')"></a>
+                        [<a href="#" class="navbar-link"
+                            onclick="logout()">Sign out</a>]
                     </p>
                 </ul>
             </div>
@@ -180,6 +179,7 @@
 
 <script>
     $(document).ready(function () {
+        loadRights();
         startUp();
     });
 
@@ -217,7 +217,7 @@
 
         /* Loading new content page */
         $("#page").empty();
-        var link = document.querySelector('link[href^=' + page + ']');
+        var link = document.querySelector('link[href$=\"' + page + '\.html"]');
         var content = link.import.querySelector("#" + page);
         document.querySelector("#page").appendChild(content.cloneNode(true));
         $("#navbar li").removeClass("active");
@@ -254,7 +254,7 @@
     }
 
     function loadBasket() {
-        if(getLs(BASKET_UP) != null) {
+        if (getLs(BASKET_UP) != null) {
             if (getLs(BASKET_PLAN) == null) {
                 loadPage("contract1", "basket");
             } else {
@@ -271,27 +271,82 @@
     }
 
     function submitModal() {
-        client.login.read("?email=" + $("#inputEmail").val() + "&password=" + $("#inputPassword").val()).done(function (customer) {
-            if (customer == null) {
+        var data = {username: $("#inputEmail").val(), password: $("#inputPassword").val()};
+        /*client.authenticate.create(data).done(function (customer) {
+         if (customer == null) {
+         $("#loginError").fadeOut().fadeIn("slow");
+         $("#inputEmail").focus();
+         $("#inputPassword").val("");
+         } else {
+         loadRights();
+         startUp();
+         closeModal();
+         }
+         });*/
+        var token = $("meta[name='_csrf']").attr("content");
+        if (!token) token = "";
+        var header = $("meta[name='_csrf_header']").attr("content");
+        if (!header) header = "";
+
+        var ds = {
+            username: $("#inputEmail").val(),
+            password: $("#inputPassword").val()
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/authenticate',
+            data: ds,
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Login-Ajax-call": 'true'
+            },
+            beforeSend: function (request) {
+                request.setRequestHeader(header, token);
+            },
+            success: function (response) {
+                if (response == 'ok') {
+                    location.reload(false);
+                }
+            },
+            error: function () {
                 $("#loginError").fadeOut().fadeIn("slow");
-                $("#inputEmail").focus();
+                $("#inputPassword").focus();
                 $("#inputPassword").val("");
-            } else {
-                loadRights();
-                startUp();
-                closeModal();
             }
         });
         return false;
     }
 
     function logout() {
-        client.login.read("?out").always(function (success) {
-            clearBasket();
-            $.cookie("currentuser", null);
-            cuser = null;
-            loadRights();
-            loadPage("home", "home");
+        /*client.login.read("?out").always(function (success) {
+         clearBasket();
+         $.cookie("currentuser", null);
+         cuser = null;
+         loadRights();
+         loadPage("home", "home");
+         });
+         return false;*/
+        var token = $("meta[name='_csrf']").attr("content");
+        if (!token) token = "";
+        var header = $("meta[name='_csrf_header']").attr("content");
+        if (!header) header = "";
+        $.ajax({
+            type: "POST",
+            beforeSend: function (request) {
+                request.setRequestHeader(header, token);
+            },
+            url: "/logout",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Login-Ajax-call": 'true'
+            },
+            success: function (msg) {
+                clearBasket();
+                location.reload(false);
+            },
+            error: function () {
+                alert("FAILURE !");
+            }
         });
         return false;
     }
@@ -344,9 +399,8 @@
         removeLs(BASKET_OPTIONS);
         removeLs(BASKET_UP);
     }
-
 </script>
-<script src="js/validator.js" type="text/javascript"></script>
+<script src="/resources/js/validator.js" type="text/javascript"></script>
 
 <div class="navbar-fixed-bottom row-fluid navbar-inverse">
     <div class="navbar-inner">

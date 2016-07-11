@@ -136,7 +136,7 @@
             function getPagedCustomers() {
 
                 var query = "";
-                if($("#items_count").val() != "all") {
+                if ($("#items_count").val() != "all") {
                     query = "?page=" + $("#current_page").val() + "&size=" + $("#items_count").val();
                 }
 
@@ -147,12 +147,10 @@
                         customersRows += "<div class=\"panel panel-default\">" +
                                 "<div class=\"panel-heading\">" +
                                 "<h3 class=\"panel-title\"><strong class=\"text-uppercase\">" + customers[c].lastName + " " + customers[c].firstName + "</strong> " + customers[c].email + "</h3>";
-                        if (cuser != null) {
-                            if (cuser.suser != null) {
-                                customersRows += "<div class=\"btn-group pull-right\"><a href=\"#\" class=\"btn btn-default btn-sm\" onclick=\"addContract(" + customers[c].id + ");\">Add contract</a>" +
-                                        "<a href=\"#\" class=\"btn btn-primary btn-sm\" onclick=\"editCustomer(" + customers[c].id + ");\">Edit</a>" +
-                                        "<a href=\"#\" class=\"btn btn-danger btn-sm\" data-toggle=\"modal\" data-target=\"#deleteCustomerModal\" onclick=\"presetDeleteCustomerId(" + customers[c].id + ");\" onfocus=\"this.blur()\">Delete</a></div>";
-                            }
+                        if ($.cookie("ecare.suser") != null) {
+                            customersRows += "<div class=\"btn-group pull-right\"><a href=\"#\" class=\"btn btn-default btn-sm\" onclick=\"addContract(" + customers[c].id + ");\">Add contract</a>" +
+                                    "<a href=\"#\" class=\"btn btn-primary btn-sm\" onclick=\"editCustomer(" + customers[c].id + ");\">Edit</a>" +
+                                    "<a href=\"#\" class=\"btn btn-danger btn-sm\" data-toggle=\"modal\" data-target=\"#deleteCustomerModal\" onclick=\"presetDeleteCustomerId(" + customers[c].id + ");\" onfocus=\"this.blur()\">Delete</a></div>";
                         }
                         contractsStr = "";
                         customers[c].contracts.forEach(function (contract) {
@@ -186,7 +184,8 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Realy delete customer? If customer owns any contracts, they will be also deleted.</h4>
+                    <h4 class="modal-title">Realy delete customer? If customer owns any contracts, they will be also
+                        deleted.</h4>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="deleteCustomerId"/>

@@ -50,7 +50,7 @@ public class AbstractEntity {
             }
             uuidStr = uuid.toString();
         }
-        if (uuid == null && uuidStr != null) {
+        if (uuid == null) {
             uuid = UUID.fromString(uuidStr);
         }
         return uuid;
@@ -60,9 +60,6 @@ public class AbstractEntity {
         return id;
     }
 
-    /**
-     * This method is mean for testing purposes only (create mock data), as we should not set Ids manually.
-     */
     public void setId(Long id) {
         this.id = id;
     }

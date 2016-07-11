@@ -1,5 +1,6 @@
 package com.tsystems.ecare.config;
 
+import com.tsystems.ecare.config.root.AppSecurityConfig;
 import com.tsystems.ecare.config.root.DevelopmentConfiguration;
 import com.tsystems.ecare.config.root.RootContextConfig;
 import com.tsystems.ecare.config.root.TestConfiguration;
@@ -15,9 +16,11 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{RootContextConfig.class, DevelopmentConfiguration.class, TestConfiguration.class};
-/*        return new Class<?>[]{RootContextConfig.class, DevelopmentConfiguration.class, TestConfiguration.class,
-                AppSecurityConfig.class};*/
+        return new Class<?>[]{
+                RootContextConfig.class,
+                DevelopmentConfiguration.class,
+                TestConfiguration.class,
+                AppSecurityConfig.class};
     }
 
     @Override

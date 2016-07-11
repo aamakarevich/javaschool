@@ -1,46 +1,24 @@
 package com.tsystems.ecare.app.services;
 
-import com.tsystems.ecare.app.dao.impl.PlanRepository;
 import com.tsystems.ecare.app.model.Plan;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.tsystems.ecare.app.model.SearchResult;
 
+import java.math.BigDecimal;
 import java.util.List;
 
-@Service
-public class PlanService {
+public interface PlanService {
 
-    @Autowired
-    private PlanRepository repository;
+    public Plan savePlan(Long id, String title, String description, BigDecimal monthlyFee);
 
-    @Transactional
-    public Plan savePlan(Plan plan) {
-        return repository.save(plan);
-    }
+    public Plan getPlan(Long id);
 
-    @Transactional
-    public Plan getPlan(Integer id) {
-        return repository.findById(Plan.class, id);
-    }
+    public void deletePlan(Long id);
 
-    @Transactional
-    public void deletePlan(Plan plan) {
-        repository.delete(plan);
-    }
+    public SearchResult<Plan> getAllPlans();
 
-    @Transactional
-    public List<Plan> getAllPlans() {
-        return repository.findAll(Plan.class);
-    }
+    public List<Plan> getPlansPaged(Integer pageNumber, Integer pageSize);
 
-    @Transactional
-    public List<Plan> getPlansPaged(Integer pageNumber, Integer pageSize) {
-        return repository.findAllPaged(Plan.class, pageNumber, pageSize);
-    }
+    public Long getPlansCount();
 
-    @Transactional
-    public Long getPlansCount() {
-        return repository.getTotalCount(Plan.class);
-    }
+    public void changeAvailableFeature(Long planId, Long featureId, Boolean available);
 }

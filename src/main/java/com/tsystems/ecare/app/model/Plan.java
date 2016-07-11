@@ -29,7 +29,7 @@ public class Plan extends AbstractEntity {
     @Column(name = "monthly_fee", nullable = false, precision = 2)
     private BigDecimal monthlyFee;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "allowed_feature",
             joinColumns = @JoinColumn(name = "plan_id", referencedColumnName = "id", nullable = false),
@@ -37,7 +37,7 @@ public class Plan extends AbstractEntity {
     private List<Feature> allowedFeatures;
 
     @OneToMany(mappedBy = "plan", fetch = FetchType.LAZY)
-    private transient List<Contract> contracts;
+    private List<Contract> contracts;
 
     public String getTitle() {
         return title;

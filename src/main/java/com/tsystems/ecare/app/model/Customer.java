@@ -50,7 +50,7 @@ public class Customer extends AbstractEntity {
     @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
     private Address address;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "customer_role",  joinColumns = @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false))
     private List<Role> roles;
 

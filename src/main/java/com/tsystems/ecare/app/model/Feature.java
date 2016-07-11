@@ -32,31 +32,31 @@ public class Feature extends AbstractEntity {
     @Column(name = "monthly_fee", nullable = false, precision = 2)
     private BigDecimal monthlyFee;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "block",
             joinColumns = @JoinColumn(name = "blocked", referencedColumnName = "id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "blocker", referencedColumnName = "id", nullable = false))
-    private transient List<Feature> blockers;
+    private List<Feature> blockers;
 
-    @ManyToMany(mappedBy = "blockers", fetch = FetchType.LAZY)
-    private transient List<Feature> blockedFeatures;
+    @ManyToMany(mappedBy = "blockers", fetch = FetchType.EAGER)
+    private List<Feature> blockedFeatures;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "need",
             joinColumns = @JoinColumn(name = "dependent", referencedColumnName = "id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "needed", referencedColumnName = "id", nullable = false))
-    private transient List<Feature> neededFeatures;
+    private List<Feature> neededFeatures;
 
-    @ManyToMany(mappedBy = "neededFeatures", fetch = FetchType.LAZY)
-    private transient List<Feature> dependentFeatures;
+    @ManyToMany(mappedBy = "neededFeatures", fetch = FetchType.EAGER)
+    private List<Feature> dependentFeatures;
 
     @ManyToMany(mappedBy = "activeFeatures", fetch = FetchType.LAZY)
-    private transient List<Contract> contracts;
+    private List<Contract> contracts;
 
     @ManyToMany(mappedBy = "allowedFeatures", fetch = FetchType.LAZY)
-    private transient List<Plan> plans;
+    private List<Plan> plans;
 
     public Feature() {}
 

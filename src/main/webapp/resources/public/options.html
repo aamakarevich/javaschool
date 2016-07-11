@@ -22,8 +22,8 @@
 
         function getAllOptions() {
 
-            client.option.read("").done(function (options) {
-
+            client.option.read("").done(function (response) {
+                options = response.features;
                 var optionsRows = "";
                 var i = 0;
                 for (var c in options) {
@@ -32,14 +32,12 @@
                     optionsRows += "<div class=\"panel panel-info\">" +
                             "<div class=\"panel-heading\">" +
                             "<h3 class=\"panel-title text-uppercase\"><strong>" + options[c].title + "</strong></h3>";
-                    if (cuser != null) {
-                        if (cuser.suser != null) {
-                            optionsRows +=
-                                    "<div class=\"btn-group pull-right\">" +
-                                    "<a href=\"#\" class=\"btn btn-info btn-sm\" onclick=\"editOption(" + options[c].id + ");\">Edit</a>" +
-                                    "<a href=\"#\" class=\"btn btn-danger btn-sm\" data-toggle=\"modal\" data-target=\"#deleteOptionModal\" " +
-                                    "onclick=\"presetDeleteOptionId(" + options[c].id + ");\" onfocus=\"this.blur()\">Delete</a></div>";
-                        }
+                    if ($.cookie("ecare.suser") != null) {
+                        optionsRows +=
+                                "<div class=\"btn-group pull-right\">" +
+                                "<a href=\"#\" class=\"btn btn-info btn-sm\" onclick=\"editOption(" + options[c].id + ");\">Edit</a>" +
+                                "<a href=\"#\" class=\"btn btn-danger btn-sm\" data-toggle=\"modal\" data-target=\"#deleteOptionModal\" " +
+                                "onclick=\"presetDeleteOptionId(" + options[c].id + ");\" onfocus=\"this.blur()\">Delete</a></div>";
                     }
                     optionsRows += "</div>" +
                             "<div class=\"panel-body\">" +
@@ -59,17 +57,13 @@
                         "<div class=\"panel-body text-center\"><h1>+</h1>" +
                         "</div></div></div>";
                 if (i != 0) {
-                    if (cuser != null) {
-                        if (cuser.suser != null) {
-                            optionsRows += addButton;
-                        }
+                    if ($.cookie("ecare.suser") != null) {
+                        optionsRows += addButton;
                     }
                     optionsRows += "</div>";
                 } else {
-                    if (cuser != null) {
-                        if (cuser.suser != null) {
-                            optionsRows += "<div class=\"row\">" + addButton + "</div>";
-                        }
+                    if ($.cookie("ecare.suser") != null) {
+                        optionsRows += "<div class=\"row\">" + addButton + "</div>";
                     }
                 }
 
@@ -77,10 +71,8 @@
                 $("#options_table").append(optionsRows);
             });
             $("#options_table_cover").fadeOut(1).fadeIn(1000);
-            if (cuser != null) {
-                if (cuser.suser != null) {
-                    $("#bOptionsLinks").fadeIn(1000);
-                }
+            if ($.cookie("ecare.suser") != null) {
+                $("#bOptionsLinks").fadeIn(1000);
             }
         }
     </script>
@@ -114,9 +106,25 @@
             loadPage('option', 'options');
         }
         function deleteOption() {
-            client.option.del($("#deleteOptionId").val()).always(function (result) {
-                $("#deleteOptionModal").modal("hide");
-                getAllOptions();
+            var token = $("meta[name='_csrf']").attr("content");
+            if (!token) token = "";
+            var header = $("meta[name='_csrf_header']").attr("content");
+            if (!header) header = "";
+
+            $.ajax({
+                type: 'DELETE',
+                url: '/option/' + $("#deleteOptionId").val(),
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                success: function (response) {
+                    $("#deleteOptionModal").modal("hide");
+                    getAllOptions();
+                },
+                error: function () {}
             });
         }
         function closeDeleteOptionModal() {

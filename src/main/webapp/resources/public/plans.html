@@ -21,8 +21,8 @@
     <script>
         function getAllPlans() {
 
-            client.plan.read("").done(function (plans) {
-
+            client.plan.read("").done(function (response) {
+                plans = response.plans;
                 var plansRows = "";
                 var i = 0;
                 for (var c in plans) {
@@ -31,14 +31,12 @@
                     plansRows += "<div class=\"panel panel-info\">" +
                             "<div class=\"panel-heading\">" +
                             "<h3 class=\"panel-title text-uppercase\"><strong>" + plans[c].title + "</strong></h3>";
-                    if (cuser != null) {
-                        if (cuser.suser != null) {
-                            plansRows +=
-                                    "<div class=\"btn-group pull-right\">" +
-                                    "<a href=\"#\" class=\"btn btn-info btn-sm\" onclick=\"editPlan(" + plans[c].id + ");\">Edit</a>" +
-                                    "<a href=\"#\" class=\"btn btn-danger btn-sm\" data-toggle=\"modal\" data-target=\"#deletePlanModal\" " +
-                                    "onclick=\"presetDeletePlanId(" + plans[c].id + ");\" onfocus=\"this.blur()\">Delete</a></div>";
-                        }
+                    if ($.cookie("ecare.suser") != null) {
+                        plansRows +=
+                                "<div class=\"btn-group pull-right\">" +
+                                "<a href=\"#\" class=\"btn btn-info btn-sm\" onclick=\"editPlan(" + plans[c].id + ");\">Edit</a>" +
+                                "<a href=\"#\" class=\"btn btn-danger btn-sm\" data-toggle=\"modal\" data-target=\"#deletePlanModal\" " +
+                                "onclick=\"presetDeletePlanId(" + plans[c].id + ");\" onfocus=\"this.blur()\">Delete</a></div>";
                     }
                     plansRows += "</div>" +
                             "<div class=\"panel-body\">" +
@@ -57,17 +55,13 @@
                         "<div class=\"panel-body text-center\"><h1>+</h1>" +
                         "</div></div></div>";
                 if (i != 0) {
-                    if (cuser != null) {
-                        if (cuser.suser != null) {
-                            plansRows += addButton;
-                        }
+                    if ($.cookie("ecare.suser") != null) {
+                        plansRows += addButton;
                     }
                     plansRows += "</div>";
                 } else {
-                    if (cuser != null) {
-                        if (cuser.suser != null) {
-                            plansRows += "<div class=\"row\">" + addButton + "</div>";
-                        }
+                    if ($.cookie("ecare.suser") != null) {
+                        plansRows += "<div class=\"row\">" + addButton + "</div>";
                     }
                 }
 
@@ -96,22 +90,39 @@
             $("#deletePlanId").val(id);
         }
         function addPlan() {
-            window.localStorage.setItem("planId", 0);
+            window.localStorage.setItem("feature1Id", 0);
             loadPage('plan', 'plans');
 
         }
         function editPlan(id) {
-            window.localStorage.setItem("planId", id);
+            window.localStorage.setItem("feature1Id", id);
             loadPage('plan', 'plans');
         }
         function deletePlan() {
-            client.plan.del($("#deletePlanId").val()).always(function (result) {
-                $("#deletePlanModal").modal("hide");
-                getAllPlans();
+            var token = $("meta[name='_csrf']").attr("content");
+            if (!token) token = "";
+            var header = $("meta[name='_csrf_header']").attr("content");
+            if (!header) header = "";
+
+            $.ajax({
+                type: 'DELETE',
+                url: '/plan/' + $("#deletePlanId").val(),
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                success: function (response) {
+                    $("#deletePlanModal").modal("hide");
+                    getAllPlans();
+                },
+                error: function () {
+
+                }
             });
         }
         function closeDeletePlanModal() {
-            $("#deletePlanModal").modal("hide");
             $("#deletePlanModal").modal("hide");
         }
     </script>

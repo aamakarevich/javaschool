@@ -13,14 +13,17 @@ public abstract class GenericRepository<T, ID extends Serializable> implements G
     @PersistenceContext
     EntityManager em;
 
+    @Override
     public T save(T entity) {
         return em.merge(entity);
     }
 
+    @Override
     public void delete(T entity) {
         em.remove(entity);
     }
 
+    @Override
     public List findAll(Class clazz) {
         List entities;
         Query query = em.createQuery("from " + clazz.getName());
@@ -28,6 +31,7 @@ public abstract class GenericRepository<T, ID extends Serializable> implements G
         return entities;
     }
 
+    @Override
     public List findAllPaged(Class clazz, Integer pageNumber, Integer pageSize) {
         List entities;
         Query query = em.createQuery("from " + clazz.getName());
@@ -37,10 +41,12 @@ public abstract class GenericRepository<T, ID extends Serializable> implements G
         return entities;
     }
 
+    @Override
     public T findById(Class clazz, ID id) {
         return (T) em.find(clazz, id);
     }
 
+    @Override
     public Long getTotalCount(Class clazz) {
         Query query = em.createQuery("select count(id) from " + clazz.getName());
         return (Long) query.getSingleResult();

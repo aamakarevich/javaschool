@@ -18,7 +18,8 @@ import javax.persistence.EntityManagerFactory;
  */
 
 @Configuration
-@ComponentScan({"com.tsystems.ecare.app.services", "com.tsystems.ecare.app.dao.impl"})
+@ComponentScan({"com.tsystems.ecare.app.services.impl", "com.tsystems.ecare.app.dao.impl",
+        "com.tsystems.ecare.app.config.root", "com.tsystems.ecare.app.security"})
 public class RootContextConfig {
 
     @Bean(name = "transactionManager")

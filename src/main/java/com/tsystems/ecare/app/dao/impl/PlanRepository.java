@@ -5,4 +5,4 @@ import com.tsystems.ecare.app.model.Plan;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PlanRepository extends GenericRepository<Plan, Integer> implements PlanDao {}
+public class PlanRepository extends GenericRepository<Plan, Long> implements PlanDao {}

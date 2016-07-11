@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author Andrei Makarevich
  */
-public interface FeatureDao extends GenericDao<Feature, Integer> {
+public interface FeatureDao extends GenericDao<Feature, Long> {
 
     /**
      * Returns only features with ids contained in passed list.
@@ -15,5 +15,5 @@ public interface FeatureDao extends GenericDao<Feature, Integer> {
      * @param ids id values to filter features
      * @return features filtered by id
      */
-    List<Feature> getListed(List<Integer> ids);
+    List<Feature> getListed(List<Long> ids);
 }

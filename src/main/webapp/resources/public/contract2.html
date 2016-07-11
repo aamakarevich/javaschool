@@ -74,7 +74,7 @@
 
             var optionsContent = "";
 
-            client.option.read("?available=" + optsParam + "&for=" + plan).done(function (availableOptions) {
+            client.option.read("?linked=" + optsParam + "&for=" + plan).done(function (availableOptions) {
                 client.option.read("?listed=" + optsParam).done(function (options) {
                     if (options != null) {
                         options.forEach(function (option) {

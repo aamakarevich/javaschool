@@ -9,10 +9,10 @@ import javax.persistence.Query;
 import java.util.List;
 
 @Repository
-public class FeatureRepository extends GenericRepository<Feature, Integer> implements FeatureDao {
+public class FeatureRepository extends GenericRepository<Feature, Long> implements FeatureDao {
 
     @Override
-    public List<Feature> getListed(List<Integer> ids) {
+    public List<Feature> getListed(List<Long> ids) {
         if(ids.size() == 0) return null;
         Query query = em.createQuery(
                 "from " + Feature.class.getName() + " c where c.id in (:ids)")
