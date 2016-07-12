@@ -18,7 +18,7 @@ public class Role extends AbstractEntity {
     private String title;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    private transient List<Customer> customers;
+    private List<Customer> customers;
 
     public Role() {}
 

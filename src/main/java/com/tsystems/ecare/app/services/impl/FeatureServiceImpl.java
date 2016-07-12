@@ -1,6 +1,6 @@
 package com.tsystems.ecare.app.services.impl;
 
-import com.tsystems.ecare.app.dao.impl.FeatureRepository;
+import com.tsystems.ecare.app.dao.FeatureDao;
 import com.tsystems.ecare.app.model.Feature;
 import com.tsystems.ecare.app.model.Plan;
 import com.tsystems.ecare.app.model.SearchResult;
@@ -22,7 +22,7 @@ import static org.springframework.util.Assert.notNull;
 public class FeatureServiceImpl implements FeatureService {
 
     @Autowired
-    FeatureRepository repository;
+    private FeatureDao featureDao;
 
     @Override
     @Transactional
@@ -39,21 +39,21 @@ public class FeatureServiceImpl implements FeatureService {
         if (id == null) {
             feature = new Feature();
         } else {
-            feature = repository.findById(Feature.class, id);
+            feature = featureDao.findById(Feature.class, id);
             notNull(feature, "can't update feature that doesn't exist");
         }
         feature.setTitle(title);
         feature.setDescription(description);
         feature.setAdditionFee(additionFee);
         feature.setMonthlyFee(monthlyFee);
-        return repository.save(feature);
+        return featureDao.save(feature);
     }
 
     @Override
     @Transactional
     public Feature getFeature(Long findFeatureId) {
         notNull(findFeatureId, "findFeatureId is mandatory");
-        return repository.findById(Feature.class, findFeatureId);
+        return featureDao.findById(Feature.class, findFeatureId);
     }
 
     @Override
@@ -61,43 +61,43 @@ public class FeatureServiceImpl implements FeatureService {
     public void deleteFeature(Long deleteFeatureid) {
         notNull(deleteFeatureid, "deleteFeatureid is mandatory");
 
-        Feature feature = repository.findById(Feature.class, deleteFeatureid);
+        Feature feature = featureDao.findById(Feature.class, deleteFeatureid);
 
         for (Feature f : feature.getBlockedFeatures()) {
             f.getBlockers().remove(feature);
-            repository.save(f);
+            featureDao.save(f);
         }
         for (Feature f : feature.getBlockers()) {
             f.getBlockedFeatures().remove(feature);
-            repository.save(f);
+            featureDao.save(f);
         }
         for (Feature f : feature.getNeededFeatures()) {
             f.getDependentFeatures().remove(feature);
-            repository.save(f);
+            featureDao.save(f);
         }
         for (Feature f : feature.getDependentFeatures()) {
             f.getNeededFeatures().remove(feature);
-            repository.save(f);
+            featureDao.save(f);
         }
         for (Plan p : feature.getPlans()) {
             p.getAllowedFeatures().remove(feature);
         }
-        feature = repository.save(feature);
-        repository.delete(feature);
+        feature = featureDao.save(feature);
+        featureDao.delete(feature);
     }
 
     @Override
     @Transactional(readOnly = true)
     public SearchResult<Feature> getAllFeatures() {
-        Long resultsCount = repository.getTotalCount(Feature.class);
-        List<Feature> features = repository.findAll(Feature.class);
+        Long resultsCount = featureDao.getTotalCount(Feature.class);
+        List<Feature> features = featureDao.findAll(Feature.class);
         return new SearchResult<>(resultsCount, features);
     }
 
     @Override
     @Transactional
     public List<Feature> getListedFeatures(List<Long> ids) {
-        return repository.getListed(ids);
+        return featureDao.getListed(ids);
     }
 
     @Override
@@ -141,8 +141,8 @@ public class FeatureServiceImpl implements FeatureService {
             throw new IllegalArgumentException("it is not possible to link feature to itself");
         }
 
-        Feature feature1 = repository.findById(Feature.class, feature1Id);
-        Feature feature2 = repository.findById(Feature.class, feature2Id);
+        Feature feature1 = featureDao.findById(Feature.class, feature1Id);
+        Feature feature2 = featureDao.findById(Feature.class, feature2Id);
         if (feature1 == null || feature2 == null) {
             throw new IllegalArgumentException("both feature1 and feature2 must exist to update link between them");
         }
@@ -161,8 +161,8 @@ public class FeatureServiceImpl implements FeatureService {
                 feature2.getNeededFeatures().add(feature1);
             }
         }
-        repository.save(feature1);
-        repository.save(feature2);
+        featureDao.save(feature1);
+        featureDao.save(feature2);
     }
 
     private void unlinkFeatures(Feature feature1, Feature feature2) {

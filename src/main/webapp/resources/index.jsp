@@ -29,86 +29,6 @@
 </head>
 
 <body>
-<script src="/resources/js/jquery.min.js" type="text/javascript"></script>
-<script src="/resources/js/jquery.cookie.js" type="text/javascript"></script>
-<script src="/resources/js/jquery.rest.min.js" type="text/javascript"></script>
-<script src="/resources/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="/resources/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
-
-<script>
-    /* Globals */
-    const BASKET_CUSTOMER = "basketCustomer";
-    const BASKET_CONTRACT = "basketContract";
-    const BASKET_NUMBER = "basketNumber";
-    const BASKET_PLAN = "basketPlan";
-    const BASKET_OPTIONS = "basketOptions";
-    const BASKET_UP = "basketUp";
-
-    /* Set up REST-client */
-    var client = new $.RestClient('/');
-
-    client.add('authenticate', {
-        stripTrailingSlash: true,
-        ajax: {async: true}
-    });
-    client.add('customer', {
-        stripTrailingSlash: true,
-        stringifyData: true,
-        ajax: {async: true}
-    });
-    client.add('plan', {
-        stripTrailingSlash: true,
-        stringifyData: true,
-        ajax: {async: true}
-    });
-    client.add('option', {
-        stripTrailingSlash: true,
-        stringifyData: true,
-        ajax: {async: true}
-    });
-    client.add('contract', {
-        stripTrailingSlash: true,
-        stringifyData: true,
-        ajax: {async: true}
-    });
-    /* end */
-
-    if ($.cookie("ecare.usrename") == null) {
-        var cpage = $.cookie("currentpage");
-        if (cpage != "home" && cpage != "plans" && cpage != "options") {
-            $.cookie("currentpage", "home", {expires: 1, path: '/'});
-        }
-    }
-
-    function loadRights() {
-        if ($.cookie("ecare.username") == null) {
-            $("#userData").empty();
-            $("#nav_username").hide();
-            $("#nav_logout").hide();
-            $("#nav_users").hide();
-            $("#nav_basket").hide();
-            $("#nav_profile").hide();
-            $("#nav_login").show();
-        } else {
-            $("#userData").empty();
-            $("#nav_login").hide();
-            $("#nav_users").hide();
-            $("#nav_basket").show();
-            $("#nav_profile").show();
-
-            if ($.cookie("ecare.admin") != null || $.cookie("ecare.manager") != null) {
-                $.cookie('ecare.suser', "true", {expires: 1, path: '/'});
-            }
-            if ($.cookie("ecare.suser") != null) {
-                $("#nav_users").show();
-            }
-            $("#nav_fullname").empty();
-            $("#nav_fullname").append($.cookie("ecare.firstname") + " " + $.cookie("ecare.lastname"));
-            $("#nav_username").show();
-        }
-        $("#topnavcover").hide().removeClass('hidden').fadeIn();
-    }
-</script>
 <div id="topnavcover" class="hidden">
     <nav class="navbar navbar-inverse navbar-fixed-top" id="topnav">
         <div class="container">
@@ -176,12 +96,97 @@
 </div>
 
 <div id="page"><!-- pages content place --></div>
-
+<div class="navbar-fixed-bottom row-fluid navbar-inverse">
+    <div class="navbar-inner">
+        <div class="container">
+            <p class="text-muted text-center">T-Systems - <a href="http://vk.com/daddyksen" id="nav_fullname"
+                                                             class="navbar-link" target="_blank">Andrei Makarevich</a> -
+                2016</p>
+        </div>
+    </div>
+</div>
+<script src="/resources/js/jquery.min.js" type="text/javascript"></script>
+<script src="/resources/js/jquery.cookie.js" type="text/javascript"></script>
+<script src="/resources/js/jquery.rest.min.js" type="text/javascript"></script>
+<script src="/resources/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="/resources/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
 <script>
+
+    /* Globals */
+    const BASKET_CUSTOMER = "basketCustomer";
+    const BASKET_CONTRACT = "basketContract";
+    const BASKET_NUMBER = "basketNumber";
+    const BASKET_PLAN = "basketPlan";
+    const BASKET_OPTIONS = "basketOptions";
+    const BASKET_UP = "basketUp";
+
+    /* REST-client */
+    var client;
+
     $(document).ready(function () {
+
+        client = new $.RestClient('/');
+
+        client.add('customer', {
+            stripTrailingSlash: true,
+            stringifyData: true,
+            ajax: {async: true}
+        });
+        client.add('plan', {
+            stripTrailingSlash: true,
+            stringifyData: true,
+            ajax: {async: true}
+        });
+        client.add('option', {
+            stripTrailingSlash: true,
+            stringifyData: true,
+            ajax: {async: true}
+        });
+        client.add('contract', {
+            stripTrailingSlash: true,
+            stringifyData: true,
+            ajax: {async: true}
+        });
+
+        if ($.cookie("ecare.usrename") == null) {
+            var cpage = $.cookie("currentpage");
+            if (cpage != "home" && cpage != "plans" && cpage != "options") {
+                $.cookie("currentpage", "home", {expires: 1, path: '/'});
+            }
+        }
+
         loadRights();
         startUp();
     });
+
+    function loadRights() {
+        if ($.cookie("ecare.username") == null) {
+            $("#userData").empty();
+            $("#nav_username").hide();
+            $("#nav_logout").hide();
+            $("#nav_users").hide();
+            $("#nav_basket").hide();
+            $("#nav_profile").hide();
+            $("#nav_login").show();
+        } else {
+            $("#userData").empty();
+            $("#nav_login").hide();
+            $("#nav_users").hide();
+            $("#nav_basket").show();
+            $("#nav_profile").show();
+
+            if ($.cookie("ecare.admin") != null || $.cookie("ecare.manager") != null) {
+                $.cookie('ecare.suser', "true", {expires: 1, path: '/'});
+            }
+            if ($.cookie("ecare.suser") != null) {
+                $("#nav_users").show();
+            }
+            $("#nav_fullname").empty();
+            $("#nav_fullname").append($.cookie("ecare.firstname") + " " + $.cookie("ecare.lastname"));
+            $("#nav_username").show();
+        }
+        $("#topnavcover").hide().removeClass('hidden').fadeIn();
+    }
 
     function startUp() {
         var currentpage = $.cookie("currentpage");
@@ -271,18 +276,6 @@
     }
 
     function submitModal() {
-        var data = {username: $("#inputEmail").val(), password: $("#inputPassword").val()};
-        /*client.authenticate.create(data).done(function (customer) {
-         if (customer == null) {
-         $("#loginError").fadeOut().fadeIn("slow");
-         $("#inputEmail").focus();
-         $("#inputPassword").val("");
-         } else {
-         loadRights();
-         startUp();
-         closeModal();
-         }
-         });*/
         var token = $("meta[name='_csrf']").attr("content");
         if (!token) token = "";
         var header = $("meta[name='_csrf_header']").attr("content");
@@ -318,14 +311,6 @@
     }
 
     function logout() {
-        /*client.login.read("?out").always(function (success) {
-         clearBasket();
-         $.cookie("currentuser", null);
-         cuser = null;
-         loadRights();
-         loadPage("home", "home");
-         });
-         return false;*/
         var token = $("meta[name='_csrf']").attr("content");
         if (!token) token = "";
         var header = $("meta[name='_csrf_header']").attr("content");
@@ -401,15 +386,5 @@
     }
 </script>
 <script src="/resources/js/validator.js" type="text/javascript"></script>
-
-<div class="navbar-fixed-bottom row-fluid navbar-inverse">
-    <div class="navbar-inner">
-        <div class="container">
-            <p class="text-muted text-center">T-Systems - <a href="http://vk.com/daddyksen" id="nav_fullname"
-                                                             class="navbar-link" target="_blank">Andrei Makarevich</a> -
-                2016</p>
-        </div>
-    </div>
-</div>
 </body>
 </html>

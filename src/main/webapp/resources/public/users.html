@@ -31,7 +31,8 @@
                             <li><a href="#" onclick="changeElementsCount(5)">5</a></li>
                             <li><a href="#" onclick="changeElementsCount(10)">10</a></li>
                             <li><a href="#" onclick="changeElementsCount(20)">20</a></li>
-                            <li><a href="#" onclick="changeElementsCount('all')">All</a></li>
+                            <li><a href="#" onclick="changeElementsCount(50)">50</a></li>
+                            <li><a href="#" onclick="changeElementsCount(100)">100</a></li>
                         </ul>
                     </div>
                 </div>
@@ -85,11 +86,7 @@
             function changeElementsCount(value) {
                 if ($("#items_count").val() == value) return;
                 $("#items_count").val(value);
-                if (value == "all") {
-                    $("#paging_change").html("Show all elements on page <span class=\"caret\">");
-                } else {
-                    $("#paging_change").html("Show " + value + " elements on page <span class=\"caret\">");
-                }
+                $("#paging_change").html("Show " + value + " elements on page <span class=\"caret\">");
                 createUsersPagination();
             }
 
@@ -135,10 +132,7 @@
 
             function getPagedCustomers() {
 
-                var query = "";
-                if ($("#items_count").val() != "all") {
-                    query = "?page=" + $("#current_page").val() + "&size=" + $("#items_count").val();
-                }
+                var query = "?page=" + $("#current_page").val() + "&size=" + $("#items_count").val();
 
                 client.customer.read(query).done(function (customers) {
 

@@ -48,7 +48,7 @@ public class PlanServiceImpl implements PlanService {
     public void deletePlan(Long id) {
         Plan plan = planDao.findById(Plan.class, id);
         if(!plan.getContracts().isEmpty()) {
-            throw new IllegalArgumentException("Forbidden to delete plan that is used by at least one contract.");
+            throw new IllegalArgumentException("forbidden to delete plan that is used by at least one contract.");
         }
         planDao.delete(plan);
     }

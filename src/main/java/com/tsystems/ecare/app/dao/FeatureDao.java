@@ -4,9 +4,7 @@ import com.tsystems.ecare.app.model.Feature;
 
 import java.util.List;
 
-/**
- * @author Andrei Makarevich
- */
+
 public interface FeatureDao extends GenericDao<Feature, Long> {
 
     /**

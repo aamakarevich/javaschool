@@ -5,9 +5,7 @@ import org.springframework.stereotype.Repository;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * @author Andrei Makarevich
- */
+
 @Repository
 public interface GenericDao<T, ID extends Serializable> {
 

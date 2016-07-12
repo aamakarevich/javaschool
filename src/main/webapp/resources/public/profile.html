@@ -17,11 +17,11 @@
         <div id="profileBody" class="col-lg-offset-1 col-lg-6 col-xs-12 input-group">
             <table class="table">
                 <thead>
-                    <tr>
-                        <th class="col-xs-5">Phone number</th>
-                        <th class="col-xs-4">Plan</th>
-                        <th class="col-xs-3">State</th>
-                    </tr>
+                <tr>
+                    <th class="col-xs-5">Phone number</th>
+                    <th class="col-xs-4">Plan</th>
+                    <th class="col-xs-3">State</th>
+                </tr>
                 </thead>
                 <tbody id="tContracts"></tbody>
             </table>
@@ -30,74 +30,130 @@
 
     <script>
         function loadProfile() {
+            var token = $("meta[name='_csrf']").attr("content");
+            if (!token) token = "";
+            var header = $("meta[name='_csrf_header']").attr("content");
+            if (!header) header = "";
 
-            client.customer.read(cuser.id).done(function (customer) {
+            $.ajax({
+                type: 'PUT',
+                url: '/profile',
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                success: function (customer) {
+                    var profileBody = "";
+                    profileBody += "<tr><td><strong>Name</strong></td><td>" + customer.lastName + " " + customer.firstName + "</td></tr>";
+                    profileBody += "<tr><td><strong>E-mail</strong></td><td>" + customer.email + "</td></tr>";
+                    profileBody += "<tr><td><strong>Birthdate</strong></td><td>" + getPrettyDate(customer.birthdate) + "</td></tr>";
+                    profileBody += "<tr><td><strong>Passport</strong></td><td>" + customer.passport + "</td></tr>";
+                    profileBody += "<tr><td><strong>Address</strong></td><td>" + customer.address.city + ", " + customer.address.address1 + " " + customer.address.address2 + "</td></tr>";
 
-                var profileBody = "";
-                profileBody += "<tr><td><strong>Name</strong></td><td>" + customer.lastName + " " + customer.firstName + "</td></tr>";
-                profileBody += "<tr><td><strong>E-mail</strong></td><td>" + customer.email + "</td></tr>";
-                profileBody += "<tr><td><strong>Birthdate</strong></td><td>" + getPrettyDate(customer.birthdate) + "</td></tr>";
-                profileBody += "<tr><td><strong>Passport</strong></td><td>" + customer.passport + "</td></tr>";
-                profileBody += "<tr><td><strong>Address</strong></td><td>" + customer.address.city + ", " + customer.address.address1 + " " + customer.address.address2 + "</td></tr>";
+                    $("#tProfile").html(profileBody);
 
-                $("#tProfile").html(profileBody);
+                    var contractsBody = "";
+                    customer.contracts.forEach(function (contract) {
+                        var strNumber = contract.number.substr(3);
+                        strNumber = strNumber.substr(0, 5) + "-" + strNumber.substr(5);
+                        strNumber = strNumber.substr(0, 3) + "-" + strNumber.substr(3);
+                        strNumber = "8 (999) " + strNumber;
 
-                var contractsBody = "";
-                customer.contracts.forEach(function (contract) {
-                    var strNumber = contract.number.substr(3);
-                    strNumber = strNumber.substr(0, 5) + "-" + strNumber.substr(5);
-                    strNumber = strNumber.substr(0, 3) + "-" + strNumber.substr(3);
-                    strNumber = "8 (999) " + strNumber;
-
-                    var aLocked = false;
-                    var button = "<button type=\"button\" id=\"lk" + contract.id + "\" onclick=\"toggleLock(" + contract.id + ", '" + strNumber + "');\" class=\"btn btn-block btn-xs ";
-                    if(contract.numberLock == "UNLOCKED") {
-                        button += "btn-default\">Unlocked";
-                    } else {
-                        aLocked = true;
-                        if(contract.numberLock == "USERLOCKED") {
-                            button += "btn-danger\">Locked";
+                        var aLocked = false;
+                        var button = "<button type=\"button\" id=\"lk" + contract.id + "\" onclick=\"toggleLock(" + contract.id + ", '" + strNumber + "');\" class=\"btn btn-block btn-xs ";
+                        if (contract.numberLock == "UNLOCKED") {
+                            button += "btn-default\">Unlocked";
                         } else {
-                            if(cuser.suser == null) {
-                                button += "btn-danger\" disabled=\"disabled\">Locked";
-                            } else {
+                            aLocked = true;
+                            if (contract.numberLock == "USERLOCKED") {
                                 button += "btn-danger\">Locked";
+                            } else {
+                                if ($.cookie("ecare.suser") != null) {
+                                    button += "btn-danger\">Locked";
+                                } else {
+                                    button += "btn-danger\" disabled=\"disabled\">Locked";
+                                }
                             }
                         }
-                    }
-                    button + "</button>";
+                        button + "</button>";
 
-                    if(!aLocked) {
-                        contractsBody += "<tr><td id='trp" + contract.id + "'><a href='#' onclick='editContract(" + customer.id + "," + contract.id + ")'>" + strNumber + "</a></td>";
-                    } else {
-                        contractsBody += "<tr><td id='trp" + contract.id + "'><strong>" + strNumber + "</strong></td>";
-                    }
-                    contractsBody += "<td>" + contract.plan.title + "</td><td>" + button + "</td></tr>";
-                });
+                        if (!aLocked) {
+                            contractsBody += "<tr><td id='trp" + contract.id + "'><a href='#' onclick='editContract(" + contract.id + ")'>" + strNumber + "</a></td>";
+                        } else {
+                            contractsBody += "<tr><td id='trp" + contract.id + "'><strong>" + strNumber + "</strong></td>";
+                        }
+                        contractsBody += "<td>" + contract.plan.title + "</td><td>" + button + "</td></tr>";
+                    });
 
-                $("#tContracts").html(contractsBody);
+                    $("#tContracts").html(contractsBody);
 
-                $("#profilePageCover").fadeOut(1).fadeIn(1000);
+                    $("#profilePageCover").fadeOut(1).fadeIn(1000);
+                },
+                error: function () {
+                }
             });
         }
 
         function toggleLock(id, strNumber) {
+            var token = $("meta[name='_csrf']").attr("content");
+            if (!token) token = "";
+            var header = $("meta[name='_csrf_header']").attr("content");
+            if (!header) header = "";
+
             var element = $("#lk" + id);
             var row = $("#trp" + id);
             if (element.hasClass("btn-default")) {
-                client.contract.update("?lock=" + id);
-                element.removeClass("btn-default");
-                element.addClass("btn-danger");
-                element.blur();
-                element.html("Locked");
-                row.html("<strong>" + strNumber + "</strong>");
+                var lock = {
+                    contractId: id,
+                    locked: true
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/profile/lock',
+                    data: JSON.stringify(lock),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    success: function (response) {
+                        element.removeClass("btn-default");
+                        element.addClass("btn-danger");
+                        element.blur();
+                        element.html("Locked");
+                        row.html("<strong>" + strNumber + "</strong>");
+                    },
+                    error: function () {}
+                });
             } else {
-                client.contract.update("?unlock=" + id);
-                element.removeClass("btn-danger");
-                element.addClass("btn-default");
-                element.blur();
-                element.html("Unlocked");
-                row.html("<a href='#' onclick='editContract(" + cuser.id + ", " + id + ")'>" + strNumber + "</a>");
+                var lock = {
+                    contractId: id,
+                    locked: false
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/profile/lock',
+                    data: JSON.stringify(lock),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    success: function (response) {
+                        element.removeClass("btn-danger");
+                        element.addClass("btn-default");
+                        element.blur();
+                        element.html("Unlocked");
+                        row.html("<a href='#' onclick='editContract(" + id + ")'>" + strNumber + "</a>");
+                    },
+                    error: function () {}
+                });
             }
         }
     </script>

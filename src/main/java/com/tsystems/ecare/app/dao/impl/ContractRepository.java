@@ -8,7 +8,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 @Repository
-public class ContractRepository extends GenericRepository<Contract, Integer> implements ContractDao {
+public class ContractRepository extends GenericRepository<Contract, Long> implements ContractDao {
 
     @Override
     public Contract findByNumber(String number) {

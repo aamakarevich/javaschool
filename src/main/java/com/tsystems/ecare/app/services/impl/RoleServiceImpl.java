@@ -1,6 +1,6 @@
 package com.tsystems.ecare.app.services.impl;
 
-import com.tsystems.ecare.app.dao.impl.RoleRepository;
+import com.tsystems.ecare.app.dao.RoleDao;
 import com.tsystems.ecare.app.model.Role;
 import com.tsystems.ecare.app.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,23 +11,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
-    private RoleRepository repository;
+    private RoleDao roleDao;
 
     @Override
     @Transactional
     public Role getRoleById(Integer id) {
-        return repository.findById(Role.class, id);
+        return roleDao.findById(Role.class, id);
     }
 
     @Override
     @Transactional
     public Role getRoleByTitle(String title) {
-        return repository.findByTitle(title);
+        return roleDao.findByTitle(title);
     }
 
     @Override
     @Transactional
     public Role saveRole(Role role) {
-        return repository.save(role);
+        return roleDao.save(role);
     }
 }

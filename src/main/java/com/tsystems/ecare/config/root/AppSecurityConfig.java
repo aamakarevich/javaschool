@@ -59,6 +59,8 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/resources/css/**").permitAll()
                 .antMatchers("/resources/fonts/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/user").permitAll()
+                .antMatchers(HttpMethod.PUT, "/profile").access("hasRole('ROLE_USER')")
+                .antMatchers(HttpMethod.PUT, "/profile/lock").access("hasRole('ROLE_USER')")
                 .antMatchers(HttpMethod.GET, "/plan").permitAll()
                 .antMatchers(HttpMethod.GET, "/plan/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/plan/**").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")

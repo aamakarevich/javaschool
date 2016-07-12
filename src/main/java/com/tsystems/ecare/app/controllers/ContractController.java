@@ -5,11 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("customer")
-public class CustomerController extends AbstractController {
+@RequestMapping("contract")
+public class ContractController extends AbstractController {
 
-    public CustomerController() {
-        super(Logger.getLogger(CustomerController.class));
+    public ContractController() {
+        super(Logger.getLogger(ContractController.class));
     }
 
 
