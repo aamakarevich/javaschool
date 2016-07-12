@@ -75,7 +75,7 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     @Transactional
-    public void changeAvailableFeature(Long planId, Long featureId, Boolean available) {
+    public void changeAllowedFeature(Long planId, Long featureId, Boolean available) {
         notNull(planId, "planId is mandatory");
         notNull(featureId, "featureId is mandatory");
         notNull(available, "available is mandatory");

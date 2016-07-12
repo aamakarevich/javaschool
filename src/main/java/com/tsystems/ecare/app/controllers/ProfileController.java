@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.security.Principal;
 
+/**
+ * Provides REST-service for retreiving profile information.
+ */
 @Controller
 @RequestMapping("profile")
 public class ProfileController extends AbstractController {

@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 public class SecurityUserDetailsService implements UserDetailsService {
 
-    private static final Logger LOGGER = Logger.getLogger(SecurityUserDetailsService.class);
+    private static final Logger logger = Logger.getLogger(SecurityUserDetailsService.class);
 
     @Autowired
     private CustomerDao customerDao;
@@ -31,7 +31,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
         Customer customer = customerDao.findByEmail(username);
         if (customer == null) {
             String message = "Username not found: " + username;
-            LOGGER.info(message);
+            logger.info(message);
             throw new UsernameNotFoundException(message);
         }
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -39,18 +39,18 @@ public class SecurityUserDetailsService implements UserDetailsService {
         boolean isManager = false;
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         for (Role role : customer.getRoles()) {
-            if (role.getTitle().equals("manager")) {
+            if ("manager".equals(role.getTitle())) {
                 authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
                 isManager = true;
                 continue;
             }
-            if (role.getTitle().equals("admin")) {
+            if ("admin".equals(role.getTitle())) {
                 authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
                 isAdmin = true;
                 continue;
             }
         }
-        LOGGER.info("Found user in database: " + username);
+        logger.info("Found user in database: " + username);
         return new RichUser(username, customer.getPassword(), authorities,
                 customer.getFirstName(), customer.getLastName(), isAdmin, isManager);
     }

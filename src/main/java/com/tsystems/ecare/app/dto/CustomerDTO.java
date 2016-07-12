@@ -23,7 +23,9 @@ public class CustomerDTO {
 
     private List<ContractDTO> contracts = new ArrayList<>();
 
-    public CustomerDTO() {};
+    public CustomerDTO() {
+        // empty constructor to instantiate object from JSON
+    };
 
     public CustomerDTO(Long id, String email, String lastName, String firstName, Date birthdate, String passport,
                        Address address, List<Contract> contracts) {
@@ -47,6 +49,10 @@ public class CustomerDTO {
                 customer.getPassport(),
                 customer.getAddress(),
                 customer.getContracts());
+    }
+
+    public static List<CustomerDTO> mapFromCustomersEntities(List<Customer> customers) {
+        return customers.stream().map(CustomerDTO::mapFromCustomerEntity).collect(Collectors.toList());
     }
 
     public Long getId() {

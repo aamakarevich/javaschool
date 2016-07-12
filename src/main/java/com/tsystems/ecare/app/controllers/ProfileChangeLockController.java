@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.security.Principal;
 
+/**
+ * Provides REST-service for locking/unlocking customers own contracts.
+ */
 @Controller
 @RequestMapping("profile/lock")
 public class ProfileChangeLockController extends AbstractController {
@@ -25,6 +28,12 @@ public class ProfileChangeLockController extends AbstractController {
         super(Logger.getLogger(ProfileChangeLockController.class));
     }
 
+    /**
+     * Handles request for locking/unlocking customers own contracts.
+     *
+     * @param principal user that performed request
+     * @param changeLock DTO with number lock change data
+     */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.PUT)

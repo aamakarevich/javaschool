@@ -10,7 +10,9 @@ public class AddressDTO {
     private String address1;
     private String address2;
 
-    public AddressDTO() {}
+    public AddressDTO() {
+        // empty constructor to instantiate object from JSON
+    }
 
     public AddressDTO(Long id, String city, String address1, String address2) {
         this.id = id;

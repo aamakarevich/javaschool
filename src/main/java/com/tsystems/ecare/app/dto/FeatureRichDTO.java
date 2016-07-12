@@ -11,8 +11,6 @@ public class FeatureRichDTO extends FeatureDTO {
     private List<Long> blockers = new ArrayList<>();
     private List<Long> prerequisites = new ArrayList<>();
 
-    public FeatureRichDTO() {}
-
     public FeatureRichDTO(Long id, String title, String description, BigDecimal additionFee, BigDecimal monthlyFee, List<Long> prerequisites, List<Long> blockers) {
         super(id, title, description, additionFee, monthlyFee);
         this.prerequisites = prerequisites;

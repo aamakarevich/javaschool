@@ -15,12 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
- * Development specific configuration - creates a localhost postgresql datasource,
- * sets hibernate on create drop mode and inserts some test data on the database.
- *
- * Set -Dspring.profiles.active=development to activate this config.
- *
+ * Development specific configuration
  */
 @Configuration
 @Profile("development")
@@ -37,7 +32,6 @@ public class DevelopmentConfiguration {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/ecare?loglevel=0");
-//        dataSource.setUrl("jdbc:mysql://localhost:3306/");
         dataSource.setUsername("root");
         dataSource.setPassword("root");
         return dataSource;
@@ -52,7 +46,7 @@ public class DevelopmentConfiguration {
         entityManagerFactoryBean.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
         entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
-        Map<String, Object> jpaProperties = new HashMap<String, Object>();
+        Map<String, Object> jpaProperties = new HashMap<>();
         jpaProperties.put("hibernate.hbm2ddl.auto", "update");
         jpaProperties.put("hibernate.show_sql", "true");
         jpaProperties.put("hibernate.format_sql", "true");

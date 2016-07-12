@@ -1,7 +1,9 @@
 package com.tsystems.ecare.app.services;
 
 import com.tsystems.ecare.app.model.Customer;
+import com.tsystems.ecare.app.model.SearchResult;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public interface CustomerService {
@@ -12,7 +14,7 @@ public interface CustomerService {
 
     public Customer getCustomerByEmail(String email);
 
-    public Customer saveNewCustomer(Customer customer);
+    public Customer saveNewCustomer(Customer customer) throws NoSuchAlgorithmException;
 
     public Customer verifyUser(String email, String password);
 
@@ -27,4 +29,6 @@ public interface CustomerService {
     public void activate(Integer id, Customer target, Customer user);
 
     public void deactivate(Integer id, Customer target, Customer user);
+
+    public SearchResult<Customer> findCustomers(String filter, Integer itemsCount, Integer pageNumber);
 }

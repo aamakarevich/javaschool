@@ -15,7 +15,9 @@ public class FeatureDTO {
     private BigDecimal additionFee;
     private BigDecimal monthlyFee;
 
-    public FeatureDTO() {}
+    public FeatureDTO() {
+        // empty constructor to instantiate object from JSON
+    }
 
     public FeatureDTO(Long id, String title, String description, BigDecimal additionFee, BigDecimal monthlyFee) {
         this.id = id;
@@ -31,7 +33,7 @@ public class FeatureDTO {
     }
 
     public static List<FeatureDTO> mapFromFeaturesEntities(List<Feature> features) {
-        return features.stream().map((feature) -> mapFromFeatureEntity(feature)).collect(Collectors.toList());
+        return features.stream().map(FeatureDTO::mapFromFeatureEntity).collect(Collectors.toList());
     }
 
     public Long getId() {

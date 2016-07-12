@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- * Provides advanced REST-full CRUD for Feature entity.
+ * Provides REST-full CRUD for Feature entity.
  */
 @Controller
 @RequestMapping("option")

@@ -7,7 +7,9 @@ public class AllowFeatureDTO {
 
     private Boolean available;
 
-    public AllowFeatureDTO() {}
+    public AllowFeatureDTO() {
+        // empty constructor to instantiate object from JSON
+    }
 
     public AllowFeatureDTO(Long planId, Long featureId, Boolean available) {
         this.planId = planId;

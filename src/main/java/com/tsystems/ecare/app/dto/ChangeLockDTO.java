@@ -5,7 +5,9 @@ public class ChangeLockDTO {
     private Long contractId;
     private boolean locked;
 
-    public ChangeLockDTO() {}
+    public ChangeLockDTO() {
+        // empty constructor to instantiate object from JSON
+    }
 
     public ChangeLockDTO(boolean locked, Long contractId) {
         this.locked = locked;

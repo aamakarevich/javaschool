@@ -12,7 +12,9 @@ public class ContractDTO {
 
     private PlanDTO plan;
 
-    public ContractDTO() {}
+    public ContractDTO() {
+        // empty constructor to instantiate object from JSON
+    }
 
     public ContractDTO(Long id, String number, Contract.Lock numberLock, Plan plan) {
         this.id = id;

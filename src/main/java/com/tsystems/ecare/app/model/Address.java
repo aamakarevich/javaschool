@@ -23,7 +23,7 @@ public class Address extends AbstractEntity {
     @Column(name = "city", nullable = false, length = 40)
     private String city;
 
-    private transient List<Customer> customers;
+//    private List<Customer> customers;
 
     public Address() {
     }
@@ -58,11 +58,11 @@ public class Address extends AbstractEntity {
         this.city = city;
     }
 
-    public List<Customer> getCustomers() {
-        return customers != null ? customers : new ArrayList<>();
-    }
-
-    public void setCustomers(List<Customer> customers) {
-        this.customers = customers;
-    }
+//    public List<Customer> getCustomers() {
+//        return customers != null ? customers : new ArrayList<>();
+//    }
+//
+//    public void setCustomers(List<Customer> customers) {
+//        this.customers = customers;
+//    }
 }

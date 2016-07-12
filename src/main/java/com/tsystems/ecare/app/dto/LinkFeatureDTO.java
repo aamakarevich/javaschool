@@ -8,7 +8,9 @@ public class LinkFeatureDTO {
     private Boolean block;
     private Boolean linked;
 
-    public LinkFeatureDTO() {}
+    public LinkFeatureDTO() {
+        // empty constructor to instantiate object from JSON
+    }
 
     public LinkFeatureDTO(Long feature1Id, Long feature2Id, Boolean block, Boolean linked) {
         this.feature1Id = feature1Id;

@@ -2,6 +2,9 @@ package com.tsystems.ecare.app.dto;
 
 import java.util.List;
 
+/**
+ * JSON serializable DTO containing data concerning a plans search request.
+ */
 public class PlansDTO {
 
     private long count;

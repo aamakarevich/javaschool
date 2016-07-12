@@ -5,9 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+/**
+ * This class is designed to implement logic of logging for all controllers.
+ */
 public abstract class AbstractController {
 
-    Logger logger;
+    protected Logger logger;
 
     public AbstractController(Logger logger) {
         this.logger = logger;

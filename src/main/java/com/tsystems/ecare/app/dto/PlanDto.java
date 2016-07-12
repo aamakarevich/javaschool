@@ -17,7 +17,9 @@ public class PlanDTO {
     private String description;
     private BigDecimal monthlyFee;
 
-    public PlanDTO() {}
+    public PlanDTO() {
+        // empty constructor to instantiate object from JSON
+    }
 
     public PlanDTO(Long id, String title, String description, BigDecimal monthlyFee) {
         this.id = id;

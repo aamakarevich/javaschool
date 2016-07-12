@@ -11,17 +11,25 @@
             <div class="row">
                 <div class="col-lg-6 col-xs-12">
                     <div class="input-group">
+                        <span class="input-group-addon">Search</span>
+                        <input type="text" class="form-control" id="users_search">
+                        <span class="input-group-btn"><button class="btn btn-default" type="button"
+                                                              onclick="searchCustomers()">Search</button></span>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-xs-12">
+                    <div class="input-group">
                         <span class="input-group-addon">Filter</span>
                         <input type="text" class="form-control" id="users_filter" onkeyup="filter()">
                         <span class="input-group-btn"><button class="btn btn-default" type="button"
                                                               onclick="resetFilter()">Reset</button></span>
                     </div>
                 </div>
-                <div class="col-lg-3 col-xs-6">
-                    <button class="btn btn-default" type="button" onclick="addCustomer();">Add customer</button>
-                </div>
-                <div class="col-lg-3 col-xs-6">
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-xs-12">
                     <div class="btn-group pull-right">
+                        <button class="btn btn-default" type="button" onclick="addCustomer();">Add customer</button>
                         <button type="button" id="paging_change" class="btn btn-default dropdown-toggle"
                                 data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">Show 5 elements on page <span
@@ -77,6 +85,10 @@
 
             }
 
+            function searchCustomers() {
+                createUsersPagination();
+            }
+
             function changePage(value) {
                 $("#current_page").val(value);
                 $("#users_filter").val("");
@@ -87,21 +99,27 @@
                 if ($("#items_count").val() == value) return;
                 $("#items_count").val(value);
                 $("#paging_change").html("Show " + value + " elements on page <span class=\"caret\">");
+                $("#current_page").val(1);
                 createUsersPagination();
             }
 
             function createUsersPagination() {
-                client.customer.read("?count").done(function (count) {
+                var query = "?pageNumber=" + $("#current_page").val() + "&itemsCount=" + $("#items_count").val();
+                var searchQuery = $("#users_search").val();
+                if(searchQuery != null && searchQuery.trim() != "") {
+                    query += "&filter=" + searchQuery;
+                }
+
+                client.customer.read(query).done(function (response) {
                     $("#pagination").empty();
                     var itemsCount = +$("#items_count").val();
-                    if (isNaN(itemsCount) || count < itemsCount) {
+                    if (response.totalPages == 1) {
                         $("#current_page").val(1);
-                        getPagedCustomers();
+                        getPagedCustomers(response.customers);
                         return;
                     }
 
-                    var total = Math.floor(count / itemsCount);
-                    if (count > total * itemsCount) total++;
+                    var total = response.totalPages;
 
                     var current = +$("#current_page").val();
                     if (current > total) {
@@ -111,66 +129,71 @@
 
                     var pages = "<li id=\"pag_1\"><a href=\"#\" onclick=\"changePage(1);\">1 <span class=\"sr-only\"></span></a></li>";
                     if (current > 5) {
-                        pages += "<li><a href=\"#\">... <span class=\"sr-only\"></span></a></li>";
-                        for (p = current - 2; p <= current + 2 && p < total; p++) {
-                            pages += "<li id=\"pag_" + p + "\"><a href=\"#\" onclick=\"changePage(" + p + ");\">" + p + " <span class=\"sr-only\"></span></a></li>";
+                        pages += "<li><a>... <span class=\"sr-only\"></span></a></li>";
+                        if(current < total - 5) {
+                            for (p = current - 2; p <= current + 2 && p < total; p++) {
+                                pages += "<li id=\"pag_" + p + "\"><a href=\"#\" onclick=\"changePage(" + p + ");\">" + p + " <span class=\"sr-only\"></span></a></li>";
+                            }
+                            pages += "<li><a>... <span class=\"sr-only\"></span></a></li>";
+                        } else {
+                            for (p = total - 6; p < total; p++) {
+                                pages += "<li id=\"pag_" + p + "\"><a href=\"#\" onclick=\"changePage(" + p + ");\">" + p + " <span class=\"sr-only\"></span></a></li>";
+                            }
                         }
                     } else {
                         for (p = 2; p <= 7 && p < total; p++) {
                             pages += "<li id=\"pag_" + p + "\"><a href=\"#\" onclick=\"changePage(" + p + ");\">" + p + " <span class=\"sr-only\"></span></a></li>";
                         }
-                    }
-                    if (total - current > 5) {
-                        pages += "<li><a href=\"#\">... <span class=\"sr-only\"></span></a></li>";
+                        pages += "<li><a>... <span class=\"sr-only\"></span></a></li>";
                     }
                     pages += "<li id=\"pag_" + total + "\"><a href=\"#\" onclick=\"changePage(" + total + ");\">" + total + " <span class=\"sr-only\"></span></a></li>";
                     $("#pagination").append(pages);
 
-                    getPagedCustomers();
+                    getPagedCustomers(response.customers);
                 });
             }
 
-            function getPagedCustomers() {
+            function getPagedCustomers(customers) {
 
-                var query = "?page=" + $("#current_page").val() + "&size=" + $("#items_count").val();
-
-                client.customer.read(query).done(function (customers) {
-
-                    var customersRows = "";
-                    for (var c in customers) {
-                        customersRows += "<div class=\"panel panel-default\">" +
-                                "<div class=\"panel-heading\">" +
-                                "<h3 class=\"panel-title\"><strong class=\"text-uppercase\">" + customers[c].lastName + " " + customers[c].firstName + "</strong> " + customers[c].email + "</h3>";
-                        if ($.cookie("ecare.suser") != null) {
-                            customersRows += "<div class=\"btn-group pull-right\"><a href=\"#\" class=\"btn btn-default btn-sm\" onclick=\"addContract(" + customers[c].id + ");\">Add contract</a>" +
-                                    "<a href=\"#\" class=\"btn btn-primary btn-sm\" onclick=\"editCustomer(" + customers[c].id + ");\">Edit</a>" +
-                                    "<a href=\"#\" class=\"btn btn-danger btn-sm\" data-toggle=\"modal\" data-target=\"#deleteCustomerModal\" onclick=\"presetDeleteCustomerId(" + customers[c].id + ");\" onfocus=\"this.blur()\">Delete</a></div>";
-                        }
-                        contractsStr = "";
-                        customers[c].contracts.forEach(function (contract) {
-                            contractsStr += "<a href=\"#\" class=\"btn btn-primary btn-xs\" onclick=\"editContract(" + customers[c].id + "," + contract.id + ");\">8" + contract.number + "</a> ";
-                        });
-                        customersRows += "</div>" +
-                                "<div class=\"panel-body\">" +
-                                "<strong>BIRTHDATE</strong>: " + getPrettyDate(customers[c].birthdate) + "<br />" +
-                                "<strong>ADDRESS</strong>: " + customers[c].address.city + ", " + customers[c].address.address1 + " " + customers[c].address.address2 + "<br />" +
-                                "<strong>CONTRACTS</strong>: " + contractsStr +
-                                "</div></div>";
+                var customersRows = "";
+                for (var c in customers) {
+                    customersRows += "<div class=\"panel panel-default\">" +
+                            "<div class=\"panel-heading\">" +
+                            "<h3 class=\"panel-title\"><strong class=\"text-uppercase\">" + customers[c].lastName + " " + customers[c].firstName + "</strong> " + customers[c].email + "</h3>";
+                    if ($.cookie("ecare.suser") != null) {
+                        customersRows += "<div class=\"btn-group pull-right\"><a href=\"#\" class=\"btn btn-default btn-sm\" onclick=\"addContract(" + customers[c].id + ");\">Add contract</a>" +
+                                "<a href=\"#\" class=\"btn btn-primary btn-sm\" onclick=\"editCustomer(" + customers[c].id + ");\">Edit</a>" +
+                                "<a href=\"#\" class=\"btn btn-danger btn-sm\" data-toggle=\"modal\" data-target=\"#deleteCustomerModal\" onclick=\"presetDeleteCustomerId(" + customers[c].id + ");\" onfocus=\"this.blur()\">Delete</a></div>";
                     }
+                    contractsStr = "";
+                    customers[c].contracts.forEach(function (contract) {
+                        contractsStr += "<a href=\"#\" class=\"btn btn-primary btn-xs\" onclick=\"editContract(" + customers[c].id + "," + contract.id + ");\">8" + contract.number + "</a> ";
+                    });
+                    customersRows += "</div>" +
+                            "<div class=\"panel-body\">" +
+                            "<strong>BIRTHDATE</strong>: " + getPrettyDate(customers[c].birthdate) + "<br />" +
+                            "<strong>ADDRESS</strong>: " + customers[c].address.city + ", " + customers[c].address.address1 + " " + customers[c].address.address2 + "<br />" +
+                            "<strong>CONTRACTS</strong>: " + contractsStr +
+                            "</div></div>";
+                }
 
-                    $("#users_table").empty();
-                    $("#users_table").append(customersRows);
+                $("#users_table").empty();
+                $("#users_table").append(customersRows);
 
-                    $("#pagination li").removeClass("active");
-                    if ($("#current_page").val() == 1) $("#pag_prev").addClass("disabled");
-                    $("#pag_" + $("#current_page").val()).addClass("active");
-                });
+                $("#pagination li").removeClass("active");
+                if ($("#current_page").val() == 1) $("#pag_prev").addClass("disabled");
+                $("#pag_" + $("#current_page").val()).addClass("active");
+
                 $("#users_table_cover").fadeIn(1500);
             }
 
             function resetFilter() {
                 $("#users_filter").val("");
                 $("#users_filter").keyup();
+
+                $("#users_search").val("");
+                createUsersPagination();
+
             }
         </script>
     </div>

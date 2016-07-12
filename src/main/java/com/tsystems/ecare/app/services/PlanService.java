@@ -20,5 +20,5 @@ public interface PlanService {
 
     public Long getPlansCount();
 
-    public void changeAvailableFeature(Long planId, Long featureId, Boolean available);
+    public void changeAllowedFeature(Long planId, Long featureId, Boolean available);
 }

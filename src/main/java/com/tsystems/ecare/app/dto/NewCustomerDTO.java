@@ -24,7 +24,9 @@ public class NewCustomerDTO {
     private String address1;
     private String address2;
 
-    public NewCustomerDTO() {}
+    public NewCustomerDTO() {
+        // empty constructor to instantiate object from JSON
+    }
 
     public String getEmail() {
         return email;

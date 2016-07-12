@@ -21,7 +21,7 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 
 /**
- * Provides advanced REST-full CRUD for Plan entity.
+ * Provides REST-full CRUD for Plan entity.
  */
 @Controller
 @RequestMapping("plan")

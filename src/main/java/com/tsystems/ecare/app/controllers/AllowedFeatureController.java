@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+/**
+ * Provides REST-service for changing allowed features for plans.
+ */
 @Controller
 @RequestMapping("allow")
 public class AllowedFeatureController extends AbstractController {
@@ -23,10 +26,15 @@ public class AllowedFeatureController extends AbstractController {
         super(Logger.getLogger(AllowedFeatureController.class));
     }
 
+    /**
+     * Handles request for changing allowed features of plan.
+     *
+     * @param allowFeature DTO with allowed feature change data
+     */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.PUT)
-    protected void changeAvailableFeature(@RequestBody AllowFeatureDTO afc) {
-        planService.changeAvailableFeature(afc.getPlanId(), afc.getFeatureId(), afc.getAvailable());
+    protected void changeAllowedFeature(@RequestBody AllowFeatureDTO allowFeature) {
+        planService.changeAllowedFeature(allowFeature.getPlanId(), allowFeature.getFeatureId(), allowFeature.getAvailable());
     }
 }
