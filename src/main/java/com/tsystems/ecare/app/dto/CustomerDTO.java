@@ -3,6 +3,7 @@ package com.tsystems.ecare.app.dto;
 import com.tsystems.ecare.app.model.Address;
 import com.tsystems.ecare.app.model.Contract;
 import com.tsystems.ecare.app.model.Customer;
+import com.tsystems.ecare.app.model.Role;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,12 +24,14 @@ public class CustomerDTO {
 
     private List<ContractDTO> contracts = new ArrayList<>();
 
+    private List<RoleDTO> roles = new ArrayList<>();
+
     public CustomerDTO() {
         // empty constructor to instantiate object from JSON
     };
 
     public CustomerDTO(Long id, String email, String lastName, String firstName, Date birthdate, String passport,
-                       Address address, List<Contract> contracts) {
+                       Address address, List<Contract> contracts, List<Role> roles) {
         this.id = id;
         this.email = email;
         this.lastName = lastName;
@@ -37,6 +40,7 @@ public class CustomerDTO {
         this.passport = passport;
         this.address = AddressDTO.mapFromAddressEntity(address);
         this.contracts = contracts.stream().map(ContractDTO::mapFromContractEntity).collect(Collectors.toList());
+        this.roles = roles.stream().map(RoleDTO::mapFromRoleEntity).collect(Collectors.toList());
     }
 
     public static CustomerDTO mapFromCustomerEntity(Customer customer) {
@@ -48,7 +52,8 @@ public class CustomerDTO {
                 customer.getBirthdate(),
                 customer.getPassport(),
                 customer.getAddress(),
-                customer.getContracts());
+                customer.getContracts(),
+                customer.getRoles());
     }
 
     public static List<CustomerDTO> mapFromCustomersEntities(List<Customer> customers) {
@@ -117,5 +122,13 @@ public class CustomerDTO {
 
     public void setContracts(List<ContractDTO> contracts) {
         this.contracts = contracts;
+    }
+
+    public List<RoleDTO> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<RoleDTO> roles) {
+        this.roles = roles;
     }
 }

@@ -70,11 +70,7 @@
                             if (contract.numberLock == "USERLOCKED") {
                                 button += "btn-danger\">Locked";
                             } else {
-                                if ($.cookie("ecare.suser") != null) {
-                                    button += "btn-danger\">Locked";
-                                } else {
-                                    button += "btn-danger\" disabled=\"disabled\">Locked";
-                                }
+                                button += "btn-danger\" disabled=\"disabled\">Locked";
                             }
                         }
                         button + "</button>";
@@ -127,7 +123,8 @@
                         element.html("Locked");
                         row.html("<strong>" + strNumber + "</strong>");
                     },
-                    error: function () {}
+                    error: function () {
+                    }
                 });
             } else {
                 var lock = {
@@ -152,7 +149,8 @@
                         element.html("Unlocked");
                         row.html("<a href='#' onclick='editContract(" + id + ")'>" + strNumber + "</a>");
                     },
-                    error: function () {}
+                    error: function () {
+                    }
                 });
             }
         }

@@ -5,6 +5,9 @@ import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
+/**
+ * Extended user to store and collect additional data.
+ */
 public class RichUser extends User {
 
     private String firstName;

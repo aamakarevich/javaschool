@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Handler to add ajax logout support.
+ */
 public class AjaxLogoutSuccessHandler implements LogoutSuccessHandler {
 
     private LogoutSuccessHandler defaultHandler;

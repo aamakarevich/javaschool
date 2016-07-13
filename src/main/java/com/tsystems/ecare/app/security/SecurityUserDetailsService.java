@@ -26,6 +26,13 @@ public class SecurityUserDetailsService implements UserDetailsService {
     @Autowired
     private CustomerDao customerDao;
 
+    /**
+     * Retreives details about user.
+     *
+     * @param username username to find
+     * @return details of found user
+     * @throws UsernameNotFoundException if user doesn't exist
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Customer customer = customerDao.findByEmail(username);

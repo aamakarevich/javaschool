@@ -89,7 +89,8 @@
         }
 
         function getPlansForContract() {
-            client.plan.read("").done(function (plans) {
+            client.plan.read("").done(function (response) {
+                var plans = response.plans;
                 var plansContent = "";
                 plans.forEach(function (plan) {
 

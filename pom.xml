@@ -168,7 +168,6 @@
       <version>2.3.2</version>
     </dependency>
 
-
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-entitymanager</artifactId>
@@ -181,12 +180,6 @@
       <version>5.1.6</version>
     </dependency>
 
-    <!--<dependency>-->
-      <!--<groupId>org.sonarsource.java</groupId>-->
-      <!--<artifactId>sonar-java-plugin</artifactId>-->
-      <!--<version>3.13.1</version>-->
-    <!--</dependency>-->
-
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
@@ -198,7 +191,6 @@
       <artifactId>gson</artifactId>
       <version>2.6.2</version>
     </dependency>
-
   </dependencies>
 
   <build>
@@ -227,6 +219,38 @@
         <groupId>org.sonarsource.scanner.maven</groupId>
         <artifactId>sonar-maven-plugin</artifactId>
         <version>3.0.1</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.glassfish.maven.plugin</groupId>
+        <artifactId>maven-glassfish-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <glassfishDirectory>C:\Environment\glassfish4\</glassfishDirectory>
+          <user>admin</user>
+          <adminPassword>admin</adminPassword>
+          <autoCreate>true</autoCreate>
+          <debug>true</debug>
+          <echo>false</echo>
+          <terse>true</terse>
+          <domain>
+            <name>domain1</name>
+            <adminPort>4848</adminPort>
+            <httpPort>8080</httpPort>
+            <httpsPort>8443</httpsPort>
+            <iiopPort>3700</iiopPort>
+            <jmsPort>7676</jmsPort>
+            <reuse>false</reuse>
+          </domain>
+          <components>
+            <component>
+              <name>${project.artifactId}</name>
+              <artifact>
+                ${project.build.directory}/${project.build.finalName}.war
+              </artifact>
+            </component>
+          </components>
+        </configuration>
       </plugin>
     </plugins>
   </build>

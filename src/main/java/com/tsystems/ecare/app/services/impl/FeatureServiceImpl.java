@@ -1,6 +1,7 @@
 package com.tsystems.ecare.app.services.impl;
 
 import com.tsystems.ecare.app.dao.FeatureDao;
+import com.tsystems.ecare.app.dao.PlanDao;
 import com.tsystems.ecare.app.model.Feature;
 import com.tsystems.ecare.app.model.Plan;
 import com.tsystems.ecare.app.model.SearchResult;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,6 +25,9 @@ public class FeatureServiceImpl implements FeatureService {
 
     @Autowired
     private FeatureDao featureDao;
+
+    @Autowired
+    private PlanDao planDao;
 
     @Override
     @Transactional
@@ -96,21 +101,17 @@ public class FeatureServiceImpl implements FeatureService {
 
     @Override
     @Transactional
-    public List<Feature> getListedFeatures(List<Long> ids) {
-        return featureDao.getListed(ids);
+    public List<Feature> getListedFeatures(String ids) {
+        return featureDao.getListed(idsFromStringToList(ids));
     }
 
     @Override
     @Transactional
-    public List<Feature> getAvailableFeatures(List<Long> ids, Integer planId) {
+    public List<Long> getAvailableFeatures(String ids, Long planId) {
 
-        List<Feature> features = getListedFeatures(ids);
-        if (features == null) {
-            features = new ArrayList<>();
-        }
-        Plan plan = null;// new PlanServiceImpl().getPlan(planId);
-        List<Feature> avaiableFeatures;// = plan.getAllowedFeatures();
-        avaiableFeatures = new ArrayList<>();
+        List<Feature> features = featureDao.getListed(idsFromStringToList(ids));
+        Plan plan = planDao.findById(Plan.class, planId);
+        List<Feature> avaiableFeatures = new ArrayList<>(plan.getAllowedFeatures());
         Iterator<Feature> iterator = avaiableFeatures.iterator();
         while (iterator.hasNext()) {
             Feature af = iterator.next();
@@ -126,7 +127,9 @@ public class FeatureServiceImpl implements FeatureService {
                 }
             }
         }
-        return avaiableFeatures;
+        List<Long> numbers = new ArrayList<>();
+        avaiableFeatures.stream().forEach(f -> numbers.add(f.getId()));
+        return numbers;
     }
 
     @Override
@@ -174,5 +177,16 @@ public class FeatureServiceImpl implements FeatureService {
         feature1.getBlockedFeatures().remove(feature2);
         feature2.getBlockers().remove(feature1);
         feature2.getBlockedFeatures().remove(feature1);
+    }
+
+    private List<Long> idsFromStringToList(String ids) {
+        List<Long> numbers = new ArrayList<>();
+        try {
+            String[] splitted = "".equals(ids.trim()) ? new String[]{} : ids.split(",");
+            Arrays.asList(splitted).stream().forEach(s -> numbers.add(Long.parseLong(s)));
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("wrong ids string format", ex);
+        }
+        return numbers;
     }
 }

@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
-
 /**
  * Provides REST-full CRUD for Plan entity.
  */
@@ -35,19 +32,21 @@ public class PlanController extends AbstractController {
     }
 
     /**
-     * Create
-     * /plan POST creates new plan
+     * Creates new plan.
+     *
+     * @param plan DTO with data to create new plan
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.POST)
-    protected void addPlan(@RequestBody PlanDTO plan) {
+    public void addPlan(@RequestBody PlanDTO plan) {
         planService.savePlan(0L, plan.getTitle(), plan.getDescription(), plan.getMonthlyFee());
     }
 
     /**
-     * Read
-     * /rest/plan GET returns all plans
+     * Returns all plans.
+     *
+     * @return DTO with all existing plans data
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -58,8 +57,10 @@ public class PlanController extends AbstractController {
     }
 
     /**
-     * Read
-     * /plan/ID GET returns plan with id = ID
+     * Returns single plan.
+     *
+     * @param id id of plan to return
+     * @return DTO with single plan data
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -69,24 +70,26 @@ public class PlanController extends AbstractController {
     }
 
     /**
-     * Update
-     * /plan PUT updates plan
+     * Updates existing plan.
+     *
+     * @param plan DTO with plan data to update
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.PUT)
-    protected void updatePlan(@RequestBody PlanDTO plan) {
+    public void updatePlan(@RequestBody PlanDTO plan) {
         planService.savePlan(plan.getId(), plan.getTitle(), plan.getDescription(), plan.getMonthlyFee());
     }
 
     /**
-     * Delete
-     * /plan/ID DELETE deletes plan with id = ID
+     * Deletes plan.
+     *
+     * @param id id of plan to delete
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    protected void deletePlan(@PathVariable Long id) throws ServletException, IOException {
+    public void deletePlan(@PathVariable Long id) {
         planService.deletePlan(id);
     }
 }

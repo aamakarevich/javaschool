@@ -46,6 +46,7 @@ public class PlanServiceImpl implements PlanService {
     @Override
     @Transactional
     public void deletePlan(Long id) {
+        notNull(id, "idToDelete is mandatory");
         Plan plan = planDao.findById(Plan.class, id);
         if(!plan.getContracts().isEmpty()) {
             throw new IllegalArgumentException("forbidden to delete plan that is used by at least one contract.");
@@ -59,12 +60,6 @@ public class PlanServiceImpl implements PlanService {
         Long resultsCount = planDao.getTotalCount(Plan.class);
         List<Plan> plans = planDao.findAll(Plan.class);
         return new SearchResult<>(resultsCount, plans);
-    }
-
-    @Override
-    @Transactional
-    public List<Plan> getPlansPaged(Integer pageNumber, Integer pageSize) {
-        return planDao.findAllPaged(Plan.class, pageNumber, pageSize);
     }
 
     @Override

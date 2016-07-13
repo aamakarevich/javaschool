@@ -41,7 +41,7 @@ public class PlanServiceTest {
         planService.savePlan(plan);*/
 //        SearchResult<Customer> result = customerService.findCustomers(null, 10, 2);
 //        System.out.println(result);
-        for (int i = 0; i < 100; i++) {
+        /*for (int i = 0; i < 100; i++) {
             Customer customer = new Customer();
             customer.setFirstName("Ivan");
             customer.setLastName("Ivanov");
@@ -53,6 +53,10 @@ public class PlanServiceTest {
             address.setAddress2("Building 92");
             customer.setAddress(address);
             customerService.saveNewCustomer(customer);
-        }
+        }*/
+        Customer customer = customerService.getCustomer(1l);
+        Customer customer1 = customerService.getCustomerByEmail("andy@ecare.com");
+//        Customer customer2 = customerService.getCustomerId(286l);
+        System.out.println();
     }
 }

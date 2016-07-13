@@ -39,7 +39,7 @@ public class Feature extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name = "blocker", referencedColumnName = "id", nullable = false))
     private List<Feature> blockers;
 
-    @ManyToMany(mappedBy = "blockers", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "blockers", fetch = FetchType.LAZY)
     private List<Feature> blockedFeatures;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -49,7 +49,7 @@ public class Feature extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name = "needed", referencedColumnName = "id", nullable = false))
     private List<Feature> neededFeatures;
 
-    @ManyToMany(mappedBy = "neededFeatures", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "neededFeatures", fetch = FetchType.LAZY)
     private List<Feature> dependentFeatures;
 
     @ManyToMany(mappedBy = "activeFeatures", fetch = FetchType.LAZY)

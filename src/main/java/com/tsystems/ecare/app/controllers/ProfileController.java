@@ -27,6 +27,12 @@ public class ProfileController extends AbstractController {
         super(Logger.getLogger(ProfileController.class));
     }
 
+    /**
+     * Returns profile information.
+     *
+     * @param principal current user
+     * @return DTO with data of current customer
+     */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.PUT)

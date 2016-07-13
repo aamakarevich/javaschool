@@ -1,7 +1,7 @@
 package com.tsystems.ecare.app.controllers;
 
-import com.tsystems.ecare.app.dto.AllowFeatureDTO;
-import com.tsystems.ecare.app.services.PlanService;
+import com.tsystems.ecare.app.dto.ActivateRoleDTO;
+import com.tsystems.ecare.app.services.CustomerService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,28 +13,28 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- * Provides REST-service for changing allowed features for plans.
+ * Provides REST-service for activating/deactivating roles for users.
  */
 @Controller
-@RequestMapping("allow")
-public class AllowedFeatureController extends AbstractController {
+@RequestMapping("role/activate")
+public class RoleController extends AbstractController {
 
     @Autowired
-    private PlanService planService;
+    private CustomerService customerService;
 
-    public AllowedFeatureController() {
-        super(Logger.getLogger(AllowedFeatureController.class));
+    public RoleController() {
+        super(Logger.getLogger(RoleController.class));
     }
 
     /**
-     * Changes allowed feature of plan.
+     * Activates/deactivates role for customer.
      *
-     * @param allowFeature DTO with allowed feature change data
+     * @param activateRole DTO with role activating data
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.PUT)
-    protected void changeAllowedFeature(@RequestBody AllowFeatureDTO allowFeature) {
-        planService.changeAllowedFeature(allowFeature.getPlanId(), allowFeature.getFeatureId(), allowFeature.getAvailable());
+    protected void activateRole(@RequestBody ActivateRoleDTO activateRole) {
+        customerService.activateRole(activateRole.getRoleId(), activateRole.getCustomerId(), activateRole.isActive());
     }
 }

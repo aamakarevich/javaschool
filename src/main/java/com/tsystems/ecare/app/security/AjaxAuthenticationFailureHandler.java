@@ -8,6 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Authentication failure handler. Returns "UNAUTHORIZED"
+ * to ajax authentication requests if authentication failed.
+ */
 public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
     private AuthenticationFailureHandler defaultHandler;

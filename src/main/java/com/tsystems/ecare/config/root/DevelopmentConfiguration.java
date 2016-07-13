@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Development specific configuration
+ * Development specific configuration.
  */
 @Configuration
 @Profile("development")

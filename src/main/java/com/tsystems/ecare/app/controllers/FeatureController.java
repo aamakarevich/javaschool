@@ -32,8 +32,9 @@ public class FeatureController extends AbstractController {
     }
 
     /**
-     * Create
-     * /option POST creates new option
+     * Creates new option.
+     *
+     * @param feature DTO with option to create data
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -48,8 +49,9 @@ public class FeatureController extends AbstractController {
     }
 
     /**
-     * Read
-     * /option GET returns all options
+     * Returns all options.
+     *
+     * @return DTO with all existing options data
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -60,8 +62,10 @@ public class FeatureController extends AbstractController {
     }
 
     /**
-     * Read
-     * /option/ID GET returns option with id = ID
+     * Returns single option.
+     *
+     * @param id id of option to return
+     * @return DTO with single option data
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -71,8 +75,9 @@ public class FeatureController extends AbstractController {
     }
 
     /**
-     * Update
-     * /option PUT updates option
+     * Updates existng option.
+     *
+     * @param feature DTO with option to update data
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -87,8 +92,9 @@ public class FeatureController extends AbstractController {
     }
 
     /**
-     * Delete
-     * /option/ID DELETE deletes option with id = ID
+     * Deletes option.
+     *
+     * @param id id of option to delete
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)

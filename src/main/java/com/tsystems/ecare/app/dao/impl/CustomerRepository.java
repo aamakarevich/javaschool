@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,7 +60,28 @@ public class CustomerRepository extends GenericRepository<Customer, Long> implem
         query.setFirstResult((pageNumber - 1) * itemsCount);
         query.setMaxResults(itemsCount);
         customers = query.getResultList();
+        for (Customer c : customers) {
+            Set<Contract> contractSet = new HashSet<>();
+            for (Contract contract : c.getContracts()) {
+                contractSet.add(contract);
+            }
+            c.getContracts().clear();
+            c.setContracts(new ArrayList<>(contractSet));
+        }
         return customers;
+    }
+
+    @Override
+    public Customer findById(Long id) {
+        Query query = em.createQuery(
+                "from " + Customer.class.getName() + " c where c.id = :id")
+                .setParameter("id", id);
+        try { /* return customer if have match and null if don't */
+            return (Customer) query.getSingleResult();
+        } catch (NoResultException ex) {
+            logger.info("user is not found by id", ex);
+            return null;
+        }
     }
 
     @Override

@@ -2,11 +2,16 @@ package com.tsystems.ecare.app.services;
 
 import com.tsystems.ecare.app.model.Contract;
 
+import java.util.List;
+
+/**
+ * Service operations interface for Contract entity.
+ */
 public interface ContractService {
 
-    Contract getContract(Long id);
+    public Contract getContract(Long id);
 
-    Contract getContractByNumber(String number);
+    public void saveContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId);
 
-    void changeLock(Long contractId, boolean locked, String customerEmail);
+    public void changeLock(Long contractId, boolean locked, String customerEmail);
 }

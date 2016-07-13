@@ -10,6 +10,9 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Spring specific FeatureDao implementation.
+ */
 @Repository
 public class FeatureRepository extends GenericRepository<Feature, Long> implements FeatureDao {
 
@@ -21,7 +24,7 @@ public class FeatureRepository extends GenericRepository<Feature, Long> implemen
             return new ArrayList<>();
         }
         Query query = em.createQuery(
-                "from " + Feature.class.getName() + " c where c.id in (:ids)")
+                "from " + Feature.class.getName() + " where id in (:ids)")
                 .setParameter("ids", ids);
         try {
             return query.getResultList();

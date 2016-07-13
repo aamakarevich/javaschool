@@ -135,14 +135,14 @@
                         strNumber = strNumber.substr(0, 3) + "-" + strNumber.substr(3);
                         strNumber = "8 (999) " + strNumber;
 
-                        var button = "<button type=\"button\" id=\"lk" + contract.id + "\" onclick=\"toggleLock(" + contract.id + ");\" class=\"btn btn-block btn-xs ";
+                        var button = "<button type=\"button\" id=\"lk" + contract.id + "\" onclick=\"toggleSuserLock(" + contract.id + ");\" class=\"btn btn-block btn-xs ";
                         if(contract.numberLock == "UNLOCKED") {
                             button += "btn-default\">Unlocked";
                         } else {
                             if(contract.numberLock == "USERLOCKED") {
                                 button += "btn-danger\">Locked";
                             } else {
-                                if($.cookie("ecare.suser") != null) {
+                                if($.cookie("ecare.suser") == null) {
                                     button += "btn-danger\" disabled=\"disabled\">Locked";
                                 } else {
                                     button += "btn-danger\">Locked";
@@ -157,7 +157,7 @@
 
                     $("#tContracts").html(contractsBody);
 
-                    if($.cookie("ecare.admin") != null) {
+                    if($.cookie("ecare.admin") == null) {
                         $("#rolesHeader").hide();
                         $("#rolesBody").hide();
                     } else {
@@ -223,7 +223,6 @@
                     firstName: $("#inputFirstName").val(),
                     birthdate: dateFromPretty($("#inputBirthdate").val()),
                     passport: $("#inputPassport").val(),
-                    id: $("#inputCustomerId").val(),
                     address: {
                         city: $("#inputCity").val(),
                         address1: $("#inputAddress1").val(),
@@ -235,6 +234,10 @@
                     loadPage("users", "users");
                 });
             } else {
+                var token = $("meta[name='_csrf']").attr("content");
+                if (!token) token = "";
+                var header = $("meta[name='_csrf_header']").attr("content");
+                if (!header) header = "";
 
                 var customer = {
                     id: $("#inputCustomerId").val(),
@@ -242,7 +245,6 @@
                     firstName: $("#inputFirstName").val(),
                     birthdate: dateFromPretty($("#inputBirthdate").val()),
                     passport: $("#inputPassport").val(),
-                    id: $("#inputCustomerId").val(),
                     address: {
                         city: $("#inputCity").val(),
                         address1: $("#inputAddress1").val(),
@@ -250,8 +252,20 @@
                     }
                 };
 
-                client.customer.update(customer).always(function (result) {
-                    loadPage("users", "users");
+                $.ajax({
+                    type: 'PUT',
+                    url: '/customer',
+                    data: JSON.stringify(customer),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    success: function (response) {
+                        loadPage("users", "users");
+                    },
+                    error: function () {}
                 });
             }
 
@@ -263,19 +277,123 @@
         }
 
         function toggleRole(id, cid) {
+            var token = $("meta[name='_csrf']").attr("content");
+            if (!token) token = "";
+            var header = $("meta[name='_csrf_header']").attr("content");
+            if (!header) header = "";
+
             var element = $("#rl" + id);
             if (element.hasClass("btn-default")) {
-                client.customer.update("?activate=" + id + "&for=" + cid);
-                element.removeClass("btn-default");
-                element.addClass("btn-primary");
-                element.blur();
-                element.html("Active");
+                var ar = {
+                    roleId: id,
+                    customerId: cid,
+                    active: true
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/role/activate',
+                    data: JSON.stringify(ar),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    success: function (response) {
+                        element.removeClass("btn-default");
+                        element.addClass("btn-primary");
+                        element.blur();
+                        element.html("Active");
+                    },
+                    error: function () {}
+                });
             } else {
-                client.customer.update("?deactivate=" + id + "&for=" + cid);
-                element.removeClass("btn-primary");
-                element.addClass("btn-default");
-                element.blur();
-                element.html("Inactive");
+                var ar = {
+                    roleId: id,
+                    customerId: cid,
+                    active: false
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/role/activate',
+                    data: JSON.stringify(ar),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    success: function (response) {
+                        element.removeClass("btn-primary");
+                        element.addClass("btn-default");
+                        element.blur();
+                        element.html("Inactive");
+                    },
+                    error: function () {}
+                });
+            }
+        }
+
+        function toggleSuserLock(id, strNumber) {
+            var token = $("meta[name='_csrf']").attr("content");
+            if (!token) token = "";
+            var header = $("meta[name='_csrf_header']").attr("content");
+            if (!header) header = "";
+
+            var element = $("#lk" + id);
+            var row = $("#trp" + id);
+            if (element.hasClass("btn-default")) {
+                var lock = {
+                    contractId: id,
+                    locked: true
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/customer/lock',
+                    data: JSON.stringify(lock),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    success: function (response) {
+                        element.removeClass("btn-default");
+                        element.addClass("btn-danger");
+                        element.blur();
+                        element.html("Locked");
+                        row.html("<strong>" + strNumber + "</strong>");
+                    },
+                    error: function () {}
+                });
+            } else {
+                var lock = {
+                    contractId: id,
+                    locked: false
+                };
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/customer/lock',
+                    data: JSON.stringify(lock),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    success: function (response) {
+                        element.removeClass("btn-danger");
+                        element.addClass("btn-default");
+                        element.blur();
+                        element.html("Unlocked");
+                        row.html("<a href='#' onclick='editContract(" + id + ")'>" + strNumber + "</a>");
+                    },
+                    error: function () {}
+                });
             }
         }
     </script>

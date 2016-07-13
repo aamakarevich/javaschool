@@ -6,7 +6,7 @@ import java.util.List;
  * Search result of a search method, meant to be used as return type in the service layer for search methods,
  * when both the result and the total results count are needed.
  *
- * @param <T>
+ * @param <T> entity class
  */
 public class SearchResult<T> {
 

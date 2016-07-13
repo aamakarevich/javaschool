@@ -8,6 +8,12 @@ import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Spring specific GenericDao implementation.
+ *
+ * @param <T> class of entity
+ * @param <ID> class used for entities ID representation
+ */
 public abstract class GenericRepository<T, ID extends Serializable> implements GenericDao<T, ID> {
 
     @PersistenceContext
@@ -27,16 +33,6 @@ public abstract class GenericRepository<T, ID extends Serializable> implements G
     public List findAll(Class clazz) {
         List entities;
         Query query = em.createQuery("from " + clazz.getName());
-        entities = query.getResultList();
-        return entities;
-    }
-
-    @Override
-    public List findAllPaged(Class clazz, Integer pageNumber, Integer pageSize) {
-        List entities;
-        Query query = em.createQuery("from " + clazz.getName());
-        query.setFirstResult((pageNumber - 1) * pageSize);
-        query.setMaxResults(pageSize);
         entities = query.getResultList();
         return entities;
     }

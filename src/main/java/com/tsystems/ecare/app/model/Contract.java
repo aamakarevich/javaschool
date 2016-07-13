@@ -23,7 +23,7 @@ public class Contract extends AbstractEntity {
     @Column(name = "number", nullable = false, length = 10)
     private String number;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private Customer customer;
 
@@ -31,7 +31,7 @@ public class Contract extends AbstractEntity {
     @JoinColumn(name = "plan_id", referencedColumnName = "id", nullable = false)
     private Plan plan;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "active_feature",  joinColumns = @JoinColumn(name = "contract_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "feature_id", referencedColumnName = "id", nullable = false))
     private List<Feature> activeFeatures;
 

@@ -227,7 +227,7 @@
                 setLs(BASKET_PLAN, contract.plan.id);
                 var fIds = [];
                 contract.activeFeatures.forEach(function (feature) {
-                    fIds.push(feature.id);
+                    fIds.push(feature);
                 })
                 setLsArray(BASKET_OPTIONS, fIds);
                 loadPage('contract1', 'basket');
@@ -243,9 +243,25 @@
             loadPage('user', 'users');
         }
         function deleteCustomer() {
-            client.customer.del($("#deleteCustomerId").val()).always(function (result) {
-                $("#deleteCustomerModal").modal("hide");
-                createUsersPagination();
+            var token = $("meta[name='_csrf']").attr("content");
+            if (!token) token = "";
+            var header = $("meta[name='_csrf_header']").attr("content");
+            if (!header) header = "";
+
+            $.ajax({
+                type: 'DELETE',
+                url: '/customer/' + $("#deleteCustomerId").val(),
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                beforeSend: function (request) {
+                    request.setRequestHeader(header, token);
+                },
+                success: function (response) {
+                    $("#deleteCustomerModal").modal("hide");
+                    createUsersPagination();
+                },
+                error: function () {}
             });
         }
         function presetDeleteCustomerId(id) {

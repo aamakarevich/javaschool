@@ -8,9 +8,7 @@ import com.tsystems.ecare.config.servlet.ServletContextConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
- *
  * Replacement for most of the content of web.xml, sets up the root and the servlet context config.
- *
  */
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 

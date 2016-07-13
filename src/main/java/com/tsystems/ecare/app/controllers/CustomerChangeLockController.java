@@ -12,32 +12,29 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.security.Principal;
-
 /**
- * Provides REST-service for locking/unlocking customers own contracts.
+ * Provides REST-service for locking/unlocking customers contracts by managers.
  */
 @Controller
-@RequestMapping("profile/lock")
-public class ProfileChangeLockController extends AbstractController {
+@RequestMapping("customer/lock")
+public class CustomerChangeLockController extends AbstractController {
 
     @Autowired
     private ContractService contractService;
 
-    public ProfileChangeLockController() {
-        super(Logger.getLogger(ProfileChangeLockController.class));
+    public CustomerChangeLockController() {
+        super(Logger.getLogger(CustomerChangeLockController.class));
     }
 
     /**
-     * Locks/unlocks customers contracts (entry point for own contracts).
+     * Locks/unlocks customers contracts (entry point for managers).
      *
-     * @param principal user that performed request
-     * @param changeLock DTO with number lock change data
+     * @param changeLock DTO with numberlock change data
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.PUT)
-    public void changeLock(Principal principal, @RequestBody ChangeLockDTO changeLock) {
-        contractService.changeLock(changeLock.getContractId(), changeLock.isLocked(), principal.getName());
+    public void changeLock(@RequestBody ChangeLockDTO changeLock) {
+        contractService.changeLock(changeLock.getContractId(), changeLock.isLocked(), null);
     }
 }

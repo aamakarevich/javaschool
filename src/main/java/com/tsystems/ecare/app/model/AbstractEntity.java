@@ -13,7 +13,6 @@ import java.util.UUID;
 /**
  * This is a base class for all entities. It provides an equals and hashcode that will always work correctly in all
  * circumstances. This avoids frequent errors related to the implementation of those same methods.
- *
  */
 @MappedSuperclass
 public class AbstractEntity {
@@ -36,9 +35,11 @@ public class AbstractEntity {
         syncUuidString();
     }
 
+    /**
+     * Fills the uuid.
+     */
     protected void syncUuidString() {
         if (null == uuidStr) {
-            // initial method call fills the uuid
             getUuid();
         }
     }

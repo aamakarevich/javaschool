@@ -5,14 +5,18 @@ import com.tsystems.ecare.app.model.Customer;
 import java.util.List;
 import java.util.Set;
 
-
+/**
+ * Data access object interface for Customer entity.
+ */
 public interface CustomerDao extends GenericDao<Customer, Long> {
 
-    Set<Long> getFilteredIds(String filter);
+    public Set<Long> getFilteredIds(String filter);
 
-    List<Customer> findPaged(Integer itemsCount, Integer pageNumber, Set<Long> filteredIds);
+    public List<Customer> findPaged(Integer itemsCount, Integer pageNumber, Set<Long> filteredIds);
 
-    Customer findByEmail(String email);
+    public Customer findById(Long id);
 
-    Customer findByEmailAndPassword(String email, String password);
+    public Customer findByEmail(String email);
+
+    public Customer findByEmailAndPassword(String email, String password);
 }

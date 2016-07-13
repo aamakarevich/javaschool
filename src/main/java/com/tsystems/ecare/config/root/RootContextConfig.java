@@ -1,6 +1,5 @@
 package com.tsystems.ecare.config.root;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,12 +10,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
- *
- * The root context configuration of the application - the beans in this context will be globally visible
- * in all servlet contexts.
- *
+ * The root context configuration of the application -
+ * the beans in this context will be globally visible in all servlet contexts.
  */
-
 @Configuration
 @ComponentScan({"com.tsystems.ecare.app.services.impl", "com.tsystems.ecare.app.dao.impl",
         "com.tsystems.ecare.app.config.root", "com.tsystems.ecare.app.security"})

@@ -3,32 +3,24 @@ package com.tsystems.ecare.app.services;
 import com.tsystems.ecare.app.model.Customer;
 import com.tsystems.ecare.app.model.SearchResult;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
+import java.util.Date;
 
+/**
+ * Service operations interface for Customer entity.
+ */
 public interface CustomerService {
 
-    public void deleteCustomer(Customer customer);
+    public void deleteCustomer(Long idTodelete);
 
     public Customer getCustomer(Long id);
 
     public Customer getCustomerByEmail(String email);
 
-    public Customer saveNewCustomer(Customer customer) throws NoSuchAlgorithmException;
-
-    public Customer verifyUser(String email, String password);
-
-    public List<Customer> getAllCustomers();
-
-    public List<Customer> getCustomersPaged(Integer pageNumber, Integer pageSize);
-
-    public Long getCustomersCount();
-
-    public Customer updateCustomer(Customer customer);
-
-    public void activate(Integer id, Customer target, Customer user);
-
-    public void deactivate(Integer id, Customer target, Customer user);
+    public Customer saveNewCustomer(Customer customer);
 
     public SearchResult<Customer> findCustomers(String filter, Integer itemsCount, Integer pageNumber);
+
+    public void activateRole(Long roleId, Long customerId, boolean active);
+
+    public Customer saveCustomer(Long id, String lastName, String firstName, Date birthdate, String passport, String city, String address1, String address2);
 }

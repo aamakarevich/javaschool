@@ -5,7 +5,9 @@ import org.springframework.stereotype.Repository;
 import java.io.Serializable;
 import java.util.List;
 
-
+/**
+ * Generic data access object interface common for all entities.
+ */
 @Repository
 public interface GenericDao<T, ID extends Serializable> {
 
@@ -14,8 +16,6 @@ public interface GenericDao<T, ID extends Serializable> {
     void delete(T entity);
 
     List findAll(Class clazz);
-
-    List findAllPaged(Class clazz, Integer pageNumber, Integer pageSize);
 
     T findById(Class clazz, ID id);
 

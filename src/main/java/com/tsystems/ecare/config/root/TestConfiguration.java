@@ -1,6 +1,5 @@
 package com.tsystems.ecare.config.root;
 
-
 //import calories.tracker.app.init.TestDataInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

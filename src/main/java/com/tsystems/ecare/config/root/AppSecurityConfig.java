@@ -22,16 +22,17 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import javax.sql.DataSource;
 
 /**
- * The Spring Security configuration for the application - its a form login config with authentication via session cookie (once logged in),
- * with fallback to HTTP Basic for non-browser clients.
- * <p>
- * The CSRF token is put on the reply as a header via a filter, as there is no server-side rendering on this app.
+ * The Spring Security configuration for the application.
  */
 @Configuration
 @EnableWebSecurity
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final Logger LOGGER = Logger.getLogger(AppSecurityConfig.class);
+
+    public static final String USER = "hasRole('ROLE_USER')";
+    public static final String MANAGER_OR_ADMIN = "hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')";
+    private static final String ADMIN = "hasRole('ROLE_ADMIN')";
 
     @Autowired
     private SecurityUserDetailsService userDetailsService;
@@ -58,26 +59,32 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/resources/js/**").permitAll()
                 .antMatchers("/resources/css/**").permitAll()
                 .antMatchers("/resources/fonts/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/user").permitAll()
-                .antMatchers(HttpMethod.PUT, "/profile").access("hasRole('ROLE_USER')")
-                .antMatchers(HttpMethod.PUT, "/profile/lock").access("hasRole('ROLE_USER')")
-                .antMatchers(HttpMethod.GET, "/customer").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.GET, "/customer/**").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.DELETE, "/customer/**").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.POST, "/customer").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.PUT, "/customer").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.PUT, "/profile").access(USER)
+                .antMatchers(HttpMethod.PUT, "/profile/lock").access(USER)
+                .antMatchers(HttpMethod.GET, "/customer").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.GET, "/customer/**").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.DELETE, "/customer/**").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.POST, "/customer").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.PUT, "/customer").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.PUT, "/customer/lock").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.PUT, "/role/activate").access(ADMIN)
                 .antMatchers(HttpMethod.GET, "/plan").permitAll()
                 .antMatchers(HttpMethod.GET, "/plan/**").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/plan/**").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.POST, "/plan").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.PUT, "/plan").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.PUT, "/allow").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.PUT, "/link").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.DELETE, "/plan/**").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.POST, "/plan").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.PUT, "/plan").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.PUT, "/allow").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.PUT, "/link").access(MANAGER_OR_ADMIN)
                 .antMatchers(HttpMethod.GET, "/option").permitAll()
                 .antMatchers(HttpMethod.GET, "/option/**").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/option/**").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.POST, "/option").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-                .antMatchers(HttpMethod.PUT, "/option").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+                .antMatchers(HttpMethod.DELETE, "/option/**").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.POST, "/option").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.PUT, "/option").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.GET, "/contract").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.GET, "/contract/**").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.DELETE, "/contract/**").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.POST, "/contract").access(MANAGER_OR_ADMIN)
+                .antMatchers(HttpMethod.PUT, "/contract").access(MANAGER_OR_ADMIN)
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

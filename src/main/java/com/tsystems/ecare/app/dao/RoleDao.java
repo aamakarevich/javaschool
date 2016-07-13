@@ -2,8 +2,10 @@ package com.tsystems.ecare.app.dao;
 
 import com.tsystems.ecare.app.model.Role;
 
-
-public interface RoleDao extends GenericDao<Role, Integer> {
+/**
+ * Data access object interface for Role entity.
+ */
+public interface RoleDao extends GenericDao<Role, Long> {
 
     Role findByTitle(String title);
 }
