@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Entity that represents customer as person and as user of the system.
+ */
 @Entity
 @Table(name = "customer")
 public class Customer extends AbstractEntity {
@@ -56,8 +59,7 @@ public class Customer extends AbstractEntity {
 
     public Customer() {}
 
-    public Customer(String firstName, String lastName, Date birthdate, String passport,
-                    String email, String password, Address address) {
+    public Customer(String firstName, String lastName, Date birthdate, String passport, String email, String password, Address address) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthdate = birthdate;
@@ -112,7 +114,6 @@ public class Customer extends AbstractEntity {
     }
 
     public void setPassword(String password) {
-
         this.password = password;
     }
 

@@ -16,8 +16,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.tsystems.ecare.app.services.ValidationUtils.assertMaximumLength;
-import static com.tsystems.ecare.app.services.ValidationUtils.assertNotBlank;
+import static com.tsystems.ecare.app.utils.ValidationUtils.assertMaximumLength;
+import static com.tsystems.ecare.app.utils.ValidationUtils.assertNotBlank;
 import static org.springframework.util.Assert.notNull;
 
 @Service

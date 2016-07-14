@@ -40,7 +40,7 @@ public class PlanController extends AbstractController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.POST)
     public void addPlan(@RequestBody PlanDTO plan) {
-        planService.savePlan(0L, plan.getTitle(), plan.getDescription(), plan.getMonthlyFee());
+        planService.savePlan(null, plan.getTitle(), plan.getDescription(), plan.getMonthlyFee());
     }
 
     /**

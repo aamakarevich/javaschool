@@ -16,6 +16,9 @@
     <sonar.language>java</sonar.language>
     <sonar.login>sonarqube</sonar.login>
     <sonar.password>sonarqube</sonar.password>
+    <sonar.binaries>target/classes</sonar.binaries>
+    <sonar.sources>src</sonar.sources>
+    <sonar.tests>test</sonar.tests>
   </properties>
 
   <dependencies>
@@ -209,6 +212,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.5.1</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>

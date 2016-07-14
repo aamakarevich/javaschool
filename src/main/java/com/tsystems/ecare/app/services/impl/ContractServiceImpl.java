@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.tsystems.ecare.app.services.ValidationUtils.assertMatches;
-import static com.tsystems.ecare.app.services.ValidationUtils.assertNotBlank;
+import static com.tsystems.ecare.app.utils.ValidationUtils.assertMatches;
+import static com.tsystems.ecare.app.utils.ValidationUtils.assertNotBlank;
 import static org.springframework.util.Assert.notNull;
 
 @Service

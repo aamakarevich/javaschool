@@ -13,6 +13,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entity that represents plan that can be applied to contracts.
+ */
 @Entity
 @Table(name = "plan")
 public class Plan extends AbstractEntity {
@@ -34,10 +37,18 @@ public class Plan extends AbstractEntity {
             name = "allowed_feature",
             joinColumns = @JoinColumn(name = "plan_id", referencedColumnName = "id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "feature_id", referencedColumnName = "id", nullable = false))
-    private List<Feature> allowedFeatures;
+    private List<Feature> allowedFeatures = new ArrayList<>();
 
     @OneToMany(mappedBy = "plan", fetch = FetchType.LAZY)
-    private List<Contract> contracts;
+    private List<Contract> contracts = new ArrayList<>();
+
+    public Plan() {}
+
+    public Plan(String title, String description, BigDecimal monthlyFee) {
+        this.title = title;
+        this.description = description;
+        this.monthlyFee = monthlyFee;
+    }
 
     public String getTitle() {
         return title;
@@ -72,7 +83,7 @@ public class Plan extends AbstractEntity {
     }
 
     public List<Feature> getAllowedFeatures() {
-        return allowedFeatures != null ? allowedFeatures : new ArrayList<>();
+        return allowedFeatures;
     }
 
     public void setAllowedFeatures(List<Feature> allowedFeatures) {

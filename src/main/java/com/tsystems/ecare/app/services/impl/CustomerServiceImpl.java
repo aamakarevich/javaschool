@@ -10,14 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import static com.tsystems.ecare.app.services.ValidationUtils.assertMaximumLength;
-import static com.tsystems.ecare.app.services.ValidationUtils.assertNotBlank;
+import static com.tsystems.ecare.app.utils.HashUtils.sha256;
+import static com.tsystems.ecare.app.utils.ValidationUtils.assertMaximumLength;
+import static com.tsystems.ecare.app.utils.ValidationUtils.assertNotBlank;
 import static org.springframework.util.Assert.notNull;
 
 @Service
@@ -87,7 +86,7 @@ public class CustomerServiceImpl implements CustomerService {
         notNull(customer, "customer is not found by id");
 
         customer.getRoles().remove(role);
-        if(active) {
+        if (active) {
             customer.getRoles().add(role);
         }
         customerDao.save(customer);
@@ -126,21 +125,18 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public Customer saveNewCustomer(Customer customer)  {
+    public Customer saveNewCustomer(Customer customer) {
 
         customer.setId(null);
-        try {
-            customer.setPassword(sha256(customer.getLastName()));
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException("unsupported encryption type");
-        }
+        customer.setPassword(sha256(customer.getLastName()));
         String lastName = customer.getLastName().toLowerCase();
         lastName = lastName.length() > 7 ? lastName.substring(0, 7) : lastName;
         String uniqueEmail = customer.getFirstName().toLowerCase().substring(0, 1) + lastName;
         int counter = 1;
         while (customerDao.findByEmail(uniqueEmail + "@ecare.com") != null) {
-            if(counter != 1) {
-                uniqueEmail = uniqueEmail.substring(0, uniqueEmail.length() - Integer.toString(counter-1).length());}
+            if (counter != 1) {
+                uniqueEmail = uniqueEmail.substring(0, uniqueEmail.length() - Integer.toString(counter - 1).length());
+            }
             uniqueEmail += Integer.toString(counter);
             counter++;
         }
@@ -148,15 +144,5 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setEmail(uniqueEmail);
         customer = customerDao.save(customer);
         return customer;
-    }
-
-    static String sha256(String input) throws NoSuchAlgorithmException {
-        MessageDigest mDigest = MessageDigest.getInstance("SHA-256");
-        byte[] result = mDigest.digest(input.getBytes());
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < result.length; i++) {
-            sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
-        }
-        return sb.toString();
     }
 }

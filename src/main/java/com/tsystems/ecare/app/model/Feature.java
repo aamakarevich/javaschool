@@ -12,6 +12,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entity that represents option - some additional conditions that can be added to contract.
+ */
 @Entity
 @Table(name = "feature")
 public class Feature extends AbstractEntity {
@@ -59,6 +62,13 @@ public class Feature extends AbstractEntity {
     private List<Plan> plans;
 
     public Feature() {}
+
+    public Feature(String title, String description, BigDecimal monthlyFee, BigDecimal additionFee) {
+        this.title = title;
+        this.description = description;
+        this.monthlyFee = monthlyFee;
+        this.additionFee = additionFee;
+    }
 
     public String getTitle() {
         return title;

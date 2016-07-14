@@ -10,15 +10,45 @@ import java.math.BigDecimal;
  */
 public interface PlanService {
 
+    /**
+     * Saves plan (new or not) to database.
+     *
+     * @param id id of plan
+     * @param title title of plan
+     * @param description description of plan
+     * @param monthlyFee monthly fee for plan
+     * @return entity with saved plan info
+     */
     public Plan savePlan(Long id, String title, String description, BigDecimal monthlyFee);
 
+    /**
+     * Searches plan in database by id.
+     *
+     * @param id id of plan
+     * @return entity with plan data
+     */
     public Plan getPlan(Long id);
 
-    public void deletePlan(Long id);
-
+    /**
+     * Searches for all plans in database.
+     *
+     * @return all plans data and total count
+     */
     public SearchResult<Plan> getAllPlans();
 
-    public Long getPlansCount();
+    /**
+     * Deletes plan from database.
+     *
+     * @param id id of plan to delete
+     */
+    public void deletePlan(Long id);
 
-    public void changeAllowedFeature(Long planId, Long featureId, Boolean available);
+    /**
+     * Changes allowed option status for plan.
+     *
+     * @param planId id of plan to change allowed option status
+     * @param featureId id of option to change allowed status
+     * @param allowed true if option must be allowed for plan
+     */
+    public void changeAllowedFeature(Long planId, Long featureId, Boolean allowed);
 }

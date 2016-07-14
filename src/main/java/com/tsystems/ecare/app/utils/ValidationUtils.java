@@ -1,4 +1,4 @@
-package com.tsystems.ecare.app.services;
+package com.tsystems.ecare.app.utils;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;

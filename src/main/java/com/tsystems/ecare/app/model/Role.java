@@ -9,6 +9,9 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entity that representse superuser roles in system.
+ */
 @Entity
 @Table(name = "role")
 public class Role extends AbstractEntity {

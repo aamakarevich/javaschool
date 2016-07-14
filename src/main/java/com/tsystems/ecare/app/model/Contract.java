@@ -15,6 +15,9 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entity that represents contract that can be created for customer.
+ */
 @Entity
 @Table(name = "contract")
 public class Contract extends AbstractEntity {

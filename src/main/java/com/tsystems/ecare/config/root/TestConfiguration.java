@@ -1,6 +1,6 @@
 package com.tsystems.ecare.config.root;
 
-//import calories.tracker.app.init.TestDataInitializer;
+import com.tsystems.ecare.app.init.TestDataInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -20,7 +20,6 @@ import java.util.Map;
  *
  * This allows to clone the project repository and start a running application with the command
  *
- * mvn clean install tomcat7:run-war -Dspring.profiles.active=test
  *
  * Access http://localhost:8080/ and login with test123 / Password2, in order to see some test data,
  * or create a new user.
@@ -31,10 +30,10 @@ import java.util.Map;
 @EnableTransactionManagement
 public class TestConfiguration {
 
-//    @Bean(initMethod = "init")
-//    public TestDataInitializer initTestData() {
-//        return new TestDataInitializer();
-//    }
+    @Bean(initMethod = "init")
+    public TestDataInitializer initTestData() {
+        return new TestDataInitializer();
+    }
 
     @Bean(name = "datasource")
     public DriverManagerDataSource dataSource() {

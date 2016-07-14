@@ -6,6 +6,7 @@ import com.tsystems.ecare.app.model.Feature;
 import com.tsystems.ecare.app.model.Plan;
 import com.tsystems.ecare.app.model.SearchResult;
 import com.tsystems.ecare.app.services.PlanService;
+import com.tsystems.ecare.app.utils.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.tsystems.ecare.app.utils.ValidationUtils.assertMaximumLength;
+import static com.tsystems.ecare.app.utils.ValidationUtils.assertNotBlank;
 import static org.springframework.util.Assert.notNull;
 
+/**
+ * Spring specific PlanService implementation.
+ */
 @Service
 public class PlanServiceImpl implements PlanService {
 
@@ -24,36 +30,57 @@ public class PlanServiceImpl implements PlanService {
     @Autowired
     private FeatureDao featureDao;
 
+    /**
+     * Saves plan (new or not) to database.
+     *
+     * @param id id of plan
+     * @param title title of plan
+     * @param description description of plan
+     * @param monthlyFee monthly fee for plan
+     * @return entity with saved plan info
+     */
     @Override
     @Transactional
     public Plan savePlan(Long id, String title, String description, BigDecimal monthlyFee) {
-        Plan plan = planDao.findById(Plan.class, id);
-        if (plan == null) {
+        Plan plan;
+        if (id == null) {
             plan = new Plan();
+        } else {
+            plan = planDao.findById(Plan.class, id);
+            notNull(plan, "plan is not found by id");
         }
+        assertNotBlank(title, "title must not be blank");
+        assertMaximumLength(title, 40, "title must not be more than 40 characters length");
+        assertNotBlank(description, "description must not be blank");
+        assertMaximumLength(description, 1000, "description must not be more than 1000 characters length");
+        notNull(monthlyFee, "monthlyFee is mandatory");
+
         plan.setTitle(title);
         plan.setDescription(description);
         plan.setMonthlyFee(monthlyFee);
         return planDao.save(plan);
     }
 
+    /**
+     * Searches plan in database by id.
+     *
+     * @param id id of plan
+     * @return entity with plan data
+     */
     @Override
     @Transactional
     public Plan getPlan(Long id) {
-        return planDao.findById(Plan.class, id);
-    }
-
-    @Override
-    @Transactional
-    public void deletePlan(Long id) {
-        notNull(id, "idToDelete is mandatory");
+        notNull(id, "plan is mandatory");
         Plan plan = planDao.findById(Plan.class, id);
-        if(!plan.getContracts().isEmpty()) {
-            throw new IllegalArgumentException("forbidden to delete plan that is used by at least one contract.");
-        }
-        planDao.delete(plan);
+        notNull(plan, "plan is not found by id");
+        return plan;
     }
 
+    /**
+     * Searches for all plans in database.
+     *
+     * @return all plans data and total count
+     */
     @Override
     @Transactional(readOnly = true)
     public SearchResult<Plan> getAllPlans() {
@@ -62,18 +89,35 @@ public class PlanServiceImpl implements PlanService {
         return new SearchResult<>(resultsCount, plans);
     }
 
+    /**
+     * Deletes plan from database if this plan is not used in any contract.
+     *
+     * @param id id of plan to delete
+     */
     @Override
     @Transactional
-    public Long getPlansCount() {
-        return planDao.getTotalCount(Plan.class);
+    public void deletePlan(Long id) {
+        notNull(id, "idToDelete is mandatory");
+        Plan plan = planDao.findById(Plan.class, id);
+        if(!plan.getContracts().isEmpty()) {
+            throw new IllegalArgumentException("forbidden to delete plan that is used by at least one contract");
+        }
+        planDao.delete(plan);
     }
 
+    /**
+     * Changes allowed option status for plan.
+     *
+     * @param planId id of plan to change allowed option status
+     * @param featureId id of option to change allowed status
+     * @param allowed true if option must be allowed for plan
+     */
     @Override
     @Transactional
-    public void changeAllowedFeature(Long planId, Long featureId, Boolean available) {
+    public void changeAllowedFeature(Long planId, Long featureId, Boolean allowed) {
         notNull(planId, "planId is mandatory");
         notNull(featureId, "featureId is mandatory");
-        notNull(available, "available is mandatory");
+        notNull(allowed, "available is mandatory");
 
         Plan plan = planDao.findById(Plan.class, planId);
         Feature feature = featureDao.findById(Feature.class, featureId);
@@ -81,7 +125,7 @@ public class PlanServiceImpl implements PlanService {
             throw new IllegalArgumentException("both plan and feature must exist to set available option");
         }
 
-        if (available) {
+        if (allowed) {
             if (!plan.getAllowedFeatures().contains(feature)) {
                 plan.getAllowedFeatures().add(feature);
             }

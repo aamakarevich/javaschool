@@ -5,6 +5,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * Entity that represents address.
+ */
 @Entity
 @Table(name = "address")
 public class Address extends AbstractEntity {
@@ -21,9 +24,11 @@ public class Address extends AbstractEntity {
     @Column(name = "city", nullable = false, length = 40)
     private String city;
 
-//    private List<Customer> customers;
+    public Address() {}
 
-    public Address() {
+    public Address(String address1, String city) {
+        this.address1 = address1;
+        this.city = city;
     }
 
     public Address(String address1, String address2, String city) {
@@ -55,12 +60,4 @@ public class Address extends AbstractEntity {
     public void setCity(String city) {
         this.city = city;
     }
-
-//    public List<Customer> getCustomers() {
-//        return customers != null ? customers : new ArrayList<>();
-//    }
-//
-//    public void setCustomers(List<Customer> customers) {
-//        this.customers = customers;
-//    }
 }
