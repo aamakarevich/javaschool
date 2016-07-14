@@ -1,7 +1,5 @@
 package com.tsystems.ecare.config.root;
 
-
-//import calories.tracker.app.init.TestDataInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -21,11 +19,6 @@ import java.util.Map;
 @Profile("development")
 @EnableTransactionManagement
 public class DevelopmentConfiguration {
-
-//    @Bean(initMethod = "init")
-//    public TestDataInitializer initTestData() {
-//        return new TestDataInitializer();
-//    }
 
     @Bean(name = "datasource")
     public DriverManagerDataSource dataSource() {

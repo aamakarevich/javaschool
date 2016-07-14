@@ -12,7 +12,9 @@ public class ContractRichDTO extends ContractDTO {
 
     private List<Long> activeFeatures = new ArrayList<>();
 
-    public ContractRichDTO() {}
+    public ContractRichDTO() {
+        // constructor for creating object from JSON
+    }
 
     public ContractRichDTO(Long id, String number, Contract.Lock numberLock, Plan plan, List<Long> activeFeatures, Long customerId) {
         super(id, number, numberLock, plan);

@@ -2,7 +2,11 @@ package com.tsystems.ecare.app.utils;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HashUtilsTest {
 
@@ -23,5 +27,16 @@ public class HashUtilsTest {
         assertEquals(gotHashOfValue1, realHashOfValue1);
         assertEquals(gotHashOfValue2, realHashOfValue2);
         assertEquals(gotHashOfValue3, realHashOfValue3);
+    }
+
+    @Test
+    public void generatePassword() {
+        Set<String> passwords = new HashSet<>();
+        for (int i = 0; i < 10; i++) {
+            String password = HashUtils.generatePassword();
+            assertTrue(password.length() == 8);
+            passwords.add(password);
+        }
+        assertTrue(passwords.size() == 10);
     }
 }

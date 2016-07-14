@@ -26,7 +26,7 @@ public class Contract extends AbstractEntity {
     @Column(name = "number", nullable = false, length = 10)
     private String number;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private Customer customer;
 
@@ -48,7 +48,9 @@ public class Contract extends AbstractEntity {
         LOCKED
     }
 
-    public Contract() {}
+    public Contract() {
+        // constractor with no parameters
+    }
 
     public String getNumber() {
         return number;

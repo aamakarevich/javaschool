@@ -45,7 +45,12 @@ public class ContractController extends AbstractController {
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.POST)
     public void addContract(@RequestBody ContractRichDTO contract) {
-        contractService.saveContract(null, contract.getNumber(), contract.getActiveFeatures(), contract.getPlan().getId(), contract.getCustomerId());
+        contractService.saveNewContract(
+                null,
+                contract.getNumber(),
+                contract.getActiveFeatures(),
+                contract.getPlan().getId(),
+                contract.getCustomerId());
     }
 
     /**
@@ -66,7 +71,7 @@ public class ContractController extends AbstractController {
      * It gives count on plan's available features and currently enabled features.
      *
      * @param listedIds currently enabled features ids
-     * @param planId id of plan applied to contract
+     * @param planId    id of plan applied to contract
      * @return DTO with available features
      */
     @ResponseBody

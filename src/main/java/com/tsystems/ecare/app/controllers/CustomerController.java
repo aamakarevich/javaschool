@@ -2,7 +2,6 @@ package com.tsystems.ecare.app.controllers;
 
 import com.tsystems.ecare.app.dto.CustomerDTO;
 import com.tsystems.ecare.app.dto.CustomersDTO;
-import com.tsystems.ecare.app.dto.NewCustomerDTO;
 import com.tsystems.ecare.app.model.Customer;
 import com.tsystems.ecare.app.model.SearchResult;
 import com.tsystems.ecare.app.services.CustomerService;
@@ -40,8 +39,16 @@ public class CustomerController extends AbstractController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.POST)
-    protected void addCustomer(@RequestBody NewCustomerDTO customer) {
-        customerService.saveNewCustomer(null);
+    protected void addCustomer(@RequestBody CustomerDTO customer) {
+        customerService.saveCustomer(
+                null,
+                customer.getLastName(),
+                customer.getFirstName(),
+                customer.getBirthdate(),
+                customer.getPassport(),
+                customer.getAddress().getCity(),
+                customer.getAddress().getAddress1(),
+                customer.getAddress().getAddress2());
     }
 
     /**

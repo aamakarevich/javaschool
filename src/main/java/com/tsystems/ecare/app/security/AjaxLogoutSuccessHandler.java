@@ -13,12 +13,6 @@ import java.io.IOException;
  */
 public class AjaxLogoutSuccessHandler implements LogoutSuccessHandler {
 
-    private LogoutSuccessHandler defaultHandler;
-
-    public AjaxLogoutSuccessHandler(LogoutSuccessHandler defaultHandler) {
-        this.defaultHandler = defaultHandler;
-    }
-
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         if ("true".equals(request.getHeader("X-Login-Ajax-call"))) {

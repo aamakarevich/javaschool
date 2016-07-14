@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CsrfFilter;
 
 import javax.sql.DataSource;
@@ -100,7 +99,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/resources/index.jsp")
-                .logoutSuccessHandler(new AjaxLogoutSuccessHandler(new SimpleUrlLogoutSuccessHandler()))
+                .logoutSuccessHandler(new AjaxLogoutSuccessHandler())
                 .invalidateHttpSession(true)
                 .deleteCookies("ecare.username", "ecare.firstname", "ecare.lastname",
                         "ecare.admin", "ecare.manager", "ecare.suser")

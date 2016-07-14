@@ -9,6 +9,8 @@ import com.tsystems.ecare.app.model.Customer;
 import com.tsystems.ecare.app.model.Feature;
 import com.tsystems.ecare.app.model.Plan;
 import com.tsystems.ecare.app.services.ContractService;
+import com.tsystems.ecare.app.utils.HashUtils;
+import com.tsystems.ecare.app.utils.SmsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static com.tsystems.ecare.app.utils.HashUtils.generatePassword;
+import static com.tsystems.ecare.app.utils.HashUtils.sha256;
 import static com.tsystems.ecare.app.utils.ValidationUtils.assertMatches;
 import static com.tsystems.ecare.app.utils.ValidationUtils.assertNotBlank;
 import static org.springframework.util.Assert.notNull;
 
+/**
+ * Spring specific ContractService implementation
+ */
 @Service
 public class ContractServiceImpl implements ContractService {
 
@@ -35,16 +42,22 @@ public class ContractServiceImpl implements ContractService {
     @Autowired
     private PlanDao planDao;
 
+    /**
+     * Saves contract (new or not) to database.
+     *
+     * @param id id of contract to save
+     * @param number phone number for contract
+     * @param activeFeatures ids of features to activate for contract
+     * @param planId id of plan for contract
+     * @param customerId id of customer for whom contract belongs
+     *
+     * @return newPassword if customer must be informed about password change, otherwise null
+     */
     @Override
     @Transactional
-    public Contract getContract(Long id) {
-        return contractDao.findById(Contract.class, id);
-    }
-
-    @Override
-    @Transactional
-    public void saveContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId) {
+    public String saveContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId) {
         Contract contract;
+        String newPassword = null;
         if (id == null) {
             contract = contractDao.findByNumber(number);
             if (contract != null) {
@@ -57,6 +70,10 @@ public class ContractServiceImpl implements ContractService {
             Customer customer = customerDao.findById(customerId);
             notNull(customer, "customer is not found by id");
 
+            if (customer.getContracts().size() == 0) {
+                newPassword = generatePassword();
+                customer.setPassword(sha256(newPassword));
+            }
             contract.setCustomer(customer);
 
             contract.setNumberLock(Contract.Lock.UNLOCKED);
@@ -99,8 +116,40 @@ public class ContractServiceImpl implements ContractService {
 
         contract.setActiveFeatures(features);
         contractDao.save(contract);
+        return newPassword;
     }
 
+    @Override
+    @Transactional
+    public void saveNewContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId) {
+        String newPassword = saveContract(id, number, activeFeatures, planId, customerId);
+        if (newPassword != null) {
+            SmsUtils.sendSms(number, newPassword);
+        }
+    }
+    /**
+     * Searches for single contract by id.
+     *
+     * @param id id of contract to find
+     * @return single contract entity
+     */
+    @Override
+    @Transactional
+    public Contract getContract(Long id) {
+        notNull(id, "id is mandatory");
+        Contract contract = contractDao.findById(Contract.class, id);
+        notNull(contract, "contract is not found by id");
+        return contract;
+    }
+
+    /**
+     * Changes lock state for contract in database.
+     *
+     * @param contractId id of contract to change lock
+     * @param locked true if contract must be locked
+     * @param customerEmail customer email if contract MUST be owned by customer
+     *                      or null if there is no difference
+     */
     @Override
     @Transactional
     public void changeLock(Long contractId, boolean locked, String customerEmail) {

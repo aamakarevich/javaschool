@@ -223,7 +223,7 @@
             setLs(BASKET_CUSTOMER, id);
             client.contract.read(contractId).done(function (contract) {
                 setLs(BASKET_CONTRACT, contract.id);
-                setLs(BASKET_NUMBER, contract.number.substr(3));
+                setLs(BASKET_NUMBER, contract.number);
                 setLs(BASKET_PLAN, contract.plan.id);
                 var fIds = [];
                 contract.activeFeatures.forEach(function (feature) {

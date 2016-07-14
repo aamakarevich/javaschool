@@ -16,8 +16,6 @@ public interface CustomerService {
 
     public Customer getCustomerByEmail(String email);
 
-    public Customer saveNewCustomer(Customer customer);
-
     public SearchResult<Customer> findCustomers(String filter, Integer itemsCount, Integer pageNumber);
 
     public void activateRole(Long roleId, Long customerId, boolean active);

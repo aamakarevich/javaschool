@@ -4,6 +4,7 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 /**
  * Hashing utility methods.
@@ -28,10 +29,19 @@ public class HashUtils {
             throw new IllegalArgumentException("unsupported encryption type", ex);
         }
         byte[] result = mDigest.digest(input.getBytes());
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < result.length; i++) {
             sb.append(Integer.toString((result[i] & 0xff) + 0x100, 16).substring(1));
         }
         return sb.toString();
+    }
+
+    /**
+     * Generates fresh password.
+     *
+     * @return password consisting of 8 characters
+     */
+    public static String generatePassword() {
+        return UUID.randomUUID().toString().substring(0, 8);
     }
 }

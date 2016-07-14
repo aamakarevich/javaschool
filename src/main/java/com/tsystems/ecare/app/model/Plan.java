@@ -42,7 +42,9 @@ public class Plan extends AbstractEntity {
     @OneToMany(mappedBy = "plan", fetch = FetchType.LAZY)
     private List<Contract> contracts = new ArrayList<>();
 
-    public Plan() {}
+    public Plan() {
+        // constractor with no parameters
+    }
 
     public Plan(String title, String description, BigDecimal monthlyFee) {
         this.title = title;

@@ -62,36 +62,6 @@ public class FeatureServiceImpl implements FeatureService {
     }
 
     @Override
-    @Transactional
-    public void deleteFeature(Long deleteFeatureid) {
-        notNull(deleteFeatureid, "deleteFeatureid is mandatory");
-
-        Feature feature = featureDao.findById(Feature.class, deleteFeatureid);
-
-        for (Feature f : feature.getBlockedFeatures()) {
-            f.getBlockers().remove(feature);
-            featureDao.save(f);
-        }
-        for (Feature f : feature.getBlockers()) {
-            f.getBlockedFeatures().remove(feature);
-            featureDao.save(f);
-        }
-        for (Feature f : feature.getNeededFeatures()) {
-            f.getDependentFeatures().remove(feature);
-            featureDao.save(f);
-        }
-        for (Feature f : feature.getDependentFeatures()) {
-            f.getNeededFeatures().remove(feature);
-            featureDao.save(f);
-        }
-        for (Plan p : feature.getPlans()) {
-            p.getAllowedFeatures().remove(feature);
-        }
-        feature = featureDao.save(feature);
-        featureDao.delete(feature);
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public SearchResult<Feature> getAllFeatures() {
         Long resultsCount = featureDao.getTotalCount(Feature.class);
@@ -130,6 +100,36 @@ public class FeatureServiceImpl implements FeatureService {
         List<Long> numbers = new ArrayList<>();
         avaiableFeatures.stream().forEach(f -> numbers.add(f.getId()));
         return numbers;
+    }
+
+    @Override
+    @Transactional
+    public void deleteFeature(Long deleteFeatureid) {
+        notNull(deleteFeatureid, "deleteFeatureid is mandatory");
+
+        Feature feature = featureDao.findById(Feature.class, deleteFeatureid);
+
+        for (Feature f : feature.getBlockedFeatures()) {
+            f.getBlockers().remove(feature);
+            featureDao.save(f);
+        }
+        for (Feature f : feature.getBlockers()) {
+            f.getBlockedFeatures().remove(feature);
+            featureDao.save(f);
+        }
+        for (Feature f : feature.getNeededFeatures()) {
+            f.getDependentFeatures().remove(feature);
+            featureDao.save(f);
+        }
+        for (Feature f : feature.getDependentFeatures()) {
+            f.getNeededFeatures().remove(feature);
+            featureDao.save(f);
+        }
+        for (Plan p : feature.getPlans()) {
+            p.getAllowedFeatures().remove(feature);
+        }
+        feature = featureDao.save(feature);
+        featureDao.delete(feature);
     }
 
     @Override

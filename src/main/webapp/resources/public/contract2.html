@@ -46,9 +46,10 @@
             }
 
             var strNumber = getLs(BASKET_NUMBER);
-            var strNumber = strNumber.substr(0, 5) + "-" + strNumber.substr(5);
-            var strNumber = strNumber.substr(0, 3) + "-" + strNumber.substr(3);
-            $("#formSubheaderNumber").html("Number is 8 (999) " + strNumber);
+            var strNumber = strNumber.substr(0, 8) + "-" + strNumber.substr(8);
+            var strNumber = strNumber.substr(0, 6) + "-" + strNumber.substr(6);
+            var strNumber = "(" + strNumber.substr(0, 3) + ") " + strNumber.substr(3);
+            $("#formSubheaderNumber").html("Number is 8 " + strNumber);
 
             var plan = getLs(BASKET_PLAN);
             client.plan.read(plan).done(function (cp) {
@@ -161,7 +162,7 @@
 
             var contract = {
                 id: getLs(BASKET_CONTRACT),
-                number: "999" + getLs(BASKET_NUMBER),
+                number: getLs(BASKET_NUMBER),
                 customerId: getLs(BASKET_CUSTOMER),
                 plan: {
                     id: getLs(BASKET_PLAN)

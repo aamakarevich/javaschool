@@ -61,7 +61,9 @@ public class Feature extends AbstractEntity {
     @ManyToMany(mappedBy = "allowedFeatures", fetch = FetchType.LAZY)
     private List<Plan> plans;
 
-    public Feature() {}
+    public Feature() {
+        // constractor with no parameters
+    }
 
     public Feature(String title, String description, BigDecimal monthlyFee, BigDecimal additionFee) {
         this.title = title;

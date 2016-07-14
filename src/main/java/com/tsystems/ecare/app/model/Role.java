@@ -23,7 +23,9 @@ public class Role extends AbstractEntity {
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private List<Customer> customers;
 
-    public Role() {}
+    public Role() {
+        // constractor with no parameters
+    }
 
     public Role(String title) {
         this.title = title;

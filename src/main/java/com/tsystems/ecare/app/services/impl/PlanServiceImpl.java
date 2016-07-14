@@ -6,7 +6,6 @@ import com.tsystems.ecare.app.model.Feature;
 import com.tsystems.ecare.app.model.Plan;
 import com.tsystems.ecare.app.model.SearchResult;
 import com.tsystems.ecare.app.services.PlanService;
-import com.tsystems.ecare.app.utils.ValidationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

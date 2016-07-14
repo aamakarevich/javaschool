@@ -329,9 +329,7 @@
                 clearBasket();
                 location.reload(false);
             },
-            error: function () {
-                alert("FAILURE !");
-            }
+            error: function () {}
         });
         return false;
     }

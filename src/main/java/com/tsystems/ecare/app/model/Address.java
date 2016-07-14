@@ -24,7 +24,9 @@ public class Address extends AbstractEntity {
     @Column(name = "city", nullable = false, length = 40)
     private String city;
 
-    public Address() {}
+    public Address() {
+        // constractor with no parameters
+    }
 
     public Address(String address1, String city) {
         this.address1 = address1;

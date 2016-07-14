@@ -31,10 +31,9 @@ public class SecurityUserDetailsService implements UserDetailsService {
      *
      * @param username username to find
      * @return details of found user
-     * @throws UsernameNotFoundException if user doesn't exist
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         Customer customer = customerDao.findByEmail(username);
         if (customer == null) {
             String message = "Username not found: " + username;
@@ -49,12 +48,10 @@ public class SecurityUserDetailsService implements UserDetailsService {
             if ("manager".equals(role.getTitle())) {
                 authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
                 isManager = true;
-                continue;
             }
             if ("admin".equals(role.getTitle())) {
                 authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
                 isAdmin = true;
-                continue;
             }
         }
         logger.info("Found user in database: " + username);

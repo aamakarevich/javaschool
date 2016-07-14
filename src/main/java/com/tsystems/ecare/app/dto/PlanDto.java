@@ -33,7 +33,7 @@ public class PlanDTO {
     }
 
     public static List<PlanDTO> mapFromPlansEntities(List<Plan> plans) {
-        return plans.stream().map((plan) -> mapFromPlanEntity(plan)).collect(Collectors.toList());
+        return plans.stream().map(PlanDTO::mapFromPlanEntity).collect(Collectors.toList());
     }
 
     public Long getId() {

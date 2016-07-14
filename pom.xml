@@ -13,16 +13,16 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <org.slf4j-version>1.6.1</org.slf4j-version>
     <jackson-version>2.4.4</jackson-version>
+
+    <sonar.sources>src</sonar.sources>
     <sonar.language>java</sonar.language>
+    <sonar.binaries>target/classes</sonar.binaries>
+    <sonar.tests>test</sonar.tests>
     <sonar.login>sonarqube</sonar.login>
     <sonar.password>sonarqube</sonar.password>
-    <sonar.binaries>target/classes</sonar.binaries>
-    <sonar.sources>src</sonar.sources>
-    <sonar.tests>test</sonar.tests>
   </properties>
 
   <dependencies>
-
     <!-- Spring -->
     <dependency>
       <groupId>org.springframework</groupId>
@@ -216,6 +216,8 @@
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
+          <debug>true</debug>
+          <debuglevel>lines,vars,source</debuglevel>
         </configuration>
       </plugin>
 
@@ -223,6 +225,14 @@
         <groupId>org.sonarsource.scanner.maven</groupId>
         <artifactId>sonar-maven-plugin</artifactId>
         <version>3.0.1</version>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
       </plugin>
 
       <plugin>

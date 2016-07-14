@@ -57,7 +57,9 @@ public class Customer extends AbstractEntity {
     @JoinTable(name = "customer_role",  joinColumns = @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false))
     private List<Role> roles;
 
-    public Customer() {}
+    public Customer() {
+        // constractor with no parameters
+    }
 
     public Customer(String firstName, String lastName, Date birthdate, String passport, String email, String password, Address address) {
         this.firstName = firstName;

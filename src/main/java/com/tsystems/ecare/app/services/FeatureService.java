@@ -15,13 +15,13 @@ public interface FeatureService {
 
     public Feature getFeature(Long id);
 
-    public void deleteFeature(Long id);
-
     public SearchResult<Feature> getAllFeatures();
 
     public List<Feature> getListedFeatures(String ids);
 
     public List<Long> getAvailableFeatures(String ids, Long planId);
+
+    public void deleteFeature(Long id);
 
     public void changeLinkedFeature(Long feature1Id, Long feature2Id, Boolean block, Boolean linked);
 }

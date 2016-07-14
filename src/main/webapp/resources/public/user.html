@@ -130,10 +130,11 @@
 
                     var contractsBody = "";
                     customer.contracts.forEach(function (contract) {
-                        var strNumber = contract.number.substr(3);
-                        strNumber = strNumber.substr(0, 5) + "-" + strNumber.substr(5);
-                        strNumber = strNumber.substr(0, 3) + "-" + strNumber.substr(3);
-                        strNumber = "8 (999) " + strNumber;
+                        var strNumber = contract.number;
+                        var strNumber = strNumber.substr(0, 8) + "-" + strNumber.substr(8);
+                        var strNumber = strNumber.substr(0, 6) + "-" + strNumber.substr(6);
+                        var strNumber = "(" + strNumber.substr(0, 3) + ") " + strNumber.substr(3);
+                        strNumber = "8 " + strNumber;
 
                         var button = "<button type=\"button\" id=\"lk" + contract.id + "\" onclick=\"toggleSuserLock(" + contract.id + ");\" class=\"btn btn-block btn-xs ";
                         if(contract.numberLock == "UNLOCKED") {
@@ -217,6 +218,11 @@
         }
 
         function saveCustomer() {
+            var token = $("meta[name='_csrf']").attr("content");
+            if (!token) token = "";
+            var header = $("meta[name='_csrf_header']").attr("content");
+            if (!header) header = "";
+
             if ($("#inputCustomerId").val() == 0) {
                 var customer = {
                     lastName: $("#inputLastName").val(),
@@ -230,15 +236,22 @@
                     }
                 };
 
-                client.customer.create(customer).always(function (result) {
-                    loadPage("users", "users");
+                $.ajax({
+                    type: 'POST',
+                    url: '/customer',
+                    data: JSON.stringify(customer),
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    beforeSend: function (request) {
+                        request.setRequestHeader(header, token);
+                    },
+                    success: function (response) {
+                        loadPage("users", "users");
+                    },
+                    error: function () {}
                 });
             } else {
-                var token = $("meta[name='_csrf']").attr("content");
-                if (!token) token = "";
-                var header = $("meta[name='_csrf_header']").attr("content");
-                if (!header) header = "";
-
                 var customer = {
                     id: $("#inputCustomerId").val(),
                     lastName: $("#inputLastName").val(),
