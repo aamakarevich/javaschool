@@ -30,11 +30,25 @@ public class FeatureDTO {
         this.monthlyFee = monthlyFee;
     }
 
+    /**
+     * Maps Feature entity to FeatureDTO object.
+     *
+     * @param feature object to map from
+     *
+     * @return maped DTO
+     */
     public static FeatureDTO mapFromFeatureEntity(Feature feature) {
         return new FeatureDTO(feature.getId(), feature.getTitle(), feature.getDescription(),
                 feature.getAdditionFee(), feature.getMonthlyFee());
     }
 
+    /**
+     * Maps list of Feature entities to list of FeatureDTO objects.
+     *
+     * @param features list to map from
+     *
+     * @return list of maped DTO
+     */
     public static List<FeatureDTO> mapFromFeaturesEntities(List<Feature> features) {
         return features.stream().map(FeatureDTO::mapFromFeatureEntity).collect(Collectors.toList());
     }

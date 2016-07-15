@@ -3,6 +3,9 @@ package com.tsystems.ecare.app.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * JSON serializable DTO containing data about available features for contract.
+ */
 public class AvailableFeaturesDTO extends FeaturesDTO {
 
     private List<Long> availableFeatures = new ArrayList<>();

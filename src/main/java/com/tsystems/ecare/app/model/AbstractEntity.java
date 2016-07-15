@@ -67,12 +67,18 @@ public class AbstractEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         AbstractEntity that = (AbstractEntity) o;
 
-        if (getUuid() != null ? !getUuid().equals(that.getUuid()) : that.getUuid() != null) return false;
+        if (getUuid() != null ? !getUuid().equals(that.getUuid()) : that.getUuid() != null) {
+            return false;
+        }
 
         return true;
     }

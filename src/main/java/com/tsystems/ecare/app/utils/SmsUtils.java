@@ -1,5 +1,6 @@
 package com.tsystems.ecare.app.utils;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -18,6 +19,10 @@ public class SmsUtils {
     private static final String URL = "http://sms.ru/sms/send";
 
     private static Logger logger = Logger.getLogger(SmsUtils.class);
+
+    private SmsUtils() {
+        throw new NotImplementedException("Utility classes cannot be instantiated");
+    }
 
     /**
      * Send sms with password to phone number.

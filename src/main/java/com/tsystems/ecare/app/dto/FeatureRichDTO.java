@@ -17,6 +17,13 @@ public class FeatureRichDTO extends FeatureDTO {
         this.blockers = blockers;
     }
 
+    /**
+     * Maps Feature entity to FeatureRichDTO object.
+     *
+     * @param feature object to map from
+     *
+     * @return maped DTO
+     */
     public static FeatureRichDTO mapFromFeatureEntity(Feature feature) {
         List<Long> blockers = new ArrayList<>();
         List<Long> prerequisites = new ArrayList<>();

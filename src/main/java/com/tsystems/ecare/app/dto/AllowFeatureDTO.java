@@ -1,5 +1,8 @@
 package com.tsystems.ecare.app.dto;
 
+/**
+ * JSON serializable DTO containing data about allowing option for plan.
+ */
 public class AllowFeatureDTO {
 
     private Long planId;

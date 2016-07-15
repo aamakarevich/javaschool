@@ -18,6 +18,13 @@ public class PlanRichDTO extends PlanDTO {
         this.allowedFeatures = allowedFeatures;
     }
 
+    /**
+     * Maps Plan entity to PlanRichDTO object.
+     *
+     * @param plan object to map from
+     *
+     * @return maped DTO
+     */
     public static PlanRichDTO mapFromPlanEntity(Plan plan) {
         return new PlanRichDTO(plan.getId(), plan.getTitle(), plan.getDescription(), plan.getMonthlyFee(),
                 FeatureDTO.mapFromFeaturesEntities(plan.getAllowedFeatures()));

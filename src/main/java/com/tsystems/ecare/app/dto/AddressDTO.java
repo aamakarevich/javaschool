@@ -24,6 +24,13 @@ public class AddressDTO {
         this.address2 = address2;
     }
 
+    /**
+     * Maps Address entity to AddressDTO object.
+     *
+     * @param address object to map from
+     *
+     * @return maped DTO
+     */
     public static AddressDTO mapFromAddressEntity(Address address) {
         return new AddressDTO(address.getId(), address.getCity(), address.getAddress1(), address.getAddress2());
     }

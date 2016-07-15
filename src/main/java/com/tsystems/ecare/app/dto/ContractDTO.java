@@ -26,6 +26,13 @@ public class ContractDTO {
         this.plan = PlanDTO.mapFromPlanEntity(plan);
     }
 
+    /**
+     * Maps Contract entity to ContractDTO object.
+     *
+     * @param contract object to map from
+     *
+     * @return maped DTO
+     */
     public static ContractDTO mapFromContractEntity(Contract contract) {
         return new ContractDTO(contract.getId(), contract.getNumber(), contract.getNumberLock(), contract.getPlan());
     }

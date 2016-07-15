@@ -76,7 +76,7 @@ public class ContractServiceImpl implements ContractService {
             Customer customer = customerDao.findById(customerId);
             notNull(customer, "customer is not found by id");
 
-            if (customer.getContracts().size() == 0) {
+            if (customer.getContracts().isEmpty()) {
                 newPassword = generatePassword();
                 customer.setPassword(sha256(newPassword));
             }

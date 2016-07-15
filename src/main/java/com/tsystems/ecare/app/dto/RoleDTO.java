@@ -16,6 +16,13 @@ public class RoleDTO {
         this.title = title;
     }
 
+    /**
+     * Maps Role entity to RoleDTO object.
+     *
+     * @param role object to map from
+     *
+     * @return maped DTO
+     */
     public static RoleDTO mapFromRoleEntity(Role role) {
         return new RoleDTO(role.getId(), role.getTitle());
     }

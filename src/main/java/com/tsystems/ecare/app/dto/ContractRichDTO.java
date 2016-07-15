@@ -25,6 +25,13 @@ public class ContractRichDTO extends ContractDTO {
         this.activeFeatures = activeFeatures;
     }
 
+    /**
+     * Maps Contract entity to ContractRichDTO object.
+     *
+     * @param contract object to map from
+     *
+     * @return maped DTO
+     */
     public static ContractRichDTO mapFromContractEntity(Contract contract) {
         List<Long> ids = new ArrayList<>();
         contract.getActiveFeatures().stream().forEach(f -> ids.add(f.getId()));

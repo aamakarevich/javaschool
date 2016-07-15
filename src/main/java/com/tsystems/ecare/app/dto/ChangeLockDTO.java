@@ -1,5 +1,8 @@
 package com.tsystems.ecare.app.dto;
 
+/**
+ * JSON serializable DTO containing data about changing locking state for contract.
+ */
 public class ChangeLockDTO {
 
     private Long contractId;

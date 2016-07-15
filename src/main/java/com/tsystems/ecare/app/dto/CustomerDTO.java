@@ -43,6 +43,13 @@ public class CustomerDTO {
         this.roles = roles.stream().map(RoleDTO::mapFromRoleEntity).collect(Collectors.toList());
     }
 
+    /**
+     * Maps Customer entity to CustomerDTO object.
+     *
+     * @param customer object to map from
+     *
+     * @return maped DTO
+     */
     public static CustomerDTO mapFromCustomerEntity(Customer customer) {
         return new CustomerDTO(
                 customer.getId(),
@@ -56,6 +63,13 @@ public class CustomerDTO {
                 customer.getRoles());
     }
 
+    /**
+     * Maps list of Customer entities to list of CustomerDTO objects.
+     *
+     * @param customers list to map from
+     *
+     * @return list of maped DTO
+     */
     public static List<CustomerDTO> mapFromCustomersEntities(List<Customer> customers) {
         return customers.stream().map(CustomerDTO::mapFromCustomerEntity).collect(Collectors.toList());
     }

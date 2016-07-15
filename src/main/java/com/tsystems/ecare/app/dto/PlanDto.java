@@ -28,10 +28,24 @@ public class PlanDTO {
         this.monthlyFee = monthlyFee;
     }
 
+    /**
+     * Maps Plan entity to PlanDTO object.
+     *
+     * @param plan object to map from
+     *
+     * @return maped DTO
+     */
     public static PlanDTO mapFromPlanEntity(Plan plan) {
         return new PlanDTO(plan.getId(), plan.getTitle(), plan.getDescription(), plan.getMonthlyFee());
     }
 
+    /**
+     * Maps list of Plan entities to list of PlanDTO objects.
+     *
+     * @param plans list to map from
+     *
+     * @return list of maped DTO
+     */
     public static List<PlanDTO> mapFromPlansEntities(List<Plan> plans) {
         return plans.stream().map(PlanDTO::mapFromPlanEntity).collect(Collectors.toList());
     }

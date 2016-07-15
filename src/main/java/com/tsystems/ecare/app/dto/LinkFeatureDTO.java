@@ -1,5 +1,8 @@
 package com.tsystems.ecare.app.dto;
 
+/**
+ * JSON serializable DTO containing data about changing link between two features.
+ */
 public class LinkFeatureDTO {
 
     private Long feature1Id;

@@ -1,5 +1,8 @@
 package com.tsystems.ecare.app.dto;
 
+/**
+ * JSON serializable DTO containing data about role activation for customer.
+ */
 public class ActivateRoleDTO {
 
     private Long roleId;
