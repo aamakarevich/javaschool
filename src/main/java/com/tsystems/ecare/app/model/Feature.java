@@ -105,14 +105,21 @@ public class Feature extends AbstractEntity {
     }
 
     public List<Feature> getBlockers() {
-        return blockers != null ? blockers : new ArrayList<>(); }
+        if (blockers == null) {
+            blockers = new ArrayList<>();
+        }
+        return blockers;
+    }
 
     public void setBlockers(List<Feature> blockers) {
         this.blockers = blockers;
     }
 
     public List<Feature> getBlockedFeatures() {
-        return blockedFeatures != null ? blockedFeatures : new ArrayList<>();
+        if (blockedFeatures == null) {
+            blockedFeatures = new ArrayList<>();
+        }
+        return blockedFeatures;
     }
 
     public void setBlockedFeatures(List<Feature> blockedFeatures) {
@@ -120,7 +127,10 @@ public class Feature extends AbstractEntity {
     }
 
     public List<Feature> getNeededFeatures() {
-        return neededFeatures != null ? neededFeatures : new ArrayList<>();
+        if (neededFeatures == null) {
+            neededFeatures = new ArrayList<>();
+        }
+        return neededFeatures;
     }
 
     public void setNeededFeatures(List<Feature> neededFeatures) {
@@ -128,7 +138,10 @@ public class Feature extends AbstractEntity {
     }
 
     public List<Feature> getDependentFeatures() {
-        return dependentFeatures != null ? dependentFeatures : new ArrayList<>();
+        if (dependentFeatures == null) {
+            dependentFeatures = new ArrayList<>();
+        }
+        return dependentFeatures;
     }
 
     public void setDependentFeatures(List<Feature> dependentFeatures) {
@@ -136,7 +149,10 @@ public class Feature extends AbstractEntity {
     }
 
     public List<Contract> getContracts() {
-        return contracts != null ? contracts : new ArrayList<>();
+        if (contracts == null) {
+            contracts = new ArrayList<>();
+        }
+        return contracts;
     }
 
     public void setContracts(List<Contract> contracts) {
@@ -144,7 +160,10 @@ public class Feature extends AbstractEntity {
     }
 
     public List<Plan> getPlans() {
-        return plans != null ? plans : new ArrayList<>();
+        if (plans == null) {
+            plans = new ArrayList<>();
+        }
+        return plans;
     }
 
     public void setPlans(List<Plan> plans) {

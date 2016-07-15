@@ -44,6 +44,24 @@ public class ContractServiceImpl implements ContractService {
     private PlanDao planDao;
 
     /**
+     * Saves new contract and in case of need triggers sendind sms with password.
+     *
+     * @param id id of contract to save
+     * @param number phone number for contract
+     * @param activeFeatures ids of features to activate for contract
+     * @param planId id of plan for contract
+     * @param customerId id of customer for whom contract belongs
+     */
+    @Override
+    @Transactional
+    public void saveNewContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId) {
+        String newPassword = saveContract(id, number, activeFeatures, planId, customerId, null);
+        if (newPassword != null) {
+            SmsUtils.sendSms(number, newPassword);
+        }
+    }
+
+    /**
      * Saves contract (new or not) to database.
      *
      * @param id id of contract to save
@@ -128,14 +146,6 @@ public class ContractServiceImpl implements ContractService {
         return newPassword;
     }
 
-    @Override
-    @Transactional
-    public void saveNewContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId) {
-        String newPassword = saveContract(id, number, activeFeatures, planId, customerId, null);
-        if (newPassword != null) {
-            SmsUtils.sendSms(number, newPassword);
-        }
-    }
     /**
      * Searches for single contract by id.
      *

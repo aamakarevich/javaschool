@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static com.tsystems.ecare.app.utils.TestUtils.getStringOfLength;
@@ -59,27 +60,27 @@ public class PlanServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void savePlanBlankTitle() {
+    public void savePlanWithBlankTitle() {
         planService.savePlan(null, "", "description", new BigDecimal(10));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void savePlanTooLongTitle() {
+    public void savePlanWithTooLongTitle() {
         planService.savePlan(null, getStringOfLength(41), "description", new BigDecimal(10));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void savePlanBlankDescription() {
+    public void savePlanWithBlankDescription() {
         planService.savePlan(null, "title", "", new BigDecimal(10));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void savePlanTooLongDescription() {
+    public void savePlanWithTooLongDescription() {
         planService.savePlan(null, "title", getStringOfLength(1001), new BigDecimal(10));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void savePlanNullMonthlyFee() {
+    public void savePlanWithNullMonthlyFee() {
         planService.savePlan(null, "title", "description", null);
     }
 
@@ -98,16 +99,13 @@ public class PlanServiceTest {
 
     @Test
     public void getAllPlans() {
-        Set<Plan> plansSet = new HashSet<>();
-        plansSet.add(em.find(Plan.class, 1l));
-        plansSet.add(em.find(Plan.class, 2l));
-        plansSet.add(em.find(Plan.class, 3l));
-        plansSet.remove(null);
+        List<Plan> expectedPlans = em.createQuery("from " + Plan.class.getName()).getResultList();
 
-        SearchResult<Plan> plans = planService.getAllPlans();
+        SearchResult<Plan> gotPlans = planService.getAllPlans();
 
-        assertEquals(plans.getResult().size(), plans.getResultsCount());
-        assertEquals(plans.getResult().size(), plansSet.size());
+        assertEquals(gotPlans.getResult().size(), gotPlans.getResultsCount());
+        assertEquals(gotPlans.getResult().size(), expectedPlans.size());
+        assertTrue(gotPlans.getResult().containsAll(expectedPlans));
     }
 
     @Test

@@ -31,6 +31,17 @@ public class FeatureServiceImpl implements FeatureService {
     @Autowired
     private PlanDao planDao;
 
+    /**
+     * Saves option (new or not) to database.
+     *
+     * @param id id of option
+     * @param title title of option
+     * @param description description of option
+     * @param additionFee additionFee for applying option
+     * @param monthlyFee monthlyFee for using option
+     *
+     * @return saved option entity
+     */
     @Override
     @Transactional
     public Feature saveFeature(Long id, String title, String description, BigDecimal additionFee, BigDecimal monthlyFee) {
@@ -60,7 +71,9 @@ public class FeatureServiceImpl implements FeatureService {
     @Transactional
     public Feature getFeature(Long findFeatureId) {
         notNull(findFeatureId, "findFeatureId is mandatory");
-        return featureDao.findById(Feature.class, findFeatureId);
+        Feature feature = featureDao.findById(Feature.class, findFeatureId);
+        notNull(feature, "features is not found by id");
+        return feature;
     }
 
     @Override
@@ -80,8 +93,11 @@ public class FeatureServiceImpl implements FeatureService {
     @Override
     @Transactional
     public List<Long> getAvailableFeatures(String ids, Long planId) {
+        notNull(planId, "planId is mandatory");
+        notNull(ids, "ids is mandatory");
         List<Feature> features = featureDao.getListed(idsFromStringToList(ids));
         Plan plan = planDao.findById(Plan.class, planId);
+        notNull(plan, "plan is not found by id");
         List<Feature> avaiableFeatures = new ArrayList<>(plan.getAllowedFeatures());
         Iterator<Feature> iterator = avaiableFeatures.iterator();
         while (iterator.hasNext()) {

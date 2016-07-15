@@ -36,6 +36,7 @@ public class PlanServiceImpl implements PlanService {
      * @param title title of plan
      * @param description description of plan
      * @param monthlyFee monthly fee for plan
+     *
      * @return entity with saved plan info
      */
     @Override
@@ -64,6 +65,7 @@ public class PlanServiceImpl implements PlanService {
      * Searches plan in database by id.
      *
      * @param id id of plan
+     *
      * @return entity with plan data
      */
     @Override

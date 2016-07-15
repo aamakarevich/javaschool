@@ -11,6 +11,17 @@ import java.util.List;
  */
 public interface FeatureService {
 
+    /**
+     * Saves option (new or not) to database.
+     *
+     * @param id id of option
+     * @param title title of option
+     * @param description description of option
+     * @param additionFee additionFee for applying option
+     * @param monthlyFee monthlyFee for using option
+     *
+     * @return saved option entity
+     */
     public Feature saveFeature(Long id, String title, String description, BigDecimal additionFee, BigDecimal monthlyFee);
 
     public Feature getFeature(Long id);

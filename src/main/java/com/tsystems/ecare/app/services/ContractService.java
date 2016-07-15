@@ -10,6 +10,17 @@ import java.util.List;
 public interface ContractService {
 
     /**
+     * Saves new contract and in case of need triggers sendind sms with password.
+     *
+     * @param id id of contract to save
+     * @param number phone number for contract
+     * @param activeFeatures ids of features to activate for contract
+     * @param planId id of plan for contract
+     * @param customerId id of customer for whom contract belongs
+     */
+    public void saveNewContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId);
+
+    /**
      * Saves contract (new or not) to database.
      *
      * @param id id of contract to save
@@ -22,8 +33,6 @@ public interface ContractService {
      * @return newPassword if customer must be informed about password change, otherwise null
      */
     public String saveContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId, String customerEmail);
-
-    public void saveNewContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId);
 
     /**
      * Searches for single contract by id.
