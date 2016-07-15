@@ -19,16 +19,38 @@ public abstract class GenericRepository<T, ID extends Serializable> implements G
     @PersistenceContext
     EntityManager em;
 
+    /**
+     * Saves entity.
+     *
+     * @param entity entity to save
+     *
+     * @return saved entity
+     */
     @Override
     public T save(T entity) {
         return em.merge(entity);
     }
 
+    /**
+     * Finds entity by id.
+     *
+     * @param clazz class that represents entity
+     * @param id id of entity to find
+     *
+     * @return found entity
+     */
     @Override
-    public void delete(T entity) {
-        em.remove(entity);
+    public T findById(Class clazz, ID id) {
+        return (T) em.find(clazz, id);
     }
 
+    /**
+     * Finds all entities of some class.
+     *
+     * @param clazz class that represents entities
+     *
+     * @return found entities
+     */
     @Override
     public List findAll(Class clazz) {
         List entities;
@@ -37,11 +59,23 @@ public abstract class GenericRepository<T, ID extends Serializable> implements G
         return entities;
     }
 
+    /**
+     * Deletes entity by id.
+     *
+     * @param id id of entity to find
+     */
     @Override
-    public T findById(Class clazz, ID id) {
-        return (T) em.find(clazz, id);
+    public void delete(T entity) {
+        em.remove(entity);
     }
 
+    /**
+     * Counts all entities of some class.
+     *
+     * @param clazz class that represents entities
+     *
+     * @return entities total amount
+     */
     @Override
     public Long getTotalCount(Class clazz) {
         Query query = em.createQuery("select count(id) from " + clazz.getName());

@@ -17,10 +17,11 @@ public interface ContractService {
      * @param activeFeatures ids of features to activate for contract
      * @param planId id of plan for contract
      * @param customerId id of customer for whom contract belongs
+     * @param customerEmail
      *
      * @return newPassword if customer must be informed about password change, otherwise null
      */
-    public String saveContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId);
+    public String saveContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId, String customerEmail);
 
     public void saveNewContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId);
 
@@ -28,9 +29,12 @@ public interface ContractService {
      * Searches for single contract by id.
      *
      * @param id id of contract to find
+     * @param customerEmail customer email if contract MUST be owned by customer
+     *                      or null if there is no difference
+     *
      * @return single contract entity
      */
-    public Contract getContract(Long id);
+    public Contract getContract(Long id, String customerEmail);
 
     /**
      * Changes lock state for contract in database.

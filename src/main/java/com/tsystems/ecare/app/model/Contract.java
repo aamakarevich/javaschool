@@ -77,7 +77,10 @@ public class Contract extends AbstractEntity {
     }
 
     public List<Feature> getActiveFeatures() {
-        return activeFeatures != null ? activeFeatures : new ArrayList<>();
+        if (activeFeatures == null) {
+            activeFeatures = new ArrayList<>();
+        }
+        return activeFeatures;
     }
 
     public void setActiveFeatures(List<Feature> activeFeatures) {

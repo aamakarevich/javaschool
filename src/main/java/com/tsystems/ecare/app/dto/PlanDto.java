@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * JSON serializable DTO containing Plan data
+ * JSON serializable DTO containing Plan data.
  */
 public class PlanDTO {
 

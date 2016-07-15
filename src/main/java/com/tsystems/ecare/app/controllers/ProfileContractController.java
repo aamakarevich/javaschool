@@ -2,7 +2,6 @@ package com.tsystems.ecare.app.controllers;
 
 import com.tsystems.ecare.app.dto.ContractRichDTO;
 import com.tsystems.ecare.app.services.ContractService;
-import com.tsystems.ecare.app.services.FeatureService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,38 +13,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.security.Principal;
+
 /**
- * Provides REST-full CRUD for Contract entity.
+ * Provides REST-service for changing customers own contracts.
  */
 @Controller
-@RequestMapping("contract")
-public class ContractController extends AbstractController {
+@RequestMapping("profile/contract")
+public class ProfileContractController extends AbstractController {
 
     @Autowired
     private ContractService contractService;
 
-    @Autowired
-    private FeatureService featureService;
-
-    public ContractController() {
-        super(Logger.getLogger(ContractController.class));
-    }
-
-    /**
-     * Creates new contract.
-     *
-     * @param contract DTO with data of contract to create
-     */
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(method = RequestMethod.POST)
-    public void addContract(@RequestBody ContractRichDTO contract) {
-        contractService.saveNewContract(
-                null,
-                contract.getNumber(),
-                contract.getActiveFeatures(),
-                contract.getPlan().getId(),
-                contract.getCustomerId());
+    public ProfileContractController() {
+        super(Logger.getLogger(ProfileContractController.class));
     }
 
     /**
@@ -57,25 +38,26 @@ public class ContractController extends AbstractController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ContractRichDTO getContract(@PathVariable Long id) {
-        return ContractRichDTO.mapFromContractEntity(contractService.getContract(id, null));
+    public ContractRichDTO getContract(Principal principal, @PathVariable Long id) {
+        return ContractRichDTO.mapFromContractEntity(contractService.getContract(id, principal.getName()));
     }
 
     /**
      * Updates single existing contract data.
      *
-     * @param contract DTO with contract data to update
+     * @param principal current user
+     * @param contract DTO with data of contract to create
      */
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(method = RequestMethod.PUT)
-    public void updateContract(@RequestBody ContractRichDTO contract) {
+    public void updateContract(Principal principal, @RequestBody ContractRichDTO contract) {
         contractService.saveContract(
                 contract.getId(),
                 contract.getNumber(),
                 contract.getActiveFeatures(),
                 contract.getPlan().getId(),
-                contract.getCustomerId(),
-                null);
+                null,
+                principal.getName());
     }
 }

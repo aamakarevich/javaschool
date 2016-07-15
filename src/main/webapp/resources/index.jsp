@@ -114,6 +114,7 @@
 
     /* Globals */
     const BASKET_CUSTOMER = "basketCustomer";
+    const BASKET_OWNER = "basketOwner";
     const BASKET_CONTRACT = "basketContract";
     const BASKET_NUMBER = "basketNumber";
     const BASKET_PLAN = "basketPlan";
@@ -147,8 +148,13 @@
             stringifyData: true,
             ajax: {async: true}
         });
+        client.add('available', {
+            stripTrailingSlash: true,
+            stringifyData: true,
+            ajax: {async: true}
+        });
 
-        if ($.cookie("ecare.usrename") == null) {
+        if ($.cookie("ecare.username") == null) {
             var cpage = $.cookie("currentpage");
             if (cpage != "home" && cpage != "plans" && cpage != "options") {
                 $.cookie("currentpage", "home", {expires: 1, path: '/'});
@@ -376,6 +382,7 @@
 
     function clearBasket() {
         removeLs(BASKET_CUSTOMER);
+        removeLs(BASKET_OWNER);
         removeLs(BASKET_CONTRACT);
         removeLs(BASKET_NUMBER);
         removeLs(BASKET_PLAN);

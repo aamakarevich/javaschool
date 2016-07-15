@@ -16,6 +16,13 @@ public class RoleRepository extends GenericRepository<Role, Long> implements Rol
 
     Logger logger = Logger.getLogger(ContractRepository.class);
 
+    /**
+     * Searches role in database by its title.
+     *
+     * @param title title of the role
+     *
+     * @return role entity or null if role was not found
+     */
     @Override
     public Role findByTitle(String title) {
         Query query = em.createQuery(

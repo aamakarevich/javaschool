@@ -6,6 +6,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * JSON serializable DTO containing extended Plan data
+ */
 public class PlanRichDTO extends PlanDTO {
 
     private List<FeatureDTO> allowedFeatures = new ArrayList<>();

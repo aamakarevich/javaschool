@@ -9,12 +9,13 @@ import com.tsystems.ecare.app.model.Customer;
 import com.tsystems.ecare.app.model.Feature;
 import com.tsystems.ecare.app.model.Plan;
 import com.tsystems.ecare.app.services.ContractService;
-import com.tsystems.ecare.app.utils.HashUtils;
 import com.tsystems.ecare.app.utils.SmsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -50,14 +51,18 @@ public class ContractServiceImpl implements ContractService {
      * @param activeFeatures ids of features to activate for contract
      * @param planId id of plan for contract
      * @param customerId id of customer for whom contract belongs
+     * @param customerEmail if not null - only customer's own contracts can be saved
      *
      * @return newPassword if customer must be informed about password change, otherwise null
      */
     @Override
     @Transactional
-    public String saveContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId) {
+    public String saveContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId, String customerEmail) {
         Contract contract;
         String newPassword = null;
+        if (customerEmail != null) {
+            notNull(id, "id must not be null if principal email is passed");
+        }
         if (id == null) {
             contract = contractDao.findByNumber(number);
             if (contract != null) {
@@ -65,6 +70,7 @@ public class ContractServiceImpl implements ContractService {
             }
 
             contract = new Contract();
+
             notNull(customerId, "customerId is mandatory when creating new contract");
 
             Customer customer = customerDao.findById(customerId);
@@ -81,6 +87,9 @@ public class ContractServiceImpl implements ContractService {
         else {
             contract = contractDao.findById(Contract.class, id);
             notNull(contract, "contract is not found by id");
+            if (customerEmail != null && !customerDao.findByEmail(customerEmail).getContracts().contains(contract)) {
+                throw new IllegalArgumentException("only owned contract data can be changed");
+            }
         }
 
         notNull(number, "number is mandatory");
@@ -122,7 +131,7 @@ public class ContractServiceImpl implements ContractService {
     @Override
     @Transactional
     public void saveNewContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId) {
-        String newPassword = saveContract(id, number, activeFeatures, planId, customerId);
+        String newPassword = saveContract(id, number, activeFeatures, planId, customerId, null);
         if (newPassword != null) {
             SmsUtils.sendSms(number, newPassword);
         }
@@ -131,14 +140,25 @@ public class ContractServiceImpl implements ContractService {
      * Searches for single contract by id.
      *
      * @param id id of contract to find
+     * @param customerEmail customer email if contract MUST be owned by customer
+     *                      or null if there is no difference
+     *
      * @return single contract entity
      */
     @Override
     @Transactional
-    public Contract getContract(Long id) {
+    public Contract getContract(Long id, String customerEmail) {
         notNull(id, "id is mandatory");
         Contract contract = contractDao.findById(Contract.class, id);
         notNull(contract, "contract is not found by id");
+        if (customerEmail != null) {
+            Customer customer = customerDao.findByEmail(customerEmail);
+            notNull(customer, "customer is not found by email");
+            if (!customer.getContracts().contains(contract)) {
+                throw new IllegalArgumentException("contract must be owned by customer");
+            }
+        }
+        contract.setActiveFeatures(new ArrayList<>(new HashSet<Feature>(contract.getActiveFeatures())));
         return contract;
     }
 

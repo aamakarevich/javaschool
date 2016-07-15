@@ -2,6 +2,9 @@ package com.tsystems.ecare.app.dto;
 
 import com.tsystems.ecare.app.model.Address;
 
+/**
+ * JSON serializable DTO containing Address data.
+ */
 public class AddressDTO {
 
     private Long id;

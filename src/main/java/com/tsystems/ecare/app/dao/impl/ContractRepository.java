@@ -20,6 +20,7 @@ public class ContractRepository extends GenericRepository<Contract, Long> implem
      * Returns contract entry searching it by phone number.
      *
      * @param number phone number to find contract by
+     *
      * @return contract or null if contract was not found
      */
     @Override

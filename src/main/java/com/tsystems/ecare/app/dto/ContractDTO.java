@@ -3,6 +3,9 @@ package com.tsystems.ecare.app.dto;
 import com.tsystems.ecare.app.model.Contract;
 import com.tsystems.ecare.app.model.Plan;
 
+/**
+ * JSON serializable DTO containing Contract data.
+ */
 public class ContractDTO {
 
     private Long id;

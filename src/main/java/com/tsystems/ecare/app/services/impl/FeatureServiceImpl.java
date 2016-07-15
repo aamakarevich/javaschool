@@ -13,8 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import static com.tsystems.ecare.app.utils.ValidationUtils.assertMaximumLength;
 import static com.tsystems.ecare.app.utils.ValidationUtils.assertNotBlank;
@@ -72,13 +74,12 @@ public class FeatureServiceImpl implements FeatureService {
     @Override
     @Transactional
     public List<Feature> getListedFeatures(String ids) {
-        return featureDao.getListed(idsFromStringToList(ids));
+        return new ArrayList<>(new HashSet<>(featureDao.getListed(idsFromStringToList(ids))));
     }
 
     @Override
     @Transactional
     public List<Long> getAvailableFeatures(String ids, Long planId) {
-
         List<Feature> features = featureDao.getListed(idsFromStringToList(ids));
         Plan plan = planDao.findById(Plan.class, planId);
         List<Feature> avaiableFeatures = new ArrayList<>(plan.getAllowedFeatures());
@@ -97,9 +98,9 @@ public class FeatureServiceImpl implements FeatureService {
                 }
             }
         }
-        List<Long> numbers = new ArrayList<>();
+        Set<Long> numbers = new HashSet<>();
         avaiableFeatures.stream().forEach(f -> numbers.add(f.getId()));
-        return numbers;
+        return new ArrayList<>(numbers);
     }
 
     @Override

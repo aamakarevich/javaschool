@@ -75,7 +75,7 @@
 
             var optionsContent = "";
 
-            client.contract.read("?listedIds=" + optsParam + "&planId=" + plan).done(function (response) {
+            client.available.read("?listedIds=" + optsParam + "&planId=" + plan).done(function (response) {
                 var options = response.listedFeatures;
                 options.forEach(function (option) {
                     optionsContent += "<tr><td>" + option.title + "</td><td>";
@@ -160,45 +160,74 @@
                 features.push(op);
             });
 
-            var contract = {
-                id: getLs(BASKET_CONTRACT),
-                number: getLs(BASKET_NUMBER),
-                customerId: getLs(BASKET_CUSTOMER),
-                plan: {
-                    id: getLs(BASKET_PLAN)
-                },
-                activeFeatures: features
-            };
+            if ("true" != getLs(BASKET_OWNER)) {
+                var contract = {
+                    id: getLs(BASKET_CONTRACT),
+                    number: getLs(BASKET_NUMBER),
+                    customerId: getLs(BASKET_CUSTOMER),
+                    plan: {
+                        id: getLs(BASKET_PLAN)
+                    },
+                    activeFeatures: features
+                };
 
-            if (contractId == null) {
-                $.ajax({
-                    type: 'POST',
-                    url: '/contract',
-                    data: JSON.stringify(contract),
-                    headers: {
-                        "Content-Type": "application/json; charset=utf-8",
-                    },
-                    beforeSend: function (request) {
-                        request.setRequestHeader(header, token);
-                    },
-                    success: function (response) {
-                        clearBasket();
-                        loadPage("users", "users");
-                    },
-                    error: function (message) {
-                        if (message.responseText == "number is not free") {
-                            setLs("duplicateNumber", true);
-                            loadPage("contract1", "basket");
-                        }
-                        if (message.responseText == "some of active features are incompatible") {
+                if (contractId == null) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/contract',
+                        data: JSON.stringify(contract),
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8",
+                        },
+                        beforeSend: function (request) {
+                            request.setRequestHeader(header, token);
+                        },
+                        success: function (response) {
+                            clearBasket();
+                            loadPage("users", "users");
+                        },
+                        error: function (message) {
+                            if (message.responseText == "number is not free") {
+                                setLs("duplicateNumber", true);
+                                loadPage("contract1", "basket");
+                            }
+                            if (message.responseText == "some of active features are incompatible") {
 
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    $.ajax({
+                        type: 'PUT',
+                        url: '/contract',
+                        data: JSON.stringify(contract),
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8",
+                        },
+                        beforeSend: function (request) {
+                            request.setRequestHeader(header, token);
+                        },
+                        success: function (response) {
+                            clearBasket();
+                            loadPage("users", "users");
+                        },
+                        error: function () {
+                        }
+                    });
+                }
             } else {
+                var contract = {
+                    id: getLs(BASKET_CONTRACT),
+                    number: getLs(BASKET_NUMBER),
+                    plan: {
+                        id: getLs(BASKET_PLAN)
+                    },
+                    activeFeatures: features
+                };
+
                 $.ajax({
                     type: 'PUT',
-                    url: '/contract',
+                    url: 'profile/contract',
                     data: JSON.stringify(contract),
                     headers: {
                         "Content-Type": "application/json; charset=utf-8",
@@ -208,7 +237,7 @@
                     },
                     success: function (response) {
                         clearBasket();
-                        loadPage("users", "users");
+                        loadPage("profile", "profile");
                     },
                     error: function () {}
                 });

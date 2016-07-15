@@ -77,7 +77,7 @@
                         button + "</button>";
 
                         if (!aLocked) {
-                            contractsBody += "<tr><td id='trp" + contract.id + "'><a href='#' onclick='editContract(" + contract.id + ")'>" + strNumber + "</a></td>";
+                            contractsBody += "<tr><td id='trp" + contract.id + "'><a href='#' onclick='editProfileContract(" + contract.id + ")'>" + strNumber + "</a></td>";
                         } else {
                             contractsBody += "<tr><td id='trp" + contract.id + "'><strong>" + strNumber + "</strong></td>";
                         }
@@ -88,8 +88,28 @@
 
                     $("#profilePageCover").fadeOut(1).fadeIn(1000);
                 },
-                error: function () {
-                }
+                error: function () {}
+            });
+        }
+
+        function editProfileContract(contractId) {
+            clearBasket();
+            setLs(BASKET_OWNER, "true");
+            $.ajax({
+                type: 'GET',
+                url: '/profile/contract/' + contractId,
+                success: function (contract) {
+                    setLs(BASKET_CONTRACT, contract.id);
+                    setLs(BASKET_NUMBER, contract.number);
+                    setLs(BASKET_PLAN, contract.plan.id);
+                    var fIds = [];
+                    contract.activeFeatures.forEach(function (feature) {
+                        fIds.push(feature);
+                    })
+                    setLsArray(BASKET_OPTIONS, fIds);
+                    loadPage('contract1', 'basket');
+                },
+                error: function () {}
             });
         }
 
@@ -148,7 +168,7 @@
                         element.addClass("btn-default");
                         element.blur();
                         element.html("Unlocked");
-                        row.html("<a href='#' onclick='editContract(" + id + ")'>" + strNumber + "</a>");
+                        row.html("<a href='#' onclick='editProfileContract(" + id + ")'>" + strNumber + "</a>");
                     },
                     error: function () {
                     }

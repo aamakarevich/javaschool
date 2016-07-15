@@ -6,6 +6,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * JSON serializable DTO containing Feature data.
+ */
 public class FeatureDTO {
 
     private Long id;

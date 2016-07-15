@@ -18,6 +18,13 @@ public class FeatureRepository extends GenericRepository<Feature, Long> implemen
 
     Logger logger = Logger.getLogger(FeatureRepository.class);
 
+    /**
+     * Searches for roles with ids contained in passed list.
+     *
+     * @param ids id values to filter features
+     *
+     * @return list of features
+     */
     @Override
     public List<Feature> getListed(List<Long> ids) {
         if(ids.isEmpty()) {

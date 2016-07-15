@@ -6,6 +6,9 @@ import com.tsystems.ecare.app.model.Plan;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * JSON serializable DTO containing extended Contract data.
+ */
 public class ContractRichDTO extends ContractDTO {
 
     private Long customerId;

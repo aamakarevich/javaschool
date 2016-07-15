@@ -2,6 +2,9 @@ package com.tsystems.ecare.app.dto;
 
 import com.tsystems.ecare.app.model.Role;
 
+/**
+ * JSON serializable DTO containing Role data.
+ */
 public class RoleDTO {
 
     private Long id;

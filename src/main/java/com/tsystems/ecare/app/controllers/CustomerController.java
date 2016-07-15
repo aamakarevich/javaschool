@@ -65,7 +65,7 @@ public class CustomerController extends AbstractController {
     }
 
     /**
-     * Returns paginated banch of customers.
+     * Returns paginated bench of customers.
      *
      * @param filter query to filter customers by name or phone number
      * @param itemsCount number of items on page
