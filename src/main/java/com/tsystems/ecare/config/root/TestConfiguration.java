@@ -30,11 +30,21 @@ import java.util.Map;
 @EnableTransactionManagement
 public class TestConfiguration {
 
+    /**
+     * Returns instance of class that is responsible for data initialization.
+     *
+     * @return instanse of TestDataInitializer
+     */
     @Bean(initMethod = "init")
     public TestDataInitializer initTestData() {
         return new TestDataInitializer();
     }
 
+    /**
+     * Configures datasourse for current configuration.
+     *
+     * @return configured datasourse driver manager
+     */
     @Bean(name = "datasource")
     public DriverManagerDataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -45,6 +55,13 @@ public class TestConfiguration {
         return dataSource;
     }
 
+    /**
+     * Configures entity manager factory bean.
+     *
+     * @param dataSource configured datasourse driver manager
+     *
+     * @return entity manager factory instanse
+     */
     @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DriverManagerDataSource dataSource) {
 

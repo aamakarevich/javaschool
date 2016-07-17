@@ -54,8 +54,8 @@ public class ContractServiceImpl implements ContractService {
      */
     @Override
     @Transactional
-    public void saveNewContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId) {
-        String newPassword = saveContract(id, number, activeFeatures, planId, customerId, null);
+    public void saveNewContract(String number, List<Long> activeFeatures, Long planId, Long customerId) {
+        String newPassword = saveContract(null, number, activeFeatures, planId, customerId, null);
         if (newPassword != null) {
             SmsUtils.sendSms(number, newPassword);
         }
@@ -65,7 +65,7 @@ public class ContractServiceImpl implements ContractService {
      * Saves contract (new or not) to database.
      *
      * @param id id of contract to save
-     * @param number phone number for contract
+     * @param number phone number for contract (ignored updating existing contract)
      * @param activeFeatures ids of features to activate for contract
      * @param planId id of plan for contract
      * @param customerId id of customer for whom contract belongs
@@ -78,6 +78,9 @@ public class ContractServiceImpl implements ContractService {
     public String saveContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId, String customerEmail) {
         Contract contract;
         String newPassword = null;
+        if (activeFeatures == null) {
+            activeFeatures = new ArrayList<>();
+        }
         if (customerEmail != null) {
             notNull(id, "id must not be null if principal email is passed");
         }
@@ -100,6 +103,10 @@ public class ContractServiceImpl implements ContractService {
             }
             contract.setCustomer(customer);
 
+            notNull(number, "number is mandatory");
+            assertMatches(number, Pattern.compile("\\d{10}"), "number must contain 10 digits");
+            contract.setNumber(number);
+
             contract.setNumberLock(Contract.Lock.UNLOCKED);
         }
         else {
@@ -109,10 +116,6 @@ public class ContractServiceImpl implements ContractService {
                 throw new IllegalArgumentException("only owned contract data can be changed");
             }
         }
-
-        notNull(number, "number is mandatory");
-        assertMatches(number, Pattern.compile("\\d{10}"), "number must contain 10 digits");
-        contract.setNumber(number);
 
         notNull(planId, "planId is mandatory");
         Plan plan = planDao.findById(Plan.class, planId);

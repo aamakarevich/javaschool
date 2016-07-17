@@ -41,7 +41,6 @@ public class ContractController extends AbstractController {
     @RequestMapping(method = RequestMethod.POST)
     public void addContract(@RequestBody ContractRichDTO contract) {
         contractService.saveNewContract(
-                null,
                 contract.getNumber(),
                 contract.getActiveFeatures(),
                 contract.getPlan().getId(),

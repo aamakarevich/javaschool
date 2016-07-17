@@ -86,6 +86,18 @@ public class TestDataInitializer {
             createTestContract(i, createTestCustomer(i), plan7);
         }
 
+        Customer customer100 = createTestCustomer(100);
+        Plan plan8 = createTestPlan(8);
+        createTestContract(95, customer100, plan8);
+        Contract contract96 = createTestContract(96, customer100, plan8);
+        contract96.setNumberLock(Contract.Lock.LOCKED);
+        Contract contract97 = createTestContract(97, customer100, plan8);
+        contract97.setNumberLock(Contract.Lock.USERLOCKED);
+        Contract contract98 = createTestContract(98, customer100, plan8);
+        contract98.setNumberLock(Contract.Lock.LOCKED);
+        Contract contract99 = createTestContract(99, customer100, plan8);
+        contract99.setNumberLock(Contract.Lock.USERLOCKED);
+
         entityManager.getTransaction().commit();
     }
 

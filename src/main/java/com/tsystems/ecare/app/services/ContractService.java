@@ -12,23 +12,22 @@ public interface ContractService {
     /**
      * Saves new contract and in case of need triggers sendind sms with password.
      *
-     * @param id id of contract to save
      * @param number phone number for contract
      * @param activeFeatures ids of features to activate for contract
      * @param planId id of plan for contract
      * @param customerId id of customer for whom contract belongs
      */
-    public void saveNewContract(Long id, String number, List<Long> activeFeatures, Long planId, Long customerId);
+    public void saveNewContract(String number, List<Long> activeFeatures, Long planId, Long customerId);
 
     /**
      * Saves contract (new or not) to database.
      *
      * @param id id of contract to save
-     * @param number phone number for contract
+     * @param number phone number for contract (ignored updating existing contract)
      * @param activeFeatures ids of features to activate for contract
      * @param planId id of plan for contract
      * @param customerId id of customer for whom contract belongs
-     * @param customerEmail
+     * @param customerEmail if not null - only customer's own contracts can be saved
      *
      * @return newPassword if customer must be informed about password change, otherwise null
      */

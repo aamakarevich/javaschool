@@ -27,7 +27,7 @@ public class FeatureRepository extends GenericRepository<Feature, Long> implemen
      */
     @Override
     public List<Feature> getListed(List<Long> ids) {
-        if(ids.isEmpty()) {
+        if(ids == null || ids.isEmpty()) {
             return new ArrayList<>();
         }
         Query query = em.createQuery(
