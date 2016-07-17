@@ -34,9 +34,9 @@ public class TestDataInitializer {
 
         entityManager.getTransaction().begin();
 
-        Customer customer1 = createTestCustomer(1);
-        Customer customer2 = createTestCustomer(2);
-        Customer customer3 = createTestCustomer(3);
+        createTestCustomer(1);
+        createTestCustomer(2);
+        createTestCustomer(3);
 
         Role role1 = createTestRole(1);
         Role role2 = createTestRole(2);
@@ -48,9 +48,9 @@ public class TestDataInitializer {
 
         Feature feature1 = createTestFeature(1);
         Feature feature2 = createTestFeature(2);
-        Feature feature3 = createTestFeature(3);
+        createTestFeature(3);
 
-        Feature feature4 = createTestFeature(4);
+        createTestFeature(4);
 
         Feature feature5 = createTestFeature(5);
         Feature feature6 = createTestFeature(6);
@@ -59,15 +59,15 @@ public class TestDataInitializer {
         feature6.getBlockers().add(feature5);
         feature5.getNeededFeatures().add(feature7);
 
-        Plan plan1 = createTestPlan(1);
+        createTestPlan(1);
         Plan plan2 = createTestPlan(2);
-        Plan plan3 = createTestPlan(3);
+        createTestPlan(3);
         plan2.getAllowedFeatures().add(feature1);
         plan2.getAllowedFeatures().add(feature2);
 
         Plan plan4 = createTestPlan(4);
-        Plan plan5 = createTestPlan(5);
-        Plan plan6 = createTestPlan(6);
+        createTestPlan(5);
+        createTestPlan(6);
         plan4.getAllowedFeatures().add(feature5);
         plan4.getAllowedFeatures().add(feature6);
         plan4.getAllowedFeatures().add(feature7);
@@ -75,8 +75,8 @@ public class TestDataInitializer {
         Feature feature8 = createTestFeature(8);
         Feature feature9 = createTestFeature(9);
         Feature feature10 = createTestFeature(10);
-        Feature feature11 = createTestFeature(11);
-        Feature feature12 = createTestFeature(12);
+        createTestFeature(11);
+        createTestFeature(12);
         feature8.getBlockers().add(feature9);
         feature9.getBlockers().add(feature8);
         feature8.getNeededFeatures().add(feature10);
