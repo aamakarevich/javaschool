@@ -1,6 +1,7 @@
 package com.tsystems.ecare.app.init;
 
 import com.tsystems.ecare.app.model.Address;
+import com.tsystems.ecare.app.model.Contract;
 import com.tsystems.ecare.app.model.Customer;
 import com.tsystems.ecare.app.model.Feature;
 import com.tsystems.ecare.app.model.Plan;
@@ -80,11 +81,23 @@ public class TestDataInitializer {
         feature9.getBlockers().add(feature8);
         feature8.getNeededFeatures().add(feature10);
 
+        Plan plan7 = createTestPlan(7);
         for (int i = 6; i < 100; i++) {
-            createTestCustomer(i);
+            createTestContract(i, createTestCustomer(i), plan7);
         }
 
         entityManager.getTransaction().commit();
+    }
+
+    private Contract createTestContract(int id, Customer customer, Plan plan) {
+        String number = "";
+        for (int i = 0; i < 10 - Integer.toString(id).length(); i++) {
+            number += "0";
+        }
+        number += Integer.toString(id);
+        Contract contract = new Contract(number, customer, plan, Contract.Lock.UNLOCKED);
+        entityManager.persist(contract);
+        return contract;
     }
 
     private Customer createTestCustomer(int id) {

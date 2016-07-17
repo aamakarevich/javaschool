@@ -29,6 +29,20 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private RoleDao roleDao;
 
+    /**
+     * Saves customer (new or not) to database.
+     *
+     * @param id id of customer
+     * @param lastName last name of customer
+     * @param firstName first name of customer
+     * @param birthdate date of birth of customer
+     * @param passport passwort data of customer
+     * @param city city part of customer's address
+     * @param address1 first part of customer's address
+     * @param address2 second part of customer's address
+     *
+     * @return entity with saved customer info
+     */
     @Override
     @Transactional
     public Customer saveCustomer(Long id, String lastName, String firstName, Date birthdate, String passport, String city, String address1, String address2) {
@@ -79,6 +93,13 @@ public class CustomerServiceImpl implements CustomerService {
         return customerDao.save(customer);
     }
 
+    /**
+     * Searches customer in database by id.
+     *
+     * @param id id of customer
+     *
+     * @return entity with customer data
+     */
     @Override
     @Transactional
     public Customer getCustomer(Long id) {
@@ -88,6 +109,13 @@ public class CustomerServiceImpl implements CustomerService {
         return customer;
     }
 
+    /**
+     * Searches customer in database by email.
+     *
+     * @param email email of customer
+     *
+     * @return entity with customer data
+     */
     @Override
     @Transactional
     public Customer getCustomerByEmail(String email) {
@@ -97,6 +125,15 @@ public class CustomerServiceImpl implements CustomerService {
         return customer;
     }
 
+    /**
+     * Searches customers by name and phone number.
+     *
+     * @param filter query to filter customers
+     * @param itemsCount number of items on page
+     * @param pageNumber number of page
+     *
+     * @return searched customers data and total count
+     */
     @Override
     @Transactional(readOnly = true)
     public SearchResult<Customer> findCustomers(String filter, Integer itemsCount, Integer pageNumber) {
@@ -119,6 +156,11 @@ public class CustomerServiceImpl implements CustomerService {
         return new SearchResult<>(total, customers);
     }
 
+    /**
+     * Deletes customer from database.
+     *
+     * @param idTodelete id of customer to delete
+     */
     @Override
     @Transactional
     public void deleteCustomer(Long idTodelete) {
@@ -128,6 +170,13 @@ public class CustomerServiceImpl implements CustomerService {
         customerDao.delete(customer);
     }
 
+    /**
+     * Activates or deactivates role for customer.
+     *
+     * @param roleId id of role
+     * @param customerId id of customer
+     * @param active true if role must be activated and false otherwise
+     */
     @Override
     @Transactional
     public void activateRole(Long roleId, Long customerId, boolean active) {

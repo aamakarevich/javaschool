@@ -52,6 +52,13 @@ public class Contract extends AbstractEntity {
         // constractor with no parameters
     }
 
+    public Contract(String number, Customer customer, Plan plan, Lock numberLock) {
+        this.number = number;
+        this.customer = customer;
+        this.plan = plan;
+        this.numberLock = numberLock;
+    }
+
     public String getNumber() {
         return number;
     }

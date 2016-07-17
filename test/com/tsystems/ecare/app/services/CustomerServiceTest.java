@@ -2,7 +2,7 @@ package com.tsystems.ecare.app.services;
 
 import com.tsystems.ecare.app.model.Customer;
 import com.tsystems.ecare.app.model.Role;
-import com.tsystems.ecare.app.utils.TestUtils;
+import com.tsystems.ecare.app.model.SearchResult;
 import com.tsystems.ecare.config.root.RootContextConfig;
 import com.tsystems.ecare.config.root.TestConfiguration;
 import org.junit.Test;
@@ -182,7 +182,27 @@ public class CustomerServiceTest {
 
     @Test
     public void findCustomers() {
-        customerService.findCustomers("", 1, 10);
+        int totalCount = em.createQuery("from " + Customer.class.getName()).getResultList().size();
+        SearchResult<Customer> customers;
+        customers = customerService.findCustomers("firstname", 10, 2);
+        assertEquals(totalCount, customers.getResultsCount());
+        assertEquals(10, customers.getResult().size());
+
+        customers = customerService.findCustomers("lastname", 10, 2);
+        assertEquals(totalCount, customers.getResultsCount());
+        assertEquals(10, customers.getResult().size());
+
+        customers = customerService.findCustomers("000000001", 20, 1);
+        assertEquals(10, customers.getResultsCount());
+        assertEquals(10, customers.getResult().size());
+
+        customers = customerService.findCustomers("000000001", 20, 2);
+        assertEquals(10, customers.getResultsCount());
+        assertEquals(0, customers.getResult().size());
+
+        customers = customerService.findCustomers("totallyinvalid", 10, 1);
+        assertEquals(0, customers.getResultsCount());
+        assertEquals(0, customers.getResult().size());
     }
 
     @Test

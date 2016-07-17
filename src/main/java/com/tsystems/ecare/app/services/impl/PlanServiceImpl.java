@@ -38,7 +38,7 @@ public class PlanServiceImpl implements PlanService {
      * @param monthlyFee monthly fee for plan
      *
      * @return entity with saved plan info
-     */
+    */
     @Override
     @Transactional
     public Plan savePlan(Long id, String title, String description, BigDecimal monthlyFee) {
