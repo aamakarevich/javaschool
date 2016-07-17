@@ -8,10 +8,16 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Test class for HashUtils.
+ */
 public class HashUtilsTest {
 
+    /**
+     * Tests if sha256 hashes are being generated properly.
+     */
     @Test
-    public void sha256() throws Exception {
+    public void sha256() {
         String value1 = "abcdef";
         String value2 = "ghijkl";
         String value3 = "mnopqr";
@@ -29,6 +35,9 @@ public class HashUtilsTest {
         assertEquals(gotHashOfValue3, realHashOfValue3);
     }
 
+    /**
+     * Tests if all passwords in bench are different and have length of 8 characters.
+     */
     @Test
     public void generatePassword() {
         Set<String> passwords = new HashSet<>();

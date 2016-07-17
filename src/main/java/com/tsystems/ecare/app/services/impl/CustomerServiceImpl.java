@@ -62,6 +62,9 @@ public class CustomerServiceImpl implements CustomerService {
         assertMaximumLength(city, 40, "city must be not more then 40 characters");
         assertNotBlank(address1, "address1 must not be blank");
         assertMaximumLength(address1, 100, "address1 must be not more then 100 characters");
+        if (address2 != null) {
+            assertMaximumLength(address2, 100, "address2 must be not more then 100 characters");
+        }
 
         customer.setAddress(new Address());
         customer.getAddress().setCity(city);
@@ -80,14 +83,18 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public Customer getCustomer(Long id) {
         notNull(id, "id is mandatory");
-        return customerDao.findById(id);
+        Customer customer = customerDao.findById(id);
+        notNull(customer, "customer is not found by id");
+        return customer;
     }
 
     @Override
     @Transactional
     public Customer getCustomerByEmail(String email) {
         assertNotBlank(email, "email is mandatory and can't be empty string");
-        return customerDao.findByEmail(email);
+        Customer customer = customerDao.findByEmail(email);
+        notNull(customer, "customer is not found by email");
+        return customer;
     }
 
     @Override

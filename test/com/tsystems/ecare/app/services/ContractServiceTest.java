@@ -12,6 +12,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+/**
+ * Test class for ContractService.
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles("test")
 @ContextConfiguration(classes={TestConfiguration.class, RootContextConfig.class})
@@ -24,22 +27,22 @@ public class ContractServiceTest {
     private EntityManager em;
 
     @Test
-    public void saveNewContract() throws Exception {
+    public void saveNewContract() {
 
     }
 
     @Test
-    public void saveContract() throws Exception {
+    public void saveContract() {
 
     }
 
     @Test
-    public void getContract() throws Exception {
+    public void getContract() {
 
     }
 
     @Test
-    public void changeLock() throws Exception {
+    public void changeLock() {
 //        contractService.changeLock();
     }
 

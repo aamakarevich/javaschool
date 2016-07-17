@@ -67,6 +67,13 @@ public class FeatureServiceImpl implements FeatureService {
         return featureDao.save(feature);
     }
 
+    /**
+     * Searches option in database by id.
+     *
+     * @param id id of option
+     *
+     * @return entity with option data
+     */
     @Override
     @Transactional
     public Feature getFeature(Long findFeatureId) {
@@ -76,6 +83,11 @@ public class FeatureServiceImpl implements FeatureService {
         return feature;
     }
 
+    /**
+     * Searches for all options in database.
+     *
+     * @return all options data and total count
+     */
     @Override
     @Transactional(readOnly = true)
     public SearchResult<Feature> getAllFeatures() {
@@ -90,6 +102,14 @@ public class FeatureServiceImpl implements FeatureService {
         return new ArrayList<>(new HashSet<>(featureDao.getListed(idsFromStringToList(ids))));
     }
 
+    /**
+     * Resolves options available for contract with some plan and some already activated options.
+     *
+     * @param ids string with comma separated ids of already active options
+     * @param planId id of plan applied to contract
+     *
+     * @return available options ids list
+     */
     @Override
     @Transactional
     public List<Long> getAvailableFeatures(String ids, Long planId) {
@@ -119,12 +139,17 @@ public class FeatureServiceImpl implements FeatureService {
         return new ArrayList<>(numbers);
     }
 
+    /**
+     * Deletes option by id.
+     *
+     * @param deleteFeatureId id of option to delete
+     */
     @Override
     @Transactional
-    public void deleteFeature(Long deleteFeatureid) {
-        notNull(deleteFeatureid, "deleteFeatureid is mandatory");
+    public void deleteFeature(Long deleteFeatureId) {
+        notNull(deleteFeatureId, "deleteFeatureId is mandatory");
 
-        Feature feature = featureDao.findById(Feature.class, deleteFeatureid);
+        Feature feature = featureDao.findById(Feature.class, deleteFeatureId);
 
         for (Feature f : feature.getBlockedFeatures()) {
             f.getBlockers().remove(feature);
@@ -149,6 +174,14 @@ public class FeatureServiceImpl implements FeatureService {
         featureDao.delete(feature);
     }
 
+    /**
+     * Updates link between two options.
+     *
+     * @param feature1Id id of the first option
+     * @param feature2Id id of the second option
+     * @param block true if block link bust be updated, false if - dependency link
+     * @param linked true if link must be set, false - if deleted
+     */
     @Override
     @Transactional
     public void changeLinkedFeature(Long feature1Id, Long feature2Id, Boolean block, Boolean linked) {

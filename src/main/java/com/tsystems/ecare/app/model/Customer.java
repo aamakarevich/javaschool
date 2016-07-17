@@ -120,7 +120,10 @@ public class Customer extends AbstractEntity {
     }
 
     public List<Contract> getContracts() {
-        return contracts != null ? contracts : new ArrayList<>();
+        if (contracts == null) {
+            contracts = new ArrayList<>();
+        }
+        return contracts;
     }
 
     public void setContracts(List<Contract> contracts) {
@@ -136,7 +139,10 @@ public class Customer extends AbstractEntity {
     }
 
     public List<Role> getRoles() {
-        return roles != null ? roles : new ArrayList<>();
+        if (roles == null) {
+            roles = new ArrayList<>();
+        }
+        return roles;
     }
 
     public void setRoles(List<Role> roles) {

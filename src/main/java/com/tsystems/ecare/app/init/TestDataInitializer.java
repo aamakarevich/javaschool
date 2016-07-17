@@ -4,6 +4,7 @@ import com.tsystems.ecare.app.model.Address;
 import com.tsystems.ecare.app.model.Customer;
 import com.tsystems.ecare.app.model.Feature;
 import com.tsystems.ecare.app.model.Plan;
+import com.tsystems.ecare.app.model.Role;
 import com.tsystems.ecare.app.utils.HashUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,14 @@ public class TestDataInitializer {
         Customer customer1 = createTestCustomer(1);
         Customer customer2 = createTestCustomer(2);
         Customer customer3 = createTestCustomer(3);
+
+        Role role1 = createTestRole(1);
+        Role role2 = createTestRole(2);
+
+        Customer customer4 = createTestCustomer(4);
+        Customer customer5 = createTestCustomer(5);
+        customer4.getRoles().add(role1);
+        customer5.getRoles().add(role2);
 
         Feature feature1 = createTestFeature(1);
         Feature feature2 = createTestFeature(2);
@@ -71,13 +80,17 @@ public class TestDataInitializer {
         feature9.getBlockers().add(feature8);
         feature8.getNeededFeatures().add(feature10);
 
+        for (int i = 6; i < 100; i++) {
+            createTestCustomer(i);
+        }
+
         entityManager.getTransaction().commit();
     }
 
     private Customer createTestCustomer(int id) {
         Customer customer = new Customer("firstname" + id, "lastname" + id, new Date(), "passport" + id,
                 "user"  + id + "@ecare.com", HashUtils.sha256("user" + id),
-                new Address("street" + id, Integer.toString(id), "city" + id));
+                new Address("street" + id, "building" + id, "city" + id));
         entityManager.persist(customer);
         return customer;
     }
@@ -92,6 +105,12 @@ public class TestDataInitializer {
         Plan plan = new Plan("plan" + id, "description" + id, new BigDecimal(id));
         entityManager.persist(plan);
         return plan;
+    }
+
+    private Role createTestRole(int id) {
+        Role role = new Role("role" + id);
+        entityManager.persist(role);
+        return role;
     }
 
 
