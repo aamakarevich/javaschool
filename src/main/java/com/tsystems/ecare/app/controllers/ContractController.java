@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Provides REST-full CRUD for Contract entity.
  */
 @Controller
-@RequestMapping("contract")
+@RequestMapping("/contract")
 public class ContractController extends AbstractController {
 
     @Autowired

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Provides REST-full CRUD for Feature entity.
  */
 @Controller
-@RequestMapping("option")
+@RequestMapping("/option")
 public class FeatureController extends AbstractController {
 
     @Autowired

@@ -1,5 +1,6 @@
 package com.tsystems.ecare.config.root;
 
+import com.tsystems.ecare.app.init.TestDataInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -20,16 +21,38 @@ import java.util.Map;
 @EnableTransactionManagement
 public class DevelopmentConfiguration {
 
+    /**
+     * Returns instance of class that is responsible for data initialization.
+     *
+     * @return instanse of TestDataInitializer
+     */
+    @Bean(initMethod = "initDataForDemo")
+    public TestDataInitializer initTestData() {
+        return new TestDataInitializer();
+    }
+
+    /**
+     * Configures datasourse for current configuration.
+     *
+     * @return configured datasourse driver manager
+     */
     @Bean(name = "datasource")
     public DriverManagerDataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/ecare?loglevel=0");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/ecaredemo?loglevel=0");
         dataSource.setUsername("root");
         dataSource.setPassword("root");
         return dataSource;
     }
 
+    /**
+     * Configures entity manager factory bean.
+     *
+     * @param dataSource configured datasourse driver manager
+     *
+     * @return entity manager factory instanse
+     */
     @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DriverManagerDataSource dataSource) {
 
@@ -40,7 +63,7 @@ public class DevelopmentConfiguration {
         entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
         Map<String, Object> jpaProperties = new HashMap<>();
-        jpaProperties.put("hibernate.hbm2ddl.auto", "update");
+        jpaProperties.put("hibernate.hbm2ddl.auto", "create-drop");
         jpaProperties.put("hibernate.show_sql", "true");
         jpaProperties.put("hibernate.format_sql", "true");
         jpaProperties.put("hibernate.use_sql_comments", "true");

@@ -13,7 +13,7 @@
                     <div class="input-group">
                         <span class="input-group-addon">Search</span>
                         <input type="text" class="form-control" id="users_search">
-                        <span class="input-group-btn"><button class="btn btn-default" type="button"
+                        <span class="input-group-btn"><button id="doSearchCustomers" class="btn btn-default" type="button"
                                                               onclick="searchCustomers()">Search</button></span>
                     </div>
                 </div>
@@ -21,7 +21,7 @@
                     <div class="input-group">
                         <span class="input-group-addon">Filter</span>
                         <input type="text" class="form-control" id="users_filter" onkeyup="filter()">
-                        <span class="input-group-btn"><button class="btn btn-default" type="button"
+                        <span class="input-group-btn"><button id="doReset" class="btn btn-default" type="button"
                                                               onclick="resetFilter()">Reset</button></span>
                     </div>
                 </div>
@@ -36,11 +36,11 @@
                                 class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href="#" onclick="changeElementsCount(5)">5</a></li>
-                            <li><a href="#" onclick="changeElementsCount(10)">10</a></li>
-                            <li><a href="#" onclick="changeElementsCount(20)">20</a></li>
-                            <li><a href="#" onclick="changeElementsCount(50)">50</a></li>
-                            <li><a href="#" onclick="changeElementsCount(100)">100</a></li>
+                            <li id="5"><a href="#" onclick="changeElementsCount(5)">5</a></li>
+                            <li id="10"><a href="#" onclick="changeElementsCount(10)">10</a></li>
+                            <li id="20"><a href="#" onclick="changeElementsCount(20)">20</a></li>
+                            <li id="50"><a href="#" onclick="changeElementsCount(50)">50</a></li>
+                            <li id="100"><a href="#" onclick="changeElementsCount(100)">100</a></li>
                         </ul>
                     </div>
                 </div>
@@ -113,7 +113,7 @@
                 client.customer.read(query).done(function (response) {
                     $("#pagination").empty();
                     var itemsCount = +$("#items_count").val();
-                    if (response.totalPages == 1) {
+                    if (response.totalPages == 1 || response.totalPages == 0) {
                         $("#current_page").val(1);
                         getPagedCustomers(response.customers);
                         return;
@@ -129,14 +129,21 @@
 
                     var pages = "<li id=\"pag_1\"><a href=\"#\" onclick=\"changePage(1);\">1 <span class=\"sr-only\"></span></a></li>";
                     if (current > 5) {
-                        pages += "<li><a>... <span class=\"sr-only\"></span></a></li>";
-                        if(current < total - 5) {
-                            for (p = current - 2; p <= current + 2 && p < total; p++) {
-                                pages += "<li id=\"pag_" + p + "\"><a href=\"#\" onclick=\"changePage(" + p + ");\">" + p + " <span class=\"sr-only\"></span></a></li>";
-                            }
+                        if(total > 9) {
                             pages += "<li><a>... <span class=\"sr-only\"></span></a></li>";
+
+                            if (current < total - 5) {
+                                for (p = current - 2; p <= current + 2 && p < total; p++) {
+                                    pages += "<li id=\"pag_" + p + "\"><a href=\"#\" onclick=\"changePage(" + p + ");\">" + p + " <span class=\"sr-only\"></span></a></li>";
+                                }
+                                pages += "<li><a>... <span class=\"sr-only\"></span></a></li>";
+                            } else {
+                                for (p = total - 6; p < total; p++) {
+                                    pages += "<li id=\"pag_" + p + "\"><a href=\"#\" onclick=\"changePage(" + p + ");\">" + p + " <span class=\"sr-only\"></span></a></li>";
+                                }
+                            }
                         } else {
-                            for (p = total - 6; p < total; p++) {
+                            for (p = 2; p < total; p++) {
                                 pages += "<li id=\"pag_" + p + "\"><a href=\"#\" onclick=\"changePage(" + p + ");\">" + p + " <span class=\"sr-only\"></span></a></li>";
                             }
                         }
@@ -144,7 +151,9 @@
                         for (p = 2; p <= 7 && p < total; p++) {
                             pages += "<li id=\"pag_" + p + "\"><a href=\"#\" onclick=\"changePage(" + p + ");\">" + p + " <span class=\"sr-only\"></span></a></li>";
                         }
-                        pages += "<li><a>... <span class=\"sr-only\"></span></a></li>";
+                        if(total > 9) {
+                            pages += "<li><a>... <span class=\"sr-only\"></span></a></li>";
+                        }
                     }
                     pages += "<li id=\"pag_" + total + "\"><a href=\"#\" onclick=\"changePage(" + total + ");\">" + total + " <span class=\"sr-only\"></span></a></li>";
                     $("#pagination").append(pages);
@@ -161,14 +170,17 @@
                             "<div class=\"panel-heading\">" +
                             "<h3 class=\"panel-title\"><strong class=\"text-uppercase\">" + customers[c].lastName + " " + customers[c].firstName + "</strong> " + customers[c].email + "</h3>";
                     if ($.cookie("ecare.suser") != null) {
-                        customersRows += "<div class=\"btn-group pull-right\"><a href=\"#\" class=\"btn btn-default btn-sm\" onclick=\"addContract(" + customers[c].id + ");\">Add contract</a>" +
-                                "<a href=\"#\" class=\"btn btn-primary btn-sm\" onclick=\"editCustomer(" + customers[c].id + ");\">Edit</a>" +
-                                "<a href=\"#\" class=\"btn btn-danger btn-sm\" data-toggle=\"modal\" data-target=\"#deleteCustomerModal\" onclick=\"presetDeleteCustomerId(" + customers[c].id + ");\" onfocus=\"this.blur()\">Delete</a></div>";
+                        customersRows += "<div class=\"btn-group pull-right\"><a href=\"#\" id='addContract" + customers[c].id + "' class=\"btn btn-default btn-sm\" onclick=\"addContract(" + customers[c].id + ");\">Add contract</a>" +
+                                "<a href=\"#\" id='editCustomer" + customers[c].id + "' class=\"btn btn-primary btn-sm\" onclick=\"editCustomer(" + customers[c].id + ");\">Edit</a>" +
+                                "<a href=\"#\" id='deleteCustomer" + customers[c].id + "' class=\"btn btn-danger btn-sm\" data-toggle=\"modal\" data-target=\"#deleteCustomerModal\" onclick=\"presetDeleteCustomerId(" + customers[c].id + ");\" onfocus=\"this.blur()\">Delete</a></div>";
                     }
                     contractsStr = "";
                     customers[c].contracts.forEach(function (contract) {
-                        contractsStr += "<a href=\"#\" class=\"btn btn-primary btn-xs\" onclick=\"editContract(" + customers[c].id + "," + contract.id + ");\">8" + contract.number + "</a> ";
+                        contractsStr += "<a href=\"#\" id='editContract" + customers[c].id + "_" + contract.id + "' class=\"btn btn-primary btn-xs\" onclick=\"editContract(" + customers[c].id + "," + contract.id + ");\">8" + contract.number + "</a> ";
                     });
+                    if(customers[c].address.address2 == null) {
+                        customers[c].address.address2 = "";
+                    }
                     customersRows += "</div>" +
                             "<div class=\"panel-body\">" +
                             "<strong>BIRTHDATE</strong>: " + getPrettyDate(customers[c].birthdate) + "<br />" +
@@ -206,7 +218,7 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="deleteCustomerId"/>
-                    <button class="btn btn-primary" type="button" onclick="deleteCustomer();">Yes</button>
+                    <button id="doDeleteCustomer" class="btn btn-primary" type="button" onclick="deleteCustomer();">Yes</button>
                     <button class="btn btn-default" type="button" onclick="closeDeleteCustomerModal();">No</button>
                 </div>
             </div>
@@ -250,7 +262,7 @@
 
             $.ajax({
                 type: 'DELETE',
-                url: '/customer/' + $("#deleteCustomerId").val(),
+                url: '/javaschool/customer/' + $("#deleteCustomerId").val(),
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 },

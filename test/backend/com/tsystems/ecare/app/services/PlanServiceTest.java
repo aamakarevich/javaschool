@@ -1,8 +1,9 @@
-package com.tsystems.ecare.app.services;
+package backend.com.tsystems.ecare.app.services;
 
 import com.tsystems.ecare.app.model.Feature;
 import com.tsystems.ecare.app.model.Plan;
 import com.tsystems.ecare.app.model.SearchResult;
+import com.tsystems.ecare.app.services.PlanService;
 import com.tsystems.ecare.config.root.RootContextConfig;
 import com.tsystems.ecare.config.root.TestConfiguration;
 import org.junit.Test;
@@ -15,9 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.tsystems.ecare.app.utils.TestUtils.getStringOfLength;
 import static org.junit.Assert.assertEquals;
@@ -45,7 +44,7 @@ public class PlanServiceTest {
         Plan gotPlan = em.find(Plan.class, plan.getId());
         assertEquals(gotPlan.getTitle(), "title");
         assertEquals(gotPlan.getDescription(), "description");
-        assertEquals(gotPlan.getMonthlyFee(), new BigDecimal(10));
+        assertEquals(gotPlan.getMonthlyFee(), new BigDecimal(10).setScale(2));
     }
 
     @Test
@@ -54,7 +53,7 @@ public class PlanServiceTest {
         Plan gotPlan = em.find(Plan.class, 1l);
         assertEquals(gotPlan.getTitle(), "title");
         assertEquals(gotPlan.getDescription(), "description");
-        assertEquals(gotPlan.getMonthlyFee(), new BigDecimal(10));
+        assertEquals(gotPlan.getMonthlyFee(), new BigDecimal(10).setScale(2));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -92,7 +91,7 @@ public class PlanServiceTest {
         Plan plan = planService.getPlan(2l);
         assertEquals(plan.getTitle(), "plan2");
         assertEquals(plan.getDescription(), "description2");
-        assertEquals(plan.getMonthlyFee(), new BigDecimal(2));
+        assertEquals(plan.getMonthlyFee(), new BigDecimal(2).setScale(2));
     }
 
     @Test(expected = IllegalArgumentException.class)

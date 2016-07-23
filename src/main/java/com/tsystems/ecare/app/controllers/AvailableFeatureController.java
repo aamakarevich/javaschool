@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Provides REST-service for retreiving available features for contracts.
  */
 @Controller
-@RequestMapping("available")
+@RequestMapping("/available")
 public class AvailableFeatureController extends AbstractController {
 
     @Autowired

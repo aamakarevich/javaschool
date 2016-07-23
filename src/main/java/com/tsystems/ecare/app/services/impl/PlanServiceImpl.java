@@ -2,6 +2,9 @@ package com.tsystems.ecare.app.services.impl;
 
 import com.tsystems.ecare.app.dao.FeatureDao;
 import com.tsystems.ecare.app.dao.PlanDao;
+import com.tsystems.ecare.app.dto.FeatureDTO;
+import com.tsystems.ecare.app.dto.PlanReportDTO;
+import com.tsystems.ecare.app.model.Contract;
 import com.tsystems.ecare.app.model.Feature;
 import com.tsystems.ecare.app.model.Plan;
 import com.tsystems.ecare.app.model.SearchResult;
@@ -11,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.tsystems.ecare.app.utils.ValidationUtils.assertMaximumLength;
 import static com.tsystems.ecare.app.utils.ValidationUtils.assertNotBlank;
@@ -134,5 +139,36 @@ public class PlanServiceImpl implements PlanService {
             plan.getAllowedFeatures().remove(feature);
         }
         planDao.save(plan);
+    }
+
+    /**
+     * Calculates and returns statistics information about plan.
+     *
+     * @param planId id of plan to collect statistics for.
+     *
+     * @return DTO with plan statistics data
+     */
+    @Override
+    @Transactional
+    public PlanReportDTO getFeatureUsers(Long planId) {
+        notNull(planId, "planId is mandatory");
+
+        Plan plan = planDao.findById(Plan.class, planId);
+        PlanReportDTO planReportDTO =
+                new PlanReportDTO(plan.getId(), plan.getTitle(), plan.getDescription(), plan.getMonthlyFee(),
+                        FeatureDTO.mapFromFeaturesEntities(plan.getAllowedFeatures()));
+        planReportDTO.setTotalContracts(plan.getContracts().size());
+        Map<Long, Long> features = new HashMap<>();
+        plan.getAllowedFeatures().forEach(f -> features.put(f.getId(), 0L));
+        for (Contract contract : plan.getContracts()) {
+            for (Feature feature : contract.getActiveFeatures()) {
+                long featureId = feature.getId();
+                if (features.containsKey(featureId)) {
+                    features.put(featureId, features.get(featureId) + 1);
+                }
+            }
+        }
+        planReportDTO.setFeaturesUsers(features);
+        return planReportDTO;
     }
 }

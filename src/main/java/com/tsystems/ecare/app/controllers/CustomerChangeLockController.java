@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Provides REST-service for locking/unlocking customers contracts by managers.
  */
 @Controller
-@RequestMapping("customer/lock")
+@RequestMapping("/customer/lock")
 public class CustomerChangeLockController extends AbstractController {
 
     @Autowired

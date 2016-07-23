@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Provides REST-service for activating/deactivating roles for users.
  */
 @Controller
-@RequestMapping("role/activate")
+@RequestMapping("/role/activate")
 public class RoleController extends AbstractController {
 
     @Autowired

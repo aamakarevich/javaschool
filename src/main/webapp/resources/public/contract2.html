@@ -174,7 +174,7 @@
                 if (contractId == null) {
                     $.ajax({
                         type: 'POST',
-                        url: '/contract',
+                        url: '/javaschool/contract',
                         data: JSON.stringify(contract),
                         headers: {
                             "Content-Type": "application/json; charset=utf-8",
@@ -199,7 +199,7 @@
                 } else {
                     $.ajax({
                         type: 'PUT',
-                        url: '/contract',
+                        url: '/javaschool/contract',
                         data: JSON.stringify(contract),
                         headers: {
                             "Content-Type": "application/json; charset=utf-8",
@@ -242,6 +242,7 @@
                     error: function () {}
                 });
             }
+            return false;
         }
     </script>
 </div>

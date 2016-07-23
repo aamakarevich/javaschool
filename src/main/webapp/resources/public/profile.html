@@ -37,7 +37,7 @@
 
             $.ajax({
                 type: 'PUT',
-                url: '/profile',
+                url: '/javaschool/profile',
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 },
@@ -45,6 +45,9 @@
                     request.setRequestHeader(header, token);
                 },
                 success: function (customer) {
+                    if(customer.address.address2 == null) {
+                        customer.address.address2 = "";
+                    }
                     var profileBody = "";
                     profileBody += "<tr><td><strong>Name</strong></td><td>" + customer.lastName + " " + customer.firstName + "</td></tr>";
                     profileBody += "<tr><td><strong>E-mail</strong></td><td>" + customer.email + "</td></tr>";
@@ -97,7 +100,7 @@
             setLs(BASKET_OWNER, "true");
             $.ajax({
                 type: 'GET',
-                url: '/profile/contract/' + contractId,
+                url: '/javaschool/profile/contract/' + contractId,
                 success: function (contract) {
                     setLs(BASKET_CONTRACT, contract.id);
                     setLs(BASKET_NUMBER, contract.number);
@@ -129,7 +132,7 @@
 
                 $.ajax({
                     type: 'PUT',
-                    url: '/profile/lock',
+                    url: '/javaschool/profile/lock',
                     data: JSON.stringify(lock),
                     headers: {
                         "Content-Type": "application/json; charset=utf-8",
@@ -155,7 +158,7 @@
 
                 $.ajax({
                     type: 'PUT',
-                    url: '/profile/lock',
+                    url: '/javaschool/profile/lock',
                     data: JSON.stringify(lock),
                     headers: {
                         "Content-Type": "application/json; charset=utf-8",

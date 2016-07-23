@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Provides REST-full CRUD for Plan entity.
  */
 @Controller
-@RequestMapping("plan")
+@RequestMapping("/plan")
 public class PlanController extends AbstractController {
 
     @Autowired

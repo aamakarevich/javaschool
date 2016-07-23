@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class Plan extends AbstractEntity {
     private String description;
 
     @Basic
-    @Column(name = "monthly_fee", nullable = false, precision = 2)
+    @Column(name = "monthly_fee", nullable = false, scale = 2, precision = 10)
     private BigDecimal monthlyFee;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -37,7 +38,7 @@ public class Plan extends AbstractEntity {
             name = "allowed_feature",
             joinColumns = @JoinColumn(name = "plan_id", referencedColumnName = "id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "feature_id", referencedColumnName = "id", nullable = false))
-    private List<Feature> allowedFeatures = new ArrayList<>();
+    private List<Feature> allowedFeatures;
 
     @OneToMany(mappedBy = "plan", fetch = FetchType.LAZY)
     private List<Contract> contracts = new ArrayList<>();
@@ -85,6 +86,10 @@ public class Plan extends AbstractEntity {
     }
 
     public List<Feature> getAllowedFeatures() {
+        if (allowedFeatures == null) {
+            allowedFeatures = new ArrayList<>();
+        }
+        allowedFeatures = new ArrayList<>(new HashSet<>(allowedFeatures));
         return allowedFeatures;
     }
 

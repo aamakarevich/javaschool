@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Provides REST-service for changing allowed features for plans.
  */
 @Controller
-@RequestMapping("allow")
+@RequestMapping("/allow")
 public class AllowedFeatureController extends AbstractController {
 
     @Autowired

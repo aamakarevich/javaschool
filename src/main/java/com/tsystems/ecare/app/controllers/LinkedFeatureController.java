@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Provides REST-service for changing links between features.
  */
 @Controller
-@RequestMapping("link")
+@RequestMapping("/link")
 public class LinkedFeatureController extends AbstractController {
 
     @Autowired

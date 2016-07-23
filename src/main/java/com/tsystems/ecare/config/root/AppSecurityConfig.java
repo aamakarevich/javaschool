@@ -1,6 +1,5 @@
 package com.tsystems.ecare.config.root;
 
-import com.allanditzel.springframework.security.web.csrf.CsrfTokenResponseHeaderBindingFilter;
 import com.tsystems.ecare.app.security.AjaxAuthenticationFailureHandler;
 import com.tsystems.ecare.app.security.AjaxAuthenticationSuccessHandler;
 import com.tsystems.ecare.app.security.AjaxLogoutSuccessHandler;
@@ -16,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.csrf.CsrfFilter;
 
 import javax.sql.DataSource;
 
@@ -46,10 +44,6 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        CsrfTokenResponseHeaderBindingFilter csrfTokenFilter = new CsrfTokenResponseHeaderBindingFilter();
-        http.addFilterAfter(csrfTokenFilter, CsrfFilter.class);
-
         http
                 .authorizeRequests()
                 .antMatchers("/resources/index.jsp").permitAll()
@@ -60,6 +54,8 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/resources/fonts/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/profile").access(USER)
                 .antMatchers(HttpMethod.GET, "/profile").access(USER)
+                .antMatchers(HttpMethod.GET, "/report").permitAll()
+                .antMatchers(HttpMethod.GET, "/report/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/available").access(USER)
                 .antMatchers(HttpMethod.GET, "/available/**").access(USER)
                 .antMatchers(HttpMethod.PUT, "/profile/lock").access(USER)
@@ -97,6 +93,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .successHandler(new AjaxAuthenticationSuccessHandler(new SavedRequestAwareAuthenticationSuccessHandler()))
+                .loginPage("/resources/index.jsp")
                 .failureHandler(new AjaxAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler()))
                 .and()
                 .httpBasic()

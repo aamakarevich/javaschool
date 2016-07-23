@@ -9,23 +9,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>eCare mobile</title>
 
-    <link rel="shortcut icon" href="/resources/img/favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="../resources/img/favicon.ico" type="image/x-icon"/>
 
-    <link rel="stylesheet" href="/resources/css/bootstrap.css">
-    <link rel="stylesheet" href="/resources/css/bootstrap-theme.css">
-    <link rel="stylesheet" href="/resources/css/theme.css">
-    <link rel="stylesheet" href="/resources/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="../resources/css/bootstrap.css">
+    <link rel="stylesheet" href="../resources/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="../resources/css/theme.css">
+    <link rel="stylesheet" href="../resources/css/bootstrap-datepicker3.min.css">
 
-    <link rel="import" href="/resources/public/home.html">
-    <link rel="import" href="/resources/public/plan.html">
-    <link rel="import" href="/resources/public/plans.html">
-    <link rel="import" href="/resources/public/option.html">
-    <link rel="import" href="/resources/public/options.html">
-    <link rel="import" href="/resources/public/user.html">
-    <link rel="import" href="/resources/public/users.html">
-    <link rel="import" href="/resources/public/contract1.html">
-    <link rel="import" href="/resources/public/contract2.html">
-    <link rel="import" href="/resources/public/profile.html">
+    <link rel="import" href="../resources/public/home.html">
+    <link rel="import" href="../resources/public/plan.html">
+    <link rel="import" href="../resources/public/plans.html">
+    <link rel="import" href="../resources/public/option.html">
+    <link rel="import" href="../resources/public/options.html">
+    <link rel="import" href="../resources/public/user.html">
+    <link rel="import" href="../resources/public/users.html">
+    <link rel="import" href="../resources/public/contract1.html">
+    <link rel="import" href="../resources/public/contract2.html">
+    <link rel="import" href="../resources/public/profile.html">
 </head>
 
 <body>
@@ -60,7 +60,7 @@
                     <p id="nav_username" class="navbar-text navbar-right">
                         Signed in as
                         <a href="#" id="nav_fullname" class="navbar-link" onclick="loadPage('profile', 'profile')"></a>
-                        [<a href="#" class="navbar-link"
+                        [<a href="#" id="signout" class="navbar-link"
                             onclick="logout()">Sign out</a>]
                     </p>
                 </ul>
@@ -105,11 +105,11 @@
         </div>
     </div>
 </div>
-<script src="/resources/js/jquery.min.js" type="text/javascript"></script>
-<script src="/resources/js/jquery.cookie.js" type="text/javascript"></script>
-<script src="/resources/js/jquery.rest.min.js" type="text/javascript"></script>
-<script src="/resources/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="/resources/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="../resources/js/jquery.min.js" type="text/javascript"></script>
+<script src="../resources/js/jquery.cookie.js" type="text/javascript"></script>
+<script src="../resources/js/jquery.rest.min.js" type="text/javascript"></script>
+<script src="../resources/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="../resources/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
 <script>
 
     /* Globals */
@@ -126,7 +126,7 @@
 
     $(document).ready(function () {
 
-        client = new $.RestClient('/');
+        client = new $.RestClient('/javaschool/');
 
         client.add('customer', {
             stripTrailingSlash: true,
@@ -293,7 +293,7 @@
         };
         $.ajax({
             type: 'POST',
-            url: '/authenticate',
+            url: '/javaschool/authenticate',
             data: ds,
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -326,7 +326,7 @@
             beforeSend: function (request) {
                 request.setRequestHeader(header, token);
             },
-            url: "/logout",
+            url: '/javaschool/logout',
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "X-Login-Ajax-call": 'true'
@@ -390,6 +390,6 @@
         removeLs(BASKET_UP);
     }
 </script>
-<script src="/resources/js/validator.js" type="text/javascript"></script>
+<script src="../resources/js/validator.js" type="text/javascript"></script>
 </body>
 </html>

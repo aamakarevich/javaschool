@@ -1,5 +1,6 @@
 package com.tsystems.ecare.app.services;
 
+import com.tsystems.ecare.app.dto.PlanReportDTO;
 import com.tsystems.ecare.app.model.Plan;
 import com.tsystems.ecare.app.model.SearchResult;
 
@@ -51,4 +52,13 @@ public interface PlanService {
      * @param allowed true if option must be allowed for plan
      */
     public void changeAllowedFeature(Long planId, Long featureId, Boolean allowed);
+
+    /**
+     * Calculates and returns statistics information about plan.
+     *
+     * @param planId id of plan to collect statistics for.
+     *
+     * @return DTO with plan statistics data
+     */
+    public PlanReportDTO getFeatureUsers(Long planId);
 }

@@ -17,7 +17,7 @@ import java.security.Principal;
  * Provides REST-service for retreiving profile information.
  */
 @Controller
-@RequestMapping("profile")
+@RequestMapping("/profile")
 public class ProfileController extends AbstractController {
 
     @Autowired

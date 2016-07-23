@@ -35,7 +35,7 @@ public class TestConfiguration {
      *
      * @return instanse of TestDataInitializer
      */
-    @Bean(initMethod = "init")
+    @Bean(initMethod = "initDataForUnitTests")
     public TestDataInitializer initTestData() {
         return new TestDataInitializer();
     }

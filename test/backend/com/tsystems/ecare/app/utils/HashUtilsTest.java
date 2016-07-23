@@ -1,5 +1,6 @@
-package com.tsystems.ecare.app.utils;
+package backend.com.tsystems.ecare.app.utils;
 
+import com.tsystems.ecare.app.utils.HashUtils;
 import org.junit.Test;
 
 import java.util.HashSet;

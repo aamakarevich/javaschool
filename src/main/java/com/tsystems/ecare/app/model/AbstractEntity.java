@@ -7,7 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.Transient;
-import javax.persistence.Version;
 import java.util.UUID;
 
 /**
@@ -20,9 +19,6 @@ public class AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Version
-    private Long version;
 
     @Transient
     private UUID uuid;
@@ -86,10 +82,6 @@ public class AbstractEntity {
     @Override
     public int hashCode() {
         return getUuid() != null ? getUuid().hashCode() : 0;
-    }
-
-    public Long getVersion() {
-        return version;
     }
 
     public String getUuidStr() {

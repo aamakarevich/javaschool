@@ -1,5 +1,7 @@
-package com.tsystems.ecare.app.utils;
+package backend.com.tsystems.ecare.app.utils;
 
+import com.tsystems.ecare.app.utils.TestUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -14,7 +16,7 @@ public class TestUtilsTest {
      */
     @Test
     public void getStringOfLength() {
-        assertEquals(TestUtils.getStringOfLength(-100).length(), 0);
+        Assert.assertEquals(TestUtils.getStringOfLength(-100).length(), 0);
         assertEquals(TestUtils.getStringOfLength(0).length(), 0);
         assertEquals(TestUtils.getStringOfLength(40).length(), 40);
         assertEquals(TestUtils.getStringOfLength(100).length(), 100);

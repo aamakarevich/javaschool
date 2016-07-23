@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Provides REST-full CRUD for Customer entity.
  */
 @Controller
-@RequestMapping("customer")
+@RequestMapping("/customer")
 public class CustomerController extends AbstractController {
 
     @Autowired

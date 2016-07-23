@@ -1,8 +1,9 @@
-package com.tsystems.ecare.app.services;
+package backend.com.tsystems.ecare.app.services;
 
 import com.tsystems.ecare.app.model.Customer;
 import com.tsystems.ecare.app.model.Role;
 import com.tsystems.ecare.app.model.SearchResult;
+import com.tsystems.ecare.app.services.CustomerService;
 import com.tsystems.ecare.config.root.RootContextConfig;
 import com.tsystems.ecare.config.root.TestConfiguration;
 import org.junit.Test;

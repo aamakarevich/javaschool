@@ -18,7 +18,7 @@ import java.security.Principal;
  * Provides REST-service for locking/unlocking customers own contracts.
  */
 @Controller
-@RequestMapping("profile/lock")
+@RequestMapping("/profile/lock")
 public class ProfileChangeLockController extends AbstractController {
 
     @Autowired

@@ -19,7 +19,7 @@ import java.security.Principal;
  * Provides REST-service for changing customers own contracts.
  */
 @Controller
-@RequestMapping("profile/contract")
+@RequestMapping("/profile/contract")
 public class ProfileContractController extends AbstractController {
 
     @Autowired
