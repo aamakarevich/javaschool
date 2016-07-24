@@ -49,9 +49,9 @@ public class FeatureServiceImpl implements FeatureService {
         assertNotBlank(title, "title must not be blank");
         assertNotBlank(description, "title must not be blank");
         notNull(additionFee, "additionFee is mandatory");
-        isTrue(additionFee.compareTo(new BigDecimal(0)) != -1, "additionFee must not be negative");
+        isTrue(additionFee.compareTo(new BigDecimal(0)) >= 0, "additionFee must not be negative");
         notNull(monthlyFee, "monthlyFee is mandatory");
-        isTrue(monthlyFee.compareTo(new BigDecimal(0)) != -1, "monthlyFee must not be negative");
+        isTrue(monthlyFee.compareTo(new BigDecimal(0)) >= 0, "monthlyFee must not be negative");
 
         assertMaximumLength(title, 40, "title must be not more then 40 characters");
         assertMaximumLength(description, 1000, "title must be not more then 1000 characters");
@@ -99,6 +99,13 @@ public class FeatureServiceImpl implements FeatureService {
         return new SearchResult<>(resultsCount, features);
     }
 
+    /**
+     * Searches for options with ids contained in passed list.
+     *
+     * @param ids id values to filter options
+     *
+     * @return options filtered by id
+     */
     @Override
     @Transactional
     public List<Feature> getListedFeatures(String ids) {

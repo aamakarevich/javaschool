@@ -101,11 +101,6 @@
         }
 
         function savePlan() {
-            var token = $("meta[name='_csrf']").attr("content");
-            if (!token) token = "";
-            var header = $("meta[name='_csrf_header']").attr("content");
-            if (!header) header = "";
-
             if ($("#inputPlanId").val() == 0) {
                 var plan = {
                     title: $("#inputTitle").val(),
@@ -162,11 +157,6 @@
 
 
         function toggleOption(id) {
-            var token = $("meta[name='_csrf']").attr("content");
-            if (!token) token = "";
-            var header = $("meta[name='_csrf_header']").attr("content");
-            if (!header) header = "";
-
             var element = $("#av" + id);
             if (element.hasClass("active")) {
                 var change = {

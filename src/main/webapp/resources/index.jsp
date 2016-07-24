@@ -121,10 +121,19 @@
     const BASKET_OPTIONS = "basketOptions";
     const BASKET_UP = "basketUp";
 
+    /* CSRF */
+    var token;
+    var header;
+
     /* REST-client */
     var client;
 
     $(document).ready(function () {
+
+        token = $("meta[name='_csrf']").attr("content");
+        if (!token) token = "";
+        header = $("meta[name='_csrf_header']").attr("content");
+        if (!header) header = "";
 
         client = new $.RestClient('/javaschool/');
 
@@ -282,11 +291,6 @@
     }
 
     function submitModal() {
-        var token = $("meta[name='_csrf']").attr("content");
-        if (!token) token = "";
-        var header = $("meta[name='_csrf_header']").attr("content");
-        if (!header) header = "";
-
         var ds = {
             username: $("#inputEmail").val(),
             password: $("#inputPassword").val()

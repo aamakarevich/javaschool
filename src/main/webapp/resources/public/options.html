@@ -106,11 +106,6 @@
             loadPage('option', 'options');
         }
         function deleteOption() {
-            var token = $("meta[name='_csrf']").attr("content");
-            if (!token) token = "";
-            var header = $("meta[name='_csrf_header']").attr("content");
-            if (!header) header = "";
-
             $.ajax({
                 type: 'DELETE',
                 url: '/javaschool/option/' + $("#deleteOptionId").val(),

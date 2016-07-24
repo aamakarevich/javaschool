@@ -40,6 +40,13 @@ public interface FeatureService {
      */
     public SearchResult<Feature> getAllFeatures();
 
+    /**
+     * Searches for options with ids contained in passed list.
+     *
+     * @param ids id values to filter options
+     *
+     * @return options filtered by id
+     */
     public List<Feature> getListedFeatures(String ids);
 
     /**

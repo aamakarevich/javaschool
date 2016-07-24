@@ -1,6 +1,5 @@
 package com.tsystems.ecare.app.utils;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Pattern;
@@ -8,10 +7,10 @@ import java.util.regex.Pattern;
 /**
  * Validation utility methods.
  */
-public final class ValidationUtils {
+public class ValidationUtils {
 
     private ValidationUtils() {
-        throw new NotImplementedException("Utility classes cannot be instantiated");
+        // do not instantiate utility class
     }
 
     /**

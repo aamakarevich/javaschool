@@ -10,7 +10,7 @@ import java.util.List;
 public interface ContractService {
 
     /**
-     * Saves new contract and in case of need triggers sendind sms with password.
+     * Saves new contract and in case of need triggers sending sms with password.
      *
      * @param number phone number for contract
      * @param activeFeatures ids of features to activate for contract

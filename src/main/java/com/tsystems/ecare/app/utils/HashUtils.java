@@ -1,7 +1,5 @@
 package com.tsystems.ecare.app.utils;
 
-import org.apache.commons.lang3.NotImplementedException;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
@@ -12,7 +10,7 @@ import java.util.UUID;
 public class HashUtils {
 
     private HashUtils() {
-        throw new NotImplementedException("Utility classes cannot be instantiated");
+        // do not instantiate utility class
     }
 
     /**

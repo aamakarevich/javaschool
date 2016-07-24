@@ -30,11 +30,6 @@
 
     <script>
         function loadProfile() {
-            var token = $("meta[name='_csrf']").attr("content");
-            if (!token) token = "";
-            var header = $("meta[name='_csrf_header']").attr("content");
-            if (!header) header = "";
-
             $.ajax({
                 type: 'PUT',
                 url: '/javaschool/profile',
@@ -117,11 +112,6 @@
         }
 
         function toggleLock(id, strNumber) {
-            var token = $("meta[name='_csrf']").attr("content");
-            if (!token) token = "";
-            var header = $("meta[name='_csrf_header']").attr("content");
-            if (!header) header = "";
-
             var element = $("#lk" + id);
             var row = $("#trp" + id);
             if (element.hasClass("btn-default")) {

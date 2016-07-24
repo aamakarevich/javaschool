@@ -120,11 +120,6 @@
         }
 
         function saveOption() {
-            var token = $("meta[name='_csrf']").attr("content");
-            if (!token) token = "";
-            var header = $("meta[name='_csrf_header']").attr("content");
-            if (!header) header = "";
-
             if ($("#inputOptionId").val() == 0) {
                 var option = {
                     title: $("#inputTitle").val(),
@@ -183,11 +178,6 @@
         }
 
         function toggleBlock(id) {
-            var token = $("meta[name='_csrf']").attr("content");
-            if (!token) token = "";
-            var header = $("meta[name='_csrf_header']").attr("content");
-            if (!header) header = "";
-
             var element = $("#bl" + id);
             var second = $("#pr" + id);
             if (element.hasClass("active")) {
@@ -254,11 +244,6 @@
         }
 
         function togglePrer(id) {
-            var token = $("meta[name='_csrf']").attr("content");
-            if (!token) token = "";
-            var header = $("meta[name='_csrf_header']").attr("content");
-            if (!header) header = "";
-
             var element = $("#pr" + id);
             var second = $("#bl" + id);
             if (element.hasClass("active")) {

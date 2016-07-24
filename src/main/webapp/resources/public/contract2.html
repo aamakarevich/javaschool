@@ -148,11 +148,6 @@
         }
 
         function contract2Proceed() {
-            var token = $("meta[name='_csrf']").attr("content");
-            if (!token) token = "";
-            var header = $("meta[name='_csrf_header']").attr("content");
-            if (!header) header = "";
-
             var contractId = getLs(BASKET_CONTRACT);
 
             var features = [];

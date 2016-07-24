@@ -75,7 +75,7 @@ public class FeatureController extends AbstractController {
     }
 
     /**
-     * Updates existng option.
+     * Updates existing option.
      *
      * @param feature DTO with option to update data
      */

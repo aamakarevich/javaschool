@@ -32,6 +32,12 @@ public class TestDataInitializer {
 
     private EntityManager entityManager;
 
+    private static Map<String, Integer> emails = new HashMap<>();
+    private static List<String> firstnames = new ArrayList<>();
+    private static List<String> lastnames = new ArrayList<>();
+    private static List<String> cities = new ArrayList<>();
+    private static List<String> streets = new ArrayList<>();
+
     /**
      * Fills out database with initial data for demonstration.
      */
@@ -118,7 +124,9 @@ public class TestDataInitializer {
         entityManager.persist(plan5);
 
         Contract contract9142212666 = new Contract("9142212666", customerRonWeasley, plan4, Contract.Lock.UNLOCKED);
+        Contract contract9142222667 = new Contract("9142222667", customerHarryPotter, plan4, Contract.Lock.UNLOCKED);
         entityManager.persist(contract9142212666);
+        entityManager.persist(contract9142222667);
 
         for (int i = 0; i < 100; i++) {
             createTestCustomer();
@@ -238,7 +246,7 @@ public class TestDataInitializer {
         Collections.shuffle(cities);
         Collections.shuffle(streets);
         customer.setAddress(new Address(streets.get(0), String.valueOf(new Random().nextInt(200) + 1), cities.get(0)));
-        customer.setPassport(String.valueOf(1000 + new Random().nextInt(8000)) + " " + String.valueOf(10000000 + new Random().nextInt(80000000)));
+        customer.setPassport((1000 + new Random().nextInt(8000)) + " " + (10000000 + new Random().nextInt(80000000)));
         customer.setPassword(HashUtils.sha256(HashUtils.generatePassword()));
         customer.setBirthdate(new Date(50 + new Random().nextInt(50), new Random().nextInt(11), 1 + new Random().nextInt(27)));
         String uniqueEmail = (firstname.substring(0, 1) + (lastname.length() > 7 ? lastname.substring(0, 7) : lastname)).toLowerCase();
@@ -247,7 +255,7 @@ public class TestDataInitializer {
         } else {
             int i = emails.get(uniqueEmail);
             emails.put(uniqueEmail, i + 1);
-            uniqueEmail += i;
+            uniqueEmail += Integer.toString(i);
         }
         uniqueEmail += "@ecare.com";
         customer.setEmail(uniqueEmail);
@@ -304,12 +312,6 @@ public class TestDataInitializer {
         entityManager.persist(role);
         return role;
     }
-
-    private static Map<String, Integer> emails = new HashMap<>();
-    private static List<String> firstnames = new ArrayList<>();
-    private static List<String> lastnames = new ArrayList<>();
-    private static List<String> cities = new ArrayList<>();
-    private static List<String> streets = new ArrayList<>();
 
     static {
         firstnames.add("John");

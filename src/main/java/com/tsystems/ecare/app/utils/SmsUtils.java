@@ -1,6 +1,5 @@
 package com.tsystems.ecare.app.utils;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -21,7 +20,7 @@ public class SmsUtils {
     private static Logger logger = Logger.getLogger(SmsUtils.class);
 
     private SmsUtils() {
-        throw new NotImplementedException("Utility classes cannot be instantiated");
+        // do not instantiate utility class
     }
 
     /**

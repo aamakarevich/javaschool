@@ -218,11 +218,6 @@
         }
 
         function saveCustomer() {
-            var token = $("meta[name='_csrf']").attr("content");
-            if (!token) token = "";
-            var header = $("meta[name='_csrf_header']").attr("content");
-            if (!header) header = "";
-
             if ($("#inputCustomerId").val() == 0) {
                 var customer = {
                     lastName: $("#inputLastName").val(),
@@ -290,11 +285,6 @@
         }
 
         function toggleRole(id, cid) {
-            var token = $("meta[name='_csrf']").attr("content");
-            if (!token) token = "";
-            var header = $("meta[name='_csrf_header']").attr("content");
-            if (!header) header = "";
-
             var element = $("#rl" + id);
             if (element.hasClass("btn-default")) {
                 var ar = {
@@ -350,11 +340,6 @@
         }
 
         function toggleSuserLock(id, strNumber) {
-            var token = $("meta[name='_csrf']").attr("content");
-            if (!token) token = "";
-            var header = $("meta[name='_csrf_header']").attr("content");
-            if (!header) header = "";
-
             var element = $("#lk" + id);
             var row = $("#trp" + id);
             if (element.hasClass("btn-default")) {

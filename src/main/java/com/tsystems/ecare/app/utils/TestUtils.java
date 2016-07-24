@@ -1,14 +1,12 @@
 package com.tsystems.ecare.app.utils;
 
-import org.apache.commons.lang3.NotImplementedException;
-
 /**
  * Testing utility methods.
  */
 public class TestUtils {
 
     private TestUtils() {
-        throw new NotImplementedException("Utility classes cannot be instantiated");
+        // do not instantiate utility class
     }
 
     /**
