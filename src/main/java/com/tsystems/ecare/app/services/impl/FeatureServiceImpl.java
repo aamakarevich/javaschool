@@ -20,6 +20,7 @@ import java.util.Set;
 
 import static com.tsystems.ecare.app.utils.ValidationUtils.assertMaximumLength;
 import static com.tsystems.ecare.app.utils.ValidationUtils.assertNotBlank;
+import static org.springframework.util.Assert.isTrue;
 import static org.springframework.util.Assert.notNull;
 
 @Service
@@ -48,7 +49,9 @@ public class FeatureServiceImpl implements FeatureService {
         assertNotBlank(title, "title must not be blank");
         assertNotBlank(description, "title must not be blank");
         notNull(additionFee, "additionFee is mandatory");
+        isTrue(additionFee.compareTo(new BigDecimal(0)) != -1, "additionFee must not be negative");
         notNull(monthlyFee, "monthlyFee is mandatory");
+        isTrue(monthlyFee.compareTo(new BigDecimal(0)) != -1, "monthlyFee must not be negative");
 
         assertMaximumLength(title, 40, "title must be not more then 40 characters");
         assertMaximumLength(description, 1000, "title must be not more then 1000 characters");

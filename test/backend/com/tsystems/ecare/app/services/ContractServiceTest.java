@@ -36,11 +36,17 @@ public class ContractServiceTest {
     public void saveNewContract() {
         contractService.saveNewContract("0123456789", null, 8L, 100L);
         Customer customer = em.find(Customer.class, 100L);
-        Contract contract = em.find(Contract.class, 100L);
+        Contract contract = em.find(Contract.class, 101L);
         assertTrue(customer.getContracts().contains(contract));
         assertEquals("0123456789", contract.getNumber());
         assertEquals(new Long(8), contract.getPlan().getId());
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void saveNewContractWithExitingNumber() {
+        contractService.saveNewContract("9142212666", null, 8L, 100L);
+    }
+
 
     @Test(expected = IllegalArgumentException.class)
     public void saveNewContractWithBlankNumber() {

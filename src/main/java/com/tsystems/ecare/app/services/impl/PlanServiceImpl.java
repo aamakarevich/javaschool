@@ -12,6 +12,7 @@ import com.tsystems.ecare.app.services.PlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 import static com.tsystems.ecare.app.utils.ValidationUtils.assertMaximumLength;
 import static com.tsystems.ecare.app.utils.ValidationUtils.assertNotBlank;
+import static org.springframework.util.Assert.isTrue;
 import static org.springframework.util.Assert.notNull;
 
 /**
@@ -59,6 +61,7 @@ public class PlanServiceImpl implements PlanService {
         assertNotBlank(description, "description must not be blank");
         assertMaximumLength(description, 1000, "description must not be more than 1000 characters length");
         notNull(monthlyFee, "monthlyFee is mandatory");
+        isTrue(monthlyFee.compareTo(new BigDecimal(0)) != -1, "monthlyFee must not be negative");
 
         plan.setTitle(title);
         plan.setDescription(description);

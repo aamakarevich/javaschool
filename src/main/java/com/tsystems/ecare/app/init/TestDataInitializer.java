@@ -202,6 +202,8 @@ public class TestDataInitializer {
         contract99.setNumberLock(Contract.Lock.USERLOCKED);
         contract99.getActiveFeatures().add(feature1);
         contract99.getActiveFeatures().add(feature2);
+        Contract contract100 = new Contract("9142212666", customer100, plan8, Contract.Lock.UNLOCKED);
+        entityManager.persist(contract100);
 
         entityManager.getTransaction().commit();
     }

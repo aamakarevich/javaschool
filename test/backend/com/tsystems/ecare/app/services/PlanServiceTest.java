@@ -86,6 +86,11 @@ public class PlanServiceTest {
         planService.savePlan(null, "title", "description", null);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void savePlanWithNegativeMonthlyFee() {
+        planService.savePlan(null, "title", "description", new BigDecimal("-100"));
+    }
+
     @Test
     public void getPlan() {
         Plan plan = planService.getPlan(2l);

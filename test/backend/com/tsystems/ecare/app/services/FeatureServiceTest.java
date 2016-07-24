@@ -90,8 +90,18 @@ public class FeatureServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
+    public void savePlanWithNegativeAdditionFee() {
+        featureService.saveFeature(null, "title", "description", new BigDecimal(-100), new BigDecimal(10));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
     public void saveFeatureWithNullMonthlyFee() {
         featureService.saveFeature(null, "title", "description", new BigDecimal(10), null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void savePlanWithNegativeMonthlyFee() {
+        featureService.saveFeature(null, "title", "description", new BigDecimal(10), new BigDecimal(-100));
     }
 
     @Test
