@@ -57,7 +57,7 @@ public class CustomerServiceImpl implements CustomerService {
         } else {
             customer = new Customer();
             customer.setPassword(HashUtils.sha256(HashUtils.generatePassword()));
-            String uniqueEmail = firstName.toLowerCase().substring(0, 1) + (lastName.length() > 7 ? lastName.substring(0, 7) : lastName).toLowerCase();
+            String uniqueEmail = firstName.toLowerCase().substring(0, 1) + (lastName.length() > 7 ? lastName.substring(0, 6) : lastName).toLowerCase();
             int counter = 1;
             while (customerDao.findByEmail(uniqueEmail + "@ecare.com") != null) {
                 if (counter != 1) {

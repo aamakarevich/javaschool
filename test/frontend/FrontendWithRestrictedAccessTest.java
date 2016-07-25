@@ -116,9 +116,11 @@ public class FrontendWithRestrictedAccessTest {
         waitForElement(By.id("op3"));
         clickElement(By.id("op3"));
 
+        Thread.sleep(200);
         waitForElement(By.id("op4"));
         clickElement(By.id("op4"));
 
+        Thread.sleep(200);
         waitForElement(By.id("op5"));
         clickElement(By.id("op5"));
 

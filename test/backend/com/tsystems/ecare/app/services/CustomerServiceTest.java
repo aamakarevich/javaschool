@@ -47,7 +47,7 @@ public class CustomerServiceTest {
         assertEquals(customer.getAddress().getCity(), gotCustomer.getAddress().getCity());
         assertEquals(customer.getAddress().getAddress1(), gotCustomer.getAddress().getAddress1());
         assertEquals(customer.getAddress().getAddress2(), gotCustomer.getAddress().getAddress2());
-        assertEquals("flastnam@ecare.com", gotCustomer.getEmail());
+        assertEquals("flastna@ecare.com", gotCustomer.getEmail());
         assertEquals(64, gotCustomer.getPassword().length());
     }
 
